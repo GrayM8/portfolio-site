@@ -2,6 +2,7 @@
 
 import { Fragment, useEffect, useState, type CSSProperties } from "react";
 import { PORTFOLIO, type FeaturedProject, type Note } from "@/data/portfolio";
+import { useAustinTemp } from "@/lib/weather";
 import { useModeTheme } from "../ModeThemeProvider";
 
 type Palette = {
@@ -57,6 +58,7 @@ export function EditorialSite() {
   const c = theme === "dark" ? o3Styles.dark : o3Styles.light;
   const P = PORTFOLIO;
   const [active, setActive] = useState<NavId>(NAV_ITEMS[0].id);
+  const temp = useAustinTemp();
 
   useEffect(() => {
     const threshold = 96;
@@ -135,7 +137,9 @@ export function EditorialSite() {
             <span className="italic font-normal">field notes</span>
           </div>
           <div className="flex items-center justify-end gap-3 font-mono text-[11px] text-[color:var(--sub)]">
-            <span className="hidden sm:inline">Austin, TX · 68°F</span>
+            <span className="hidden sm:inline">
+              Austin, TX{temp !== null ? ` · ${temp}°F` : ""}
+            </span>
           </div>
         </div>
       </header>

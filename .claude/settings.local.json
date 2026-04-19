@@ -18,7 +18,8 @@
       "Bash(powershell *)",
       "Bash(curl -s http://localhost:3000/ -o /dev/null -w \"HTTP %{http_code}\\\\n\")",
       "Bash(taskkill *)",
-      "Bash(curl -s -o /dev/null -w \"HTTP %{http_code}\\\\n\" --max-time 3 http://localhost:3000/)"
+      "Bash(curl -s -o /dev/null -w \"HTTP %{http_code}\\\\n\" --max-time 3 http://localhost:3000/)",
+      "Bash(curl -s \"https://api.open-meteo.com/v1/forecast?latitude=30.2672&longitude=-97.7431&current=temperature_2m&temperature_unit=fahrenheit\")"
     ]
   }
 }
