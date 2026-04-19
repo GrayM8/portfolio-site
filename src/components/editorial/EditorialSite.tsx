@@ -329,7 +329,7 @@ export function EditorialSite() {
 
       {/* FEATURED */}
       <section id="work" className="border-b border-[color:var(--rule)]">
-        <div className={`${WRAP} ${PAD} py-12 md:py-16`}>
+        <div className={`${WRAP} ${PAD} py-16 md:py-24 lg:py-28`}>
           <SpreadHead
             c={c}
             roman="I."
@@ -337,7 +337,7 @@ export function EditorialSite() {
             title="Projects, shipping"
             sub="Three things I've built this year that I'm proud of."
           />
-          <div className="mt-10 md:mt-12 grid gap-12 md:gap-14">
+          <div className="mt-14 md:mt-20 grid gap-20 md:gap-28 lg:gap-32">
             {P.featured.map((p, i) => (
               <EditorialFeature key={p.slug} p={p} c={c} idx={i} />
             ))}
@@ -924,13 +924,13 @@ function EditorialFeature({
   return (
     <a
       href="#"
-      className={`o3-feat grid grid-cols-1 lg:grid-cols-[1.4fr_1fr] gap-6 md:gap-8 lg:gap-10 no-underline items-center ${
-        flip ? "lg:[&>*:first-child]:order-2" : ""
-      }`}
+      className="o3-feat grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 lg:gap-16 no-underline items-center"
       style={{ color: "inherit" }}
     >
       <div
-        className="relative overflow-hidden border"
+        className={`relative overflow-hidden border w-full ${
+          flip ? "lg:order-2" : "lg:order-1"
+        }`}
         style={{
           aspectRatio: "16 / 10",
           borderColor: c.rule,
@@ -961,9 +961,9 @@ function EditorialFeature({
           FIG. 0{idx + 2} · {p.slug}
         </div>
       </div>
-      <div className="min-w-0">
+      <div className={`min-w-0 ${flip ? "lg:order-1" : "lg:order-2"}`}>
         <div
-          className="font-mono text-[10px] uppercase tracking-[0.15em] mb-3"
+          className="font-mono text-[10px] uppercase tracking-[0.15em] mb-5 md:mb-6"
           style={{ color: c.sub }}
         >
           Case {String(idx + 1).padStart(2, "0")} ·{" "}
@@ -973,7 +973,7 @@ function EditorialFeature({
           · {p.year}
         </div>
         <h3
-          className="o3-title font-serif font-normal m-0 mb-3"
+          className="o3-title font-serif font-normal m-0 mb-4 md:mb-5"
           style={{
             color: c.ink,
             fontSize: "clamp(28px, 5vw, 44px)",
@@ -984,16 +984,16 @@ function EditorialFeature({
           {p.title}
         </h3>
         <div
-          className="font-serif italic leading-[1.4] mb-5 text-[16px] md:text-[18px] lg:text-[19px]"
+          className="font-serif italic leading-[1.45] mb-8 md:mb-10 text-[16px] md:text-[18px] lg:text-[19px]"
           style={{ color: c.sub }}
         >
           {p.tagline}
         </div>
-        <div className="grid gap-2.5 mb-5">
+        <div className="grid gap-3.5 md:gap-4 mb-10 md:mb-12">
           {p.bullets.map((b, i) => (
             <div
               key={i}
-              className="grid grid-cols-[20px_1fr] text-[13px] md:text-[14px] leading-[1.5]"
+              className="grid grid-cols-[20px_1fr] text-[13px] md:text-[14px] leading-[1.6]"
               style={{ color: c.ink }}
             >
               <span
@@ -1008,13 +1008,13 @@ function EditorialFeature({
         </div>
         {p.metrics && (
           <div
-            className="grid grid-cols-3 border-t mb-4"
+            className="grid grid-cols-3 border-t border-b mb-8 md:mb-10"
             style={{ borderColor: c.ink }}
           >
             {p.metrics.map((m, i) => (
               <div
                 key={i}
-                className="py-3"
+                className="py-6 md:py-7 px-3 md:px-4 text-left"
                 style={{
                   borderRight:
                     i < (p.metrics?.length ?? 0) - 1
@@ -1026,14 +1026,14 @@ function EditorialFeature({
                   className="font-serif font-normal leading-none"
                   style={{
                     color: c.ink,
-                    fontSize: "clamp(22px, 3.5vw, 28px)",
+                    fontSize: "clamp(24px, 3.5vw, 32px)",
                     letterSpacing: -0.5,
                   }}
                 >
                   {m.v}
                 </div>
                 <div
-                  className="font-mono text-[9px] uppercase tracking-widest mt-1"
+                  className="font-mono text-[9px] uppercase tracking-widest mt-2"
                   style={{ color: c.sub }}
                 >
                   {m.k}
@@ -1042,7 +1042,9 @@ function EditorialFeature({
             ))}
           </div>
         )}
-        <div className="flex flex-wrap gap-x-4 gap-y-1 items-center font-mono text-[11px]">
+        <div
+          className="flex flex-wrap gap-x-5 gap-y-2 items-center font-mono text-[11px] pt-2"
+        >
           <span style={{ color: c.sub }}>{p.tech.join(" · ")}</span>
           <span
             className="sm:ml-auto"
