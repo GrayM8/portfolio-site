@@ -290,8 +290,8 @@ export function EditorialSite() {
                     color: c.ink,
                   }}
                 >
-                  <div style={{ color: c.accent }}>Me in Tokyo</div>
-                  <div style={{ color: c.sub }}>2023</div>
+                  <div style={{ color: c.accent }}>Gray Marshall</div>
+                  <div style={{ color: c.sub }}>Tokyo · 2023</div>
                 </div>
                 <div
                   className="absolute top-3 left-3 font-mono text-[9px] uppercase tracking-[0.15em] px-2 py-0.5 border border-[color:var(--rule)] bg-[color:var(--bg)]"
