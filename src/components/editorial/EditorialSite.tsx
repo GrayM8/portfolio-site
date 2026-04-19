@@ -421,7 +421,7 @@ export function EditorialSite() {
         className="border-b border-[color:var(--rule)] scroll-mt-20"
         style={{ background: c.soft }}
       >
-        <div className={`${WRAP} ${PAD} py-14 md:py-20`}>
+        <div className={`${WRAP} ${PAD} py-10 md:py-12`}>
           <SpreadHead
             c={c}
             roman="II."
@@ -429,37 +429,22 @@ export function EditorialSite() {
             title="Currently at the bench"
             sub={nowSub}
           />
-          <div className="mt-12 md:mt-14 grid grid-cols-1 sm:grid-cols-2 gap-x-10 md:gap-x-16 gap-y-10 md:gap-y-12">
+          <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 md:gap-6">
             {P.now.map((n, i) => (
-              <article
-                key={i}
-                className="grid grid-cols-[auto_1fr] gap-5 md:gap-7 items-start pt-5 md:pt-6 border-t"
-                style={{ borderColor: c.ink }}
-              >
+              <div key={i}>
                 <div
-                  className="font-serif italic font-light leading-none tabular-nums"
-                  style={{
-                    color: c.accent,
-                    fontSize: "clamp(32px, 4.5vw, 44px)",
-                  }}
+                  className="font-mono text-[10px] uppercase tracking-widest mb-2.5"
+                  style={{ color: c.accent }}
                 >
-                  {String(i + 1).padStart(2, "0")}
+                  {String(i + 1).padStart(2, "0")} · {n.where}
                 </div>
-                <div>
-                  <div
-                    className="font-mono text-[10px] uppercase tracking-widest"
-                    style={{ color: c.sub }}
-                  >
-                    {n.where}
-                  </div>
-                  <div
-                    className="mt-2 md:mt-3 font-serif font-normal leading-[1.3] text-[18px] md:text-[20px] lg:text-[22px]"
-                    style={{ color: c.ink }}
-                  >
-                    {n.what}
-                  </div>
+                <div
+                  className="font-serif leading-[1.25] font-normal text-[18px] md:text-[20px] lg:text-[22px]"
+                  style={{ color: c.ink }}
+                >
+                  {n.what}
                 </div>
-              </article>
+              </div>
             ))}
           </div>
         </div>
