@@ -1111,7 +1111,8 @@ function Terminal({ c, P }: { c: Palette; P: Portfolio }) {
     let timer: number | undefined;
     const tick = () => {
       if (i < bootLines.length) {
-        setHistory((h) => [...h, bootLines[i]]);
+        const line = bootLines[i];
+        setHistory((h) => [...h, line]);
         i++;
         timer = window.setTimeout(tick, i < 3 ? 150 : i < 10 ? 100 : 80);
       } else {
