@@ -1195,14 +1195,14 @@ function LiveTelemetry({ c, username }: { c: Palette; username: string }) {
 
   const metrics: Array<[string, string, string]> = activity
     ? [
-        ["commits", `${activity.totalCommits}`, "30d"],
+        ["prs", `${activity.prsOpened}`, "opened"],
+        ["reviews", `${activity.reviewsGiven}`, "given"],
         ["repos", `${activity.reposTouched}`, "touched"],
-        ["streak", `${activity.streak}`, activity.streak === 1 ? "day" : "days"],
       ]
     : [
-        ["commits", "—", "30d"],
+        ["prs", "—", "opened"],
+        ["reviews", "—", "given"],
         ["repos", "—", "touched"],
-        ["streak", "—", "days"],
       ];
 
   return (

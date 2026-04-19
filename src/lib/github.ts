@@ -2,20 +2,18 @@
 
 import { useEffect, useState } from "react";
 
-type SearchCommit = {
-  commit: { author: { date: string } };
-  repository: { full_name: string };
-};
-
-type SearchResponse = {
-  total_count?: number;
-  items?: SearchCommit[];
-  message?: string;
+type GHEvent = {
+  type: string;
+  created_at: string;
+  repo: { name: string };
+  payload: { action?: string };
 };
 
 export type GithubActivity = {
   daily: number[];
-  totalCommits: number;
+  eventsTotal: number;
+  prsOpened: number;
+  reviewsGiven: number;
   reposTouched: number;
   streak: number;
   lastSynced: number;
@@ -34,14 +32,7 @@ export function useGithubActivity(username: string): GithubActivity | null {
 
   useEffect(() => {
     const ac = new AbortController();
-
-    // 30-day window ending today (UTC date boundary is fine — small drift)
-    const sinceDate = new Date();
-    sinceDate.setUTCDate(sinceDate.getUTCDate() - (DAYS - 1));
-    const sinceISO = sinceDate.toISOString().slice(0, 10);
-
-    const q = `author:${username} author-date:>=${sinceISO}`;
-    const url = `https://api.github.com/search/commits?q=${encodeURIComponent(q)}&per_page=100&sort=author-date&order=desc`;
+    const url = `https://api.github.com/users/${encodeURIComponent(username)}/events/public?per_page=100`;
 
     fetch(url, {
       signal: ac.signal,
@@ -49,21 +40,35 @@ export function useGithubActivity(username: string): GithubActivity | null {
       cache: "no-store",
     })
       .then((r) =>
-        r.ok ? (r.json() as Promise<SearchResponse>) : Promise.reject(new Error(String(r.status))),
+        r.ok ? (r.json() as Promise<GHEvent[]>) : Promise.reject(new Error(String(r.status))),
       )
-      .then((body) => {
-        const items = body.items ?? [];
+      .then((events) => {
         const daily = new Array<number>(DAYS).fill(0);
         const repos = new Set<string>();
         const todayStart = startOfDay(new Date());
         const dayMs = 24 * 60 * 60 * 1000;
+        let prsOpened = 0;
+        let reviewsGiven = 0;
+        let eventsInWindow = 0;
 
-        for (const it of items) {
-          const committedAt = new Date(it.commit.author.date);
-          const diffDays = Math.floor((todayStart - startOfDay(committedAt)) / dayMs);
+        for (const e of events) {
+          const diffDays = Math.floor(
+            (todayStart - startOfDay(new Date(e.created_at))) / dayMs,
+          );
           if (diffDays < 0 || diffDays >= DAYS) continue;
+
           daily[DAYS - 1 - diffDays] += 1;
-          repos.add(it.repository.full_name);
+          repos.add(e.repo.name);
+          eventsInWindow += 1;
+
+          if (e.type === "PullRequestEvent" && e.payload.action === "opened") {
+            prsOpened += 1;
+          } else if (
+            e.type === "PullRequestReviewEvent" ||
+            e.type === "PullRequestReviewCommentEvent"
+          ) {
+            reviewsGiven += 1;
+          }
         }
 
         let streak = 0;
@@ -74,14 +79,16 @@ export function useGithubActivity(username: string): GithubActivity | null {
 
         setData({
           daily,
-          totalCommits: body.total_count ?? items.length,
+          eventsTotal: eventsInWindow,
+          prsOpened,
+          reviewsGiven,
           reposTouched: repos.size,
           streak,
           lastSynced: Date.now(),
         });
       })
       .catch(() => {
-        // UI falls back to placeholders
+        // leave null; UI falls back to placeholders
       });
 
     return () => ac.abort();
