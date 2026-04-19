@@ -1,6 +1,7 @@
 "use client";
 
 import { Fragment, useEffect, useState, type CSSProperties } from "react";
+import { Github } from "lucide-react";
 import {
   Area,
   AreaChart,
@@ -1222,7 +1223,7 @@ function LiveTelemetry({ c, username }: { c: Palette; username: string }) {
         className="flex items-center justify-between px-4 py-2.5 border-b text-[9px] uppercase tracking-widest"
         style={{ borderColor: c.rule, color: c.sub }}
       >
-        <span>Public · Activity</span>
+        <span>Activity (excluding private repos)</span>
         <a
           href={`https://github.com/${username}`}
           target="_blank"
@@ -1230,8 +1231,8 @@ function LiveTelemetry({ c, username }: { c: Palette; username: string }) {
           className="flex items-center gap-1.5 no-underline"
           style={{ color: c.accent }}
         >
-          <span className="o3-blip">●</span>
-          <span>github/{username}</span>
+          <span>{username}</span>
+          <Github size={13} strokeWidth={1.5} aria-hidden />
         </a>
       </div>
 
