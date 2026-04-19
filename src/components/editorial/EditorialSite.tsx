@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect, useState, type CSSProperties } from "react";
 import { PORTFOLIO, type FeaturedProject, type Note } from "@/data/portfolio";
 import { useModeTheme } from "../ModeThemeProvider";
 
@@ -38,878 +38,671 @@ const o3Styles: { light: Palette; dark: Palette } = {
   },
 };
 
-const serif = 'var(--font-serif), "Instrument Serif", Georgia, serif';
-const display = "var(--font-serif), Georgia, serif";
-const sans = "var(--font-sans), -apple-system, sans-serif";
-const mono = "var(--font-mono), ui-monospace, monospace";
+const WRAP = "mx-auto w-full max-w-[1440px]";
+const PAD = "px-5 sm:px-8 md:px-10 lg:px-12";
 
 export function EditorialSite() {
   const { theme } = useModeTheme();
   const c = theme === "dark" ? o3Styles.dark : o3Styles.light;
   const P = PORTFOLIO;
 
+  const cssVars = {
+    "--bg": c.bg,
+    "--cover": c.cover,
+    "--ink": c.ink,
+    "--sub": c.sub,
+    "--rule": c.rule,
+    "--accent": c.accent,
+    "--soft": c.soft,
+    "--card": c.card,
+  } as CSSProperties;
+
   return (
     <div
-      style={{
-        background: c.bg,
-        color: c.ink,
-        fontFamily: sans,
-        minHeight: "100%",
-        fontSize: 14,
-        lineHeight: 1.55,
-      }}
+      style={cssVars}
+      className="min-h-full bg-[color:var(--bg)] text-[color:var(--ink)] font-sans text-[14px] leading-[1.55]"
     >
       <style>{`
-        @keyframes o3-tick { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-2px) } }
         .o3-link { color: inherit; text-decoration: none; position: relative; }
-        .o3-link::after { content:''; position:absolute; left:0; right:0; bottom:-2px; height:1px; background:${c.ink}; transform: scaleX(0); transform-origin: right; transition: transform .25s ease; }
+        .o3-link::after { content:''; position:absolute; left:0; right:0; bottom:-2px; height:1px; background:var(--ink); transform: scaleX(0); transform-origin: right; transition: transform .25s ease; }
         .o3-link:hover::after { transform: scaleX(1); transform-origin: left; }
-        .o3-link:hover { color: ${c.accent}; }
+        .o3-link:hover { color: var(--accent); }
         .o3-feat:hover .o3-img { transform: scale(1.02); }
-        .o3-feat:hover .o3-title { color: ${c.accent}; }
+        .o3-feat:hover .o3-title { color: var(--accent); }
         .o3-img { transition: transform .5s ease; }
         .o3-title { transition: color .2s; }
-        .o3-row:hover { background: ${c.soft} !important; }
-        .o3-row:hover .o3-t { color: ${c.accent} !important; }
+        .o3-row:hover { background: var(--soft); }
+        .o3-row:hover .o3-t { color: var(--accent); }
         .o3-t { transition: color .15s; }
         @keyframes o3-blip { 0%,100% { opacity: 0.3 } 50% { opacity: 1 } }
         .o3-blip { animation: o3-blip 1.8s ease-in-out infinite; }
-        .o3-kicker { font-family: ${mono}; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: ${c.sub}; }
+        .o3-kicker { font-family: var(--font-mono); font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--sub); }
       `}</style>
 
       {/* MASTHEAD */}
       <header
-        style={{
-          padding: "14px 40px",
-          borderBottom: `1px solid ${c.ink}`,
-          display: "grid",
-          gridTemplateColumns: "1fr auto 1fr",
-          alignItems: "center",
-          gap: 24,
-          background: c.bg,
-        }}
+        className={`border-b border-[color:var(--ink)] bg-[color:var(--bg)]`}
       >
         <div
-          style={{
-            fontFamily: mono,
-            fontSize: 10,
-            letterSpacing: 1,
-            color: c.sub,
-            textTransform: "uppercase",
-          }}
+          className={`${WRAP} ${PAD} py-3 md:py-3.5 grid grid-cols-[auto_1fr] md:grid-cols-[1fr_auto_1fr] items-center gap-4 md:gap-6`}
         >
-          Vol. 03 · Issue 01 · April 2026
-        </div>
-        <div
-          style={{
-            fontFamily: display,
-            fontSize: 22,
-            fontWeight: 500,
-            letterSpacing: 2,
-            textAlign: "center",
-          }}
-        >
-          <span style={{ color: c.accent }}>G.</span>MARSHALL{" "}
-          <span style={{ color: c.sub, fontWeight: 400 }}>—</span>{" "}
-          <span style={{ fontStyle: "italic", fontWeight: 400 }}>field notes</span>
-        </div>
-        <div
-          style={{
-            display: "flex",
-            gap: 14,
-            justifyContent: "flex-end",
-            alignItems: "center",
-            fontFamily: mono,
-            fontSize: 11,
-          }}
-        >
-          <span style={{ color: c.sub }}>Austin, TX · 68°F</span>
+          <div className="hidden md:block font-mono text-[10px] tracking-widest uppercase text-[color:var(--sub)]">
+            Vol. 03 · Issue 01 · April 2026
+          </div>
+          <div className="font-serif text-[18px] sm:text-[20px] md:text-[22px] font-medium tracking-[0.12em] md:tracking-[0.18em] whitespace-nowrap text-left md:text-center">
+            <span style={{ color: c.accent }}>G.</span>MARSHALL{" "}
+            <span className="text-[color:var(--sub)] font-normal">—</span>{" "}
+            <span className="italic font-normal">field notes</span>
+          </div>
+          <div className="flex items-center justify-end gap-3 font-mono text-[11px] text-[color:var(--sub)]">
+            <span className="hidden sm:inline">Austin, TX · 68°F</span>
+          </div>
         </div>
       </header>
 
       {/* NAV */}
-      <nav
-        style={{
-          padding: "10px 40px",
-          borderBottom: `1px solid ${c.rule}`,
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          fontFamily: mono,
-          fontSize: 11,
-          letterSpacing: 1,
-          textTransform: "uppercase",
-        }}
-      >
-        <div style={{ display: "flex", gap: 28, color: c.sub }}>
-          <a href="#about" className="o3-link">About</a>
-          <a href="#work" className="o3-link">Work</a>
-          <a href="#now" className="o3-link">Now</a>
-          <a href="#experience" className="o3-link">Experience</a>
-          <a href="#notes" className="o3-link">Notes</a>
-          <a href="#contact" className="o3-link">Contact</a>
-        </div>
-        <div style={{ color: c.accent }}>
-          <span className="o3-blip">●</span>{" "}
-          <span style={{ color: c.sub }}>Available for Summer 2026</span>
+      <nav className="border-b border-[color:var(--rule)]">
+        <div
+          className={`${WRAP} ${PAD} py-2.5 md:py-3 flex justify-between items-center gap-4 font-mono text-[11px] tracking-widest uppercase`}
+        >
+          <div className="flex gap-4 sm:gap-5 md:gap-7 text-[color:var(--sub)] overflow-x-auto scrollbar-none -mx-1 px-1">
+            <a href="#about" className="o3-link shrink-0">About</a>
+            <a href="#work" className="o3-link shrink-0">Work</a>
+            <a href="#now" className="o3-link shrink-0">Now</a>
+            <a href="#experience" className="o3-link shrink-0">Experience</a>
+            <a href="#notes" className="o3-link shrink-0">Notes</a>
+            <a href="#contact" className="o3-link shrink-0">Contact</a>
+          </div>
+          <div className="hidden md:block text-[color:var(--accent)] whitespace-nowrap">
+            <span className="o3-blip">●</span>{" "}
+            <span className="text-[color:var(--sub)]">Available for Summer 2026</span>
+          </div>
         </div>
       </nav>
 
       {/* COVER */}
       <section
+        className="border-b border-[color:var(--rule)] relative"
         style={{
-          padding: "64px 40px 56px",
-          borderBottom: `1px solid ${c.rule}`,
           background: `
-            radial-gradient(ellipse at 50% 30%, transparent 55%, ${theme === "dark" ? "rgba(0,0,0,0.35)" : "rgba(80,50,10,0.10)"} 100%),
-            url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.08 0'/></filter><rect width='180' height='180' filter='url(%23n)' opacity='${theme === "dark" ? "0.5" : "0.7"}'/></svg>"),
+            radial-gradient(ellipse at 50% 30%, transparent 55%, ${
+              theme === "dark" ? "rgba(0,0,0,0.35)" : "rgba(80,50,10,0.10)"
+            } 100%),
+            url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.08 0'/></filter><rect width='180' height='180' filter='url(%23n)' opacity='${
+              theme === "dark" ? "0.5" : "0.7"
+            }'/></svg>"),
             linear-gradient(to bottom, ${c.cover}, ${c.bg})
           `,
-          position: "relative",
         }}
       >
-        <div className="o3-kicker" style={{ marginBottom: 24 }}>
-          Feature · 01
-        </div>
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1.5fr 1fr",
-            gap: 48,
-            alignItems: "start",
-          }}
-        >
-          <div>
-            <h1
-              style={{
-                fontFamily: display,
-                fontWeight: 400,
-                fontSize: 132,
-                lineHeight: 0.88,
-                letterSpacing: -4,
-                margin: 0,
-                color: c.ink,
-              }}
-            >
-              Building
-              <br />
-              <span style={{ fontStyle: "italic", fontWeight: 300 }}>things that</span>
-              <br />
-              don&apos;t break<span style={{ color: c.accent }}>.</span>
-            </h1>
-            <div
-              style={{
-                marginTop: 36,
-                fontSize: 18,
-                lineHeight: 1.5,
-                color: c.ink,
-                maxWidth: 620,
-                fontFamily: serif,
-                fontWeight: 400,
-              }}
-            >
-              <span className="o3-kicker" style={{ marginRight: 8 }}>
-                Dispatch
-              </span>
-              Gray Marshall is a second-year CS student at UT Austin building the real-time
-              telemetry stack for a Formula SAE electric race car — and co-leading a production
-              web platform as CTO of Longhorn Sim Racing. This is where the work lives.
+        <div className={`${WRAP} ${PAD} py-12 md:py-16 lg:py-20`}>
+          <div className="o3-kicker mb-6">Feature · 01</div>
+          <div className="grid grid-cols-1 lg:grid-cols-[1.5fr_1fr] gap-8 md:gap-10 lg:gap-12 items-start">
+            <div>
+              <h1
+                className="font-serif font-normal m-0 text-[color:var(--ink)]"
+                style={{
+                  fontSize: "clamp(48px, 11vw, 132px)",
+                  lineHeight: 0.9,
+                  letterSpacing: "clamp(-2px, -0.5vw, -4px)",
+                }}
+              >
+                Building
+                <br />
+                <span className="italic font-light">things that</span>
+                <br />
+                don&apos;t break<span style={{ color: c.accent }}>.</span>
+              </h1>
+              <div
+                className="mt-7 md:mt-9 text-[15px] md:text-[17px] lg:text-[18px] leading-[1.5] max-w-[620px] font-serif"
+                style={{ color: c.ink }}
+              >
+                <span className="o3-kicker mr-2">Dispatch</span>
+                Gray Marshall is a second-year CS student at UT Austin building the real-time
+                telemetry stack for a Formula SAE electric race car — and co-leading a
+                production web platform as CTO of Longhorn Sim Racing. This is where the work
+                lives.
+              </div>
+              <div className="mt-6 md:mt-8 flex flex-wrap gap-x-5 gap-y-1 items-center font-mono text-[11px] md:text-[12px] text-[color:var(--sub)]">
+                <span>
+                  by <span style={{ color: c.ink }}>the engineer himself</span>
+                </span>
+                <span className="hidden sm:inline">·</span>
+                <span>{P.about[0].length > 80 ? "6 min read" : "4 min read"}</span>
+                <span className="hidden sm:inline">·</span>
+                <a href="#contact" className="o3-link" style={{ color: c.accent }}>
+                  Get in touch →
+                </a>
+              </div>
             </div>
-            <div
-              style={{
-                marginTop: 32,
-                display: "flex",
-                gap: 24,
-                alignItems: "center",
-                fontFamily: mono,
-                fontSize: 12,
-                color: c.sub,
-              }}
-            >
-              <span>
-                by <span style={{ color: c.ink }}>the engineer himself</span>
-              </span>
-              <span>·</span>
-              <span>{P.about[0].length > 80 ? "6 min read" : "4 min read"}</span>
-              <span>·</span>
-              <a href="#contact" className="o3-link" style={{ color: c.accent }}>
-                Get in touch →
-              </a>
-            </div>
-          </div>
 
-          {/* Portrait + live widget */}
-          <div>
-            <div
-              style={{
-                position: "relative",
-                aspectRatio: "4/5",
-                overflow: "hidden",
-                border: `1px solid ${c.rule}`,
-              }}
-            >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="/assets/headshot.jpg"
-                alt="Gray Marshall"
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  objectFit: "cover",
-                  filter: "grayscale(0.35) contrast(1.05) sepia(0.12)",
-                }}
-              />
+            {/* Portrait + live widget */}
+            <div className="max-w-[460px] w-full mx-auto lg:mx-0">
               <div
-                style={{
-                  position: "absolute",
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  padding: "32px 20px 16px",
-                  background: `linear-gradient(to top, ${c.cover}f0, transparent)`,
-                  fontFamily: mono,
-                  fontSize: 10,
-                  color: c.ink,
-                  letterSpacing: 1,
-                  textTransform: "uppercase",
-                }}
+                className="relative overflow-hidden border border-[color:var(--rule)]"
+                style={{ aspectRatio: "4 / 5" }}
               >
-                <div style={{ color: c.accent }}>Gray Marshall</div>
-                <div style={{ color: c.sub }}>Austin · 2026</div>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/assets/headshot.jpg"
+                  alt="Gray Marshall"
+                  className="w-full h-full object-cover"
+                  style={{ filter: "grayscale(0.35) contrast(1.05) sepia(0.12)" }}
+                />
+                <div
+                  className="absolute inset-x-0 bottom-0 px-5 pb-4 pt-8 font-mono text-[10px] uppercase tracking-widest"
+                  style={{
+                    background: `linear-gradient(to top, ${c.cover}f0, transparent)`,
+                    color: c.ink,
+                  }}
+                >
+                  <div style={{ color: c.accent }}>Gray Marshall</div>
+                  <div style={{ color: c.sub }}>Austin · 2026</div>
+                </div>
+                <div
+                  className="absolute top-3 left-3 font-mono text-[9px] uppercase tracking-[0.15em] px-2 py-0.5 border border-[color:var(--rule)] bg-[color:var(--bg)]"
+                  style={{ color: c.ink }}
+                >
+                  PLATE 01
+                </div>
               </div>
-              <div
-                style={{
-                  position: "absolute",
-                  top: 12,
-                  left: 12,
-                  fontFamily: mono,
-                  fontSize: 9,
-                  color: c.ink,
-                  letterSpacing: 2,
-                  textTransform: "uppercase",
-                  background: c.bg,
-                  padding: "3px 8px",
-                  border: `1px solid ${c.rule}`,
-                }}
-              >
-                PLATE 01
-              </div>
+              <LiveTelemetry c={c} />
             </div>
-            <LiveTelemetry c={c} />
           </div>
         </div>
       </section>
 
       {/* TABLE OF CONTENTS / STATS */}
-      <section
-        style={{
-          padding: "40px 40px",
-          borderBottom: `1px solid ${c.rule}`,
-          display: "grid",
-          gridTemplateColumns: "1fr 1px 1.5fr",
-          gap: 40,
-        }}
-      >
-        <div>
-          <div className="o3-kicker" style={{ marginBottom: 16 }}>
-            In This Issue
+      <section className="border-b border-[color:var(--rule)]">
+        <div
+          className={`${WRAP} ${PAD} py-10 md:py-12 grid grid-cols-1 lg:grid-cols-[1fr_1px_1.5fr] gap-8 lg:gap-10`}
+        >
+          <div>
+            <div className="o3-kicker mb-4">In This Issue</div>
+            <ol className="list-none p-0 m-0 font-serif">
+              {(
+                [
+                  ["I.", "Featured Projects", "three things, shipping"],
+                  ["II.", "Now", "currently at the bench"],
+                  ["III.", "Index", "everything, listed"],
+                  ["IV.", "Experience", "where I spend my weeks"],
+                  ["V.", "Education", "ut austin, cs"],
+                  ["VI.", "Systems", "what I reach for"],
+                  ["VII.", "Notes", "writing on process"],
+                ] as const
+              ).map(([r, t, sub]) => (
+                <li
+                  key={r}
+                  className="grid grid-cols-[36px_1fr_auto] py-2.5 border-b border-dotted border-[color:var(--rule)] items-baseline gap-3"
+                >
+                  <span
+                    className="italic text-[14px]"
+                    style={{ color: c.sub }}
+                  >
+                    {r}
+                  </span>
+                  <div>
+                    <div
+                      className="text-[17px] sm:text-[19px] md:text-[20px] leading-[1.15]"
+                      style={{ color: c.ink }}
+                    >
+                      {t}
+                    </div>
+                    <div
+                      className="text-[11px] font-mono mt-0.5"
+                      style={{ color: c.sub, letterSpacing: 0.3 }}
+                    >
+                      {sub}
+                    </div>
+                  </div>
+                  <span
+                    className="font-mono text-[10px]"
+                    style={{ color: c.sub }}
+                  >
+                    →
+                  </span>
+                </li>
+              ))}
+            </ol>
           </div>
-          <ol style={{ listStyle: "none", padding: 0, margin: 0, fontFamily: serif }}>
-            {(
-              [
-                ["I.", "Featured Projects", "three things, shipping"],
-                ["II.", "Now", "currently at the bench"],
-                ["III.", "Index", "everything, listed"],
-                ["IV.", "Experience", "where I spend my weeks"],
-                ["V.", "Education", "ut austin, cs"],
-                ["VI.", "Systems", "what I reach for"],
-                ["VII.", "Notes", "writing on process"],
-              ] as const
-            ).map(([r, t, sub]) => (
-              <li
-                key={r}
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "40px 1fr auto",
-                  padding: "10px 0",
-                  borderBottom: `1px dotted ${c.rule}`,
-                  alignItems: "baseline",
-                  gap: 12,
-                }}
-              >
-                <span style={{ fontStyle: "italic", color: c.sub, fontSize: 14 }}>{r}</span>
-                <div>
-                  <div style={{ fontSize: 20, color: c.ink, lineHeight: 1.1 }}>{t}</div>
+          <div
+            className="hidden lg:block w-px"
+            style={{ background: c.rule }}
+          />
+          <div>
+            <div className="o3-kicker mb-4">At a Glance</div>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-5 md:gap-6 mb-7">
+              {(
+                [
+                  ["2nd", "year at UT Austin"],
+                  ["1 race car", "shipping telemetry for"],
+                  ["1 platform", "built as CTO · live"],
+                  ["3+", "featured projects"],
+                  ["127", "signals streaming"],
+                  ["<40ms", "p99 telemetry latency"],
+                ] as const
+              ).map(([v, k]) => (
+                <div
+                  key={k}
+                  className="pt-3 border-t"
+                  style={{ borderColor: c.ink }}
+                >
                   <div
+                    className="font-serif font-normal leading-none"
                     style={{
-                      fontSize: 11,
-                      fontFamily: mono,
-                      color: c.sub,
-                      letterSpacing: 0.3,
-                      marginTop: 2,
+                      color: c.ink,
+                      fontSize: "clamp(28px, 4.5vw, 40px)",
+                      letterSpacing: -1,
                     }}
                   >
-                    {sub}
+                    {v}
+                  </div>
+                  <div
+                    className="text-[11px] mt-1.5 font-mono"
+                    style={{ color: c.sub, letterSpacing: 0.3 }}
+                  >
+                    {k}
                   </div>
                 </div>
-                <span style={{ fontFamily: mono, fontSize: 10, color: c.sub }}>→</span>
-              </li>
-            ))}
-          </ol>
-        </div>
-        <div style={{ background: c.rule, width: 1 }}></div>
-        <div>
-          <div className="o3-kicker" style={{ marginBottom: 16 }}>
-            At a Glance
-          </div>
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(3, 1fr)",
-              gap: 24,
-              marginBottom: 28,
-            }}
-          >
-            {(
-              [
-                ["2nd", "year at UT Austin"],
-                ["1 race car", "shipping telemetry for"],
-                ["1 platform", "built as CTO · live"],
-                ["3+", "featured projects"],
-                ["127", "signals streaming"],
-                ["<40ms", "p99 telemetry latency"],
-              ] as const
-            ).map(([v, k]) => (
-              <div key={k} style={{ paddingTop: 14, borderTop: `1px solid ${c.ink}` }}>
-                <div
-                  style={{
-                    fontFamily: display,
-                    fontSize: 40,
-                    lineHeight: 1,
-                    fontWeight: 400,
-                    letterSpacing: -1,
-                    color: c.ink,
-                  }}
-                >
-                  {v}
-                </div>
-                <div
-                  style={{
-                    fontSize: 11,
-                    color: c.sub,
-                    marginTop: 6,
-                    fontFamily: mono,
-                    letterSpacing: 0.3,
-                  }}
-                >
-                  {k}
-                </div>
-              </div>
-            ))}
-          </div>
-          <div
-            style={{
-              padding: 20,
-              background: c.soft,
-              borderLeft: `3px solid ${c.accent}`,
-              fontFamily: serif,
-              fontSize: 17,
-              fontStyle: "italic",
-              lineHeight: 1.5,
-              color: c.ink,
-            }}
-          >
-            &ldquo;I optimize for tight feedback loops, clear abstractions, and durable software
-            that ships fast and performs under pressure.&rdquo;
+              ))}
+            </div>
             <div
+              className="p-5 font-serif italic text-[15px] md:text-[17px] leading-[1.5]"
               style={{
-                marginTop: 12,
-                fontFamily: mono,
-                fontSize: 10,
-                color: c.sub,
-                letterSpacing: 1,
-                textTransform: "uppercase",
-                fontStyle: "normal",
+                background: c.soft,
+                borderLeft: `3px solid ${c.accent}`,
+                color: c.ink,
               }}
             >
-              — Gray, on how he works
+              &ldquo;I optimize for tight feedback loops, clear abstractions, and durable
+              software that ships fast and performs under pressure.&rdquo;
+              <div
+                className="mt-3 font-mono text-[10px] uppercase tracking-widest not-italic"
+                style={{ color: c.sub }}
+              >
+                — Gray, on how he works
+              </div>
             </div>
           </div>
         </div>
       </section>
 
       {/* FEATURED */}
-      <section
-        id="work"
-        style={{ padding: "64px 40px", borderBottom: `1px solid ${c.rule}` }}
-      >
-        <SpreadHead
-          c={c}
-          roman="I."
-          kicker="Feature"
-          title="Projects, shipping"
-          sub="Three things I've built this year that I'm proud of."
-        />
-        <div style={{ marginTop: 48, display: "grid", gap: 48 }}>
-          {P.featured.map((p, i) => (
-            <EditorialFeature key={p.slug} p={p} c={c} idx={i} />
-          ))}
+      <section id="work" className="border-b border-[color:var(--rule)]">
+        <div className={`${WRAP} ${PAD} py-12 md:py-16`}>
+          <SpreadHead
+            c={c}
+            roman="I."
+            kicker="Feature"
+            title="Projects, shipping"
+            sub="Three things I've built this year that I'm proud of."
+          />
+          <div className="mt-10 md:mt-12 grid gap-12 md:gap-14">
+            {P.featured.map((p, i) => (
+              <EditorialFeature key={p.slug} p={p} c={c} idx={i} />
+            ))}
+          </div>
         </div>
       </section>
 
       {/* NOW */}
       <section
         id="now"
-        style={{
-          padding: "48px 40px",
-          borderBottom: `1px solid ${c.rule}`,
-          background: c.soft,
-        }}
+        className="border-b border-[color:var(--rule)]"
+        style={{ background: c.soft }}
       >
-        <SpreadHead
-          c={c}
-          roman="II."
-          kicker="Dispatch"
-          title="Currently at the bench"
-          sub={`As of ${new Date().toLocaleDateString("en-US", {
-            month: "long",
-            day: "numeric",
-            year: "numeric",
-          })}`}
-        />
-        <div
-          style={{
-            marginTop: 32,
-            display: "grid",
-            gridTemplateColumns: "repeat(4, 1fr)",
-            gap: 24,
-          }}
-        >
-          {P.now.map((n, i) => (
-            <div key={i} style={{ paddingTop: 16, borderTop: `1px solid ${c.ink}` }}>
+        <div className={`${WRAP} ${PAD} py-10 md:py-12`}>
+          <SpreadHead
+            c={c}
+            roman="II."
+            kicker="Dispatch"
+            title="Currently at the bench"
+            sub={`As of ${new Date().toLocaleDateString("en-US", {
+              month: "long",
+              day: "numeric",
+              year: "numeric",
+            })}`}
+          />
+          <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 md:gap-6">
+            {P.now.map((n, i) => (
               <div
-                style={{
-                  fontFamily: mono,
-                  fontSize: 10,
-                  color: c.accent,
-                  letterSpacing: 1,
-                  textTransform: "uppercase",
-                  marginBottom: 10,
-                }}
+                key={i}
+                className="pt-4 border-t"
+                style={{ borderColor: c.ink }}
               >
-                {String(i + 1).padStart(2, "0")} · {n.where}
+                <div
+                  className="font-mono text-[10px] uppercase tracking-widest mb-2.5"
+                  style={{ color: c.accent }}
+                >
+                  {String(i + 1).padStart(2, "0")} · {n.where}
+                </div>
+                <div
+                  className="font-serif leading-[1.25] font-normal text-[18px] md:text-[20px] lg:text-[22px]"
+                  style={{ color: c.ink }}
+                >
+                  {n.what}
+                </div>
               </div>
-              <div
-                style={{
-                  fontFamily: display,
-                  fontSize: 22,
-                  lineHeight: 1.25,
-                  color: c.ink,
-                  fontWeight: 400,
-                }}
-              >
-                {n.what}
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </section>
 
       {/* INDEX */}
-      <section style={{ padding: "64px 40px", borderBottom: `1px solid ${c.rule}` }}>
-        <SpreadHead
-          c={c}
-          roman="III."
-          kicker="Index"
-          title="Everything, listed"
-          sub={`${P.projects.length + P.featured.length} projects, archived and active.`}
-        />
-        <div style={{ marginTop: 32 }}>
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "80px 1fr 2.5fr 1.5fr 80px",
-              padding: "12px 16px",
-              borderBottom: `1px solid ${c.ink}`,
-              fontFamily: mono,
-              fontSize: 10,
-              color: c.sub,
-              letterSpacing: 1,
-              textTransform: "uppercase",
-            }}
-          >
-            <div>Year</div>
-            <div>Title</div>
-            <div>Description</div>
-            <div>Stack</div>
-            <div>Status</div>
-          </div>
-          {P.projects.map((p, i) => (
-            <div
-              key={i}
-              className="o3-row"
-              style={{
-                display: "grid",
-                gridTemplateColumns: "80px 1fr 2.5fr 1.5fr 80px",
-                padding: "18px 16px",
-                borderBottom: `1px solid ${c.rule}`,
-                alignItems: "baseline",
-                cursor: "pointer",
-              }}
-            >
-              <div style={{ fontFamily: mono, fontSize: 11, color: c.sub }}>{p.year}</div>
-              <div
-                className="o3-t"
-                style={{
-                  fontFamily: display,
-                  fontSize: 22,
-                  color: c.ink,
-                  lineHeight: 1.15,
-                  fontWeight: 400,
-                }}
-              >
-                {p.title}
-              </div>
-              <div
-                style={{
-                  color: c.sub,
-                  fontSize: 14,
-                  fontFamily: serif,
-                  fontStyle: "italic",
-                }}
-              >
-                {p.tagline}
-              </div>
-              <div
-                style={{
-                  fontFamily: mono,
-                  fontSize: 10,
-                  color: c.sub,
-                  letterSpacing: 0.5,
-                }}
-              >
-                {p.tech.join(" · ")}
-              </div>
-              <div
-                style={{
-                  fontFamily: mono,
-                  fontSize: 10,
-                  color: p.status === "Live" ? c.accent : c.sub,
-                  letterSpacing: 1,
-                  textTransform: "uppercase",
-                }}
-              >
-                {p.status}
-              </div>
+      <section className="border-b border-[color:var(--rule)]">
+        <div className={`${WRAP} ${PAD} py-12 md:py-16`}>
+          <SpreadHead
+            c={c}
+            roman="III."
+            kicker="Index"
+            title="Everything, listed"
+            sub={`${P.projects.length + P.featured.length} projects, archived and active.`}
+          />
+          <div className="mt-8">
+            {/* Mobile: card list */}
+            <div className="md:hidden">
+              {P.projects.map((p, i) => (
+                <div
+                  key={i}
+                  className="o3-row py-4 border-b"
+                  style={{ borderColor: c.rule }}
+                >
+                  <div className="flex items-baseline justify-between gap-3 mb-1">
+                    <div
+                      className="font-mono text-[10px] uppercase tracking-widest"
+                      style={{
+                        color: p.status === "Live" ? c.accent : c.sub,
+                      }}
+                    >
+                      {p.status} · {p.year}
+                    </div>
+                  </div>
+                  <div
+                    className="o3-t font-serif font-normal text-[22px] leading-[1.15]"
+                    style={{ color: c.ink }}
+                  >
+                    {p.title}
+                  </div>
+                  <div
+                    className="font-serif italic text-[14px] mt-1"
+                    style={{ color: c.sub }}
+                  >
+                    {p.tagline}
+                  </div>
+                  <div
+                    className="font-mono text-[10px] mt-2"
+                    style={{ color: c.sub, letterSpacing: 0.5 }}
+                  >
+                    {p.tech.join(" · ")}
+                  </div>
+                </div>
+              ))}
             </div>
-          ))}
+            {/* Desktop: table */}
+            <div className="hidden md:block">
+              <div
+                className="grid grid-cols-[70px_1fr_2fr_1.4fr_80px] px-4 py-3 border-b font-mono text-[10px] uppercase tracking-widest"
+                style={{ borderColor: c.ink, color: c.sub }}
+              >
+                <div>Year</div>
+                <div>Title</div>
+                <div>Description</div>
+                <div>Stack</div>
+                <div>Status</div>
+              </div>
+              {P.projects.map((p, i) => (
+                <div
+                  key={i}
+                  className="o3-row grid grid-cols-[70px_1fr_2fr_1.4fr_80px] px-4 py-4 border-b items-baseline cursor-pointer"
+                  style={{ borderColor: c.rule }}
+                >
+                  <div
+                    className="font-mono text-[11px]"
+                    style={{ color: c.sub }}
+                  >
+                    {p.year}
+                  </div>
+                  <div
+                    className="o3-t font-serif text-[20px] leading-[1.15] font-normal"
+                    style={{ color: c.ink }}
+                  >
+                    {p.title}
+                  </div>
+                  <div
+                    className="font-serif italic text-[14px]"
+                    style={{ color: c.sub }}
+                  >
+                    {p.tagline}
+                  </div>
+                  <div
+                    className="font-mono text-[10px]"
+                    style={{ color: c.sub, letterSpacing: 0.5 }}
+                  >
+                    {p.tech.join(" · ")}
+                  </div>
+                  <div
+                    className="font-mono text-[10px] uppercase tracking-widest"
+                    style={{ color: p.status === "Live" ? c.accent : c.sub }}
+                  >
+                    {p.status}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
 
       {/* EXPERIENCE */}
       <section
         id="experience"
-        style={{ padding: "64px 40px", borderBottom: `1px solid ${c.rule}` }}
+        className="border-b border-[color:var(--rule)]"
       >
-        <SpreadHead
-          c={c}
-          roman="IV."
-          kicker="Engagements"
-          title="Where I spend my weeks"
-          sub="Two roles, both active."
-        />
-        <div
-          style={{
-            marginTop: 40,
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr",
-            gap: 32,
-          }}
-        >
-          {P.experience.map((e, i) => (
-            <article key={i} style={{ display: "grid", gap: 16 }}>
-              <div
-                style={{
-                  display: "flex",
-                  gap: 16,
-                  alignItems: "start",
-                  paddingBottom: 16,
-                  borderBottom: `1px solid ${c.ink}`,
-                }}
-              >
+        <div className={`${WRAP} ${PAD} py-12 md:py-16`}>
+          <SpreadHead
+            c={c}
+            roman="IV."
+            kicker="Engagements"
+            title="Where I spend my weeks"
+            sub="Two roles, both active."
+          />
+          <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10">
+            {P.experience.map((e, i) => (
+              <article key={i} className="grid gap-4">
                 <div
-                  style={{
-                    width: 56,
-                    height: 56,
-                    background: c.soft,
-                    border: `1px solid ${c.rule}`,
-                    overflow: "hidden",
-                    flexShrink: 0,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
+                  className="flex gap-4 items-start pb-4 border-b"
+                  style={{ borderColor: c.ink }}
                 >
-                  {e.logo && (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      src={e.logo}
-                      alt=""
-                      style={{
-                        width: "100%",
-                        height: "100%",
-                        objectFit: "contain",
-                        padding: 8,
-                      }}
-                    />
-                  )}
-                </div>
-                <div style={{ flex: 1 }}>
                   <div
-                    className="o3-kicker"
-                    style={{ color: c.accent, marginBottom: 6 }}
+                    className="w-14 h-14 overflow-hidden flex-shrink-0 flex items-center justify-center border"
+                    style={{ background: c.soft, borderColor: c.rule }}
                   >
-                    ● Currently · {e.tenure}
+                    {e.logo && (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={e.logo}
+                        alt=""
+                        className="w-full h-full object-contain p-2"
+                      />
+                    )}
                   </div>
-                  <div
-                    style={{
-                      fontFamily: display,
-                      fontSize: 26,
-                      lineHeight: 1.15,
-                      color: c.ink,
-                      fontWeight: 400,
-                    }}
-                  >
-                    {e.title}
-                  </div>
-                  <div
-                    style={{
-                      color: c.sub,
-                      fontSize: 13,
-                      marginTop: 4,
-                      fontFamily: serif,
-                      fontStyle: "italic",
-                    }}
-                  >
-                    {e.org} · {e.location} ·{" "}
-                    <span
-                      style={{ fontStyle: "normal", fontFamily: mono, fontSize: 11 }}
+                  <div className="flex-1 min-w-0">
+                    <div
+                      className="o3-kicker mb-1.5"
+                      style={{ color: c.accent }}
                     >
-                      {e.period}
-                    </span>
+                      ● Currently · {e.tenure}
+                    </div>
+                    <div
+                      className="font-serif font-normal text-[22px] md:text-[24px] lg:text-[26px] leading-[1.15]"
+                      style={{ color: c.ink }}
+                    >
+                      {e.title}
+                    </div>
+                    <div
+                      className="text-[13px] mt-1 font-serif italic"
+                      style={{ color: c.sub }}
+                    >
+                      {e.org} · {e.location} ·{" "}
+                      <span className="not-italic font-mono text-[11px]">
+                        {e.period}
+                      </span>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <ul
-                style={{
-                  listStyle: "none",
-                  padding: 0,
-                  margin: 0,
-                  display: "grid",
-                  gap: 10,
-                }}
-              >
-                {e.bullets.map((b, j) => (
-                  <li
-                    key={j}
-                    style={{
-                      display: "grid",
-                      gridTemplateColumns: "24px 1fr",
-                      fontSize: 13,
-                      lineHeight: 1.55,
-                      color: c.ink,
-                    }}
-                  >
-                    <span
-                      style={{
-                        color: c.accent,
-                        fontFamily: serif,
-                        fontStyle: "italic",
-                      }}
+                <ul className="list-none p-0 m-0 grid gap-2.5">
+                  {e.bullets.map((b, j) => (
+                    <li
+                      key={j}
+                      className="grid grid-cols-[20px_1fr] text-[13px] leading-[1.55]"
+                      style={{ color: c.ink }}
                     >
-                      §
+                      <span
+                        className="font-serif italic"
+                        style={{ color: c.accent }}
+                      >
+                        §
+                      </span>
+                      <span>{b}</span>
+                    </li>
+                  ))}
+                </ul>
+                <div
+                  className="pt-3.5 border-t flex flex-wrap gap-x-0 gap-y-1"
+                  style={{ borderColor: c.rule }}
+                >
+                  {e.skills.map((s, j) => (
+                    <span
+                      key={s}
+                      className="font-mono text-[10px]"
+                      style={{ color: c.sub }}
+                    >
+                      {s}
+                      {j < e.skills.length - 1 && (
+                        <span style={{ color: c.rule, margin: "0 6px" }}>·</span>
+                      )}
                     </span>
-                    <span>{b}</span>
-                  </li>
-                ))}
-              </ul>
-              <div
-                style={{
-                  paddingTop: 14,
-                  borderTop: `1px solid ${c.rule}`,
-                  display: "flex",
-                  flexWrap: "wrap",
-                  gap: 4,
-                }}
-              >
-                {e.skills.map((s) => (
-                  <span key={s} style={{ fontFamily: mono, fontSize: 10, color: c.sub }}>
-                    {s}
-                    <span style={{ color: c.rule, margin: "0 6px" }}>·</span>
-                  </span>
-                ))}
-              </div>
-            </article>
-          ))}
+                  ))}
+                </div>
+              </article>
+            ))}
+          </div>
         </div>
       </section>
 
       {/* EDUCATION + SYSTEMS */}
-      <section
-        style={{
-          padding: "64px 40px",
-          borderBottom: `1px solid ${c.rule}`,
-          display: "grid",
-          gridTemplateColumns: "1fr 1.4fr",
-          gap: 48,
-        }}
-      >
-        <div>
-          <SpreadHead
-            c={c}
-            roman="V."
-            kicker="Schooling"
-            title="Education"
-            sub=""
-            compact
-          />
-          <div style={{ marginTop: 24, paddingTop: 16, borderTop: `1px solid ${c.ink}` }}>
-            {P.education.logo && (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={P.education.logo}
-                alt=""
-                style={{
-                  width: 48,
-                  height: 48,
-                  objectFit: "contain",
-                  marginBottom: 16,
-                  filter: theme === "dark" ? "invert(1) opacity(0.9)" : "",
-                }}
-              />
-            )}
+      <section className="border-b border-[color:var(--rule)]">
+        <div
+          className={`${WRAP} ${PAD} py-12 md:py-16 grid grid-cols-1 lg:grid-cols-[1fr_1.4fr] gap-10 lg:gap-12`}
+        >
+          <div>
+            <SpreadHead
+              c={c}
+              roman="V."
+              kicker="Schooling"
+              title="Education"
+              sub=""
+              compact
+            />
             <div
-              style={{
-                fontFamily: display,
-                fontSize: 26,
-                lineHeight: 1.15,
-                color: c.ink,
-                fontWeight: 400,
-              }}
+              className="mt-6 pt-4 border-t"
+              style={{ borderColor: c.ink }}
             >
-              {P.education.school}
-            </div>
-            <div
-              style={{
-                color: c.sub,
-                fontSize: 14,
-                marginTop: 4,
-                fontFamily: serif,
-                fontStyle: "italic",
-              }}
-            >
-              {P.education.degree}
-            </div>
-            <div
-              style={{
-                fontFamily: mono,
-                fontSize: 11,
-                color: c.accent,
-                marginTop: 8,
-                letterSpacing: 0.5,
-              }}
-            >
-              {P.education.period} · {P.education.location}
-            </div>
-            <div style={{ marginTop: 24 }}>
-              <div className="o3-kicker" style={{ marginBottom: 12 }}>
-                Coursework
-              </div>
-              <ul
-                style={{
-                  listStyle: "none",
-                  padding: 0,
-                  margin: 0,
-                  display: "grid",
-                  gap: 6,
-                }}
+              {P.education.logo && (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={P.education.logo}
+                  alt=""
+                  className="w-12 h-12 object-contain mb-4"
+                  style={{
+                    filter: theme === "dark" ? "invert(1) opacity(0.9)" : "",
+                  }}
+                />
+              )}
+              <div
+                className="font-serif font-normal text-[22px] md:text-[24px] lg:text-[26px] leading-[1.15]"
+                style={{ color: c.ink }}
               >
-                {P.education.coursework.map((cc, i) => (
-                  <li
-                    key={cc}
-                    style={{
-                      display: "grid",
-                      gridTemplateColumns: "30px 1fr",
-                      fontSize: 13,
-                      color: c.ink,
-                      fontFamily: serif,
-                    }}
-                  >
-                    <span
-                      style={{ color: c.sub, fontFamily: mono, fontSize: 10 }}
+                {P.education.school}
+              </div>
+              <div
+                className="text-[14px] mt-1 font-serif italic"
+                style={{ color: c.sub }}
+              >
+                {P.education.degree}
+              </div>
+              <div
+                className="font-mono text-[11px] mt-2"
+                style={{ color: c.accent, letterSpacing: 0.5 }}
+              >
+                {P.education.period} · {P.education.location}
+              </div>
+              <div className="mt-6">
+                <div className="o3-kicker mb-3">Coursework</div>
+                <ul className="list-none p-0 m-0 grid gap-1.5">
+                  {P.education.coursework.map((cc, i) => (
+                    <li
+                      key={cc}
+                      className="grid grid-cols-[30px_1fr] text-[13px] font-serif"
+                      style={{ color: c.ink }}
                     >
-                      {String(i + 1).padStart(2, "0")}
-                    </span>
-                    <span>{cc}</span>
-                  </li>
-                ))}
-              </ul>
+                      <span
+                        className="font-mono text-[10px]"
+                        style={{ color: c.sub }}
+                      >
+                        {String(i + 1).padStart(2, "0")}
+                      </span>
+                      <span>{cc}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
           </div>
-        </div>
-        <div>
-          <SpreadHead
-            c={c}
-            roman="VI."
-            kicker="Toolkit"
-            title="Systems & stack"
-            sub="What I reach for when shipping."
-            compact
-          />
-          <div style={{ marginTop: 24 }}>
-            {Object.entries(P.skills).map(([cat, items], i) => (
-              <div
-                key={cat}
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "180px 1fr",
-                  gap: 24,
-                  padding: "16px 0",
-                  borderTop: `1px solid ${i === 0 ? c.ink : c.rule}`,
-                }}
-              >
+          <div>
+            <SpreadHead
+              c={c}
+              roman="VI."
+              kicker="Toolkit"
+              title="Systems & stack"
+              sub="What I reach for when shipping."
+              compact
+            />
+            <div className="mt-6">
+              {Object.entries(P.skills).map(([cat, items], i) => (
                 <div
-                  style={{
-                    fontFamily: display,
-                    fontSize: 22,
-                    fontStyle: "italic",
-                    color: c.ink,
-                    fontWeight: 400,
-                  }}
+                  key={cat}
+                  className="grid grid-cols-1 sm:grid-cols-[150px_1fr] md:grid-cols-[180px_1fr] gap-2 sm:gap-6 py-4 border-t"
+                  style={{ borderColor: i === 0 ? c.ink : c.rule }}
                 >
-                  {cat}
+                  <div
+                    className="font-serif italic font-normal text-[20px] md:text-[22px]"
+                    style={{ color: c.ink }}
+                  >
+                    {cat}
+                  </div>
+                  <div className="flex flex-wrap gap-x-1 items-baseline">
+                    {items.map((s, j) => (
+                      <Fragment key={s}>
+                        <span
+                          className="font-serif text-[14px] md:text-[15px]"
+                          style={{ color: c.ink }}
+                        >
+                          {s}
+                        </span>
+                        {j < items.length - 1 && (
+                          <span
+                            style={{ color: c.accent, margin: "0 4px" }}
+                          >
+                            ·
+                          </span>
+                        )}
+                      </Fragment>
+                    ))}
+                  </div>
                 </div>
-                <div
-                  style={{
-                    display: "flex",
-                    flexWrap: "wrap",
-                    gap: 4,
-                    alignItems: "baseline",
-                  }}
-                >
-                  {items.map((s, j) => (
-                    <Fragment key={s}>
-                      <span style={{ fontFamily: serif, fontSize: 15, color: c.ink }}>
-                        {s}
-                      </span>
-                      {j < items.length - 1 && (
-                        <span style={{ color: c.accent, margin: "0 4px" }}>·</span>
-                      )}
-                    </Fragment>
-                  ))}
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       </section>
@@ -917,200 +710,143 @@ export function EditorialSite() {
       {/* NOTES */}
       <section
         id="notes"
-        style={{
-          padding: "64px 40px",
-          borderBottom: `1px solid ${c.rule}`,
-          background: c.cover,
-        }}
+        className="border-b border-[color:var(--rule)]"
+        style={{ background: c.cover }}
       >
-        <SpreadHead
-          c={c}
-          roman="VII."
-          kicker="Writing"
-          title="Notes from the margin"
-          sub="Engineering, process, and occasional trackside observation."
-        />
-        <div
-          style={{
-            marginTop: 32,
-            display: "grid",
-            gridTemplateColumns: "1.5fr 1fr 1fr",
-            gap: 32,
-          }}
-        >
-          <FeatureNote n={P.notes[0]} c={c} lead />
-          <div style={{ display: "grid", gap: 24, alignContent: "start" }}>
-            {P.notes.slice(1, 3).map((n, i) => (
-              <FeatureNote key={i} n={n} c={c} />
-            ))}
-          </div>
-          <div style={{ display: "grid", gap: 24, alignContent: "start" }}>
-            <FeatureNote n={P.notes[3]} c={c} />
-            <div
-              style={{
-                padding: 16,
-                background: c.bg,
-                border: `1px solid ${c.rule}`,
-              }}
-            >
-              <div className="o3-kicker" style={{ marginBottom: 8 }}>
-                Subscribe
-              </div>
+        <div className={`${WRAP} ${PAD} py-12 md:py-16`}>
+          <SpreadHead
+            c={c}
+            roman="VII."
+            kicker="Writing"
+            title="Notes from the margin"
+            sub="Engineering, process, and occasional trackside observation."
+          />
+          <div className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-[1.5fr_1fr_1fr] gap-8 md:gap-10">
+            <FeatureNote n={P.notes[0]} c={c} lead />
+            <div className="grid gap-6 content-start">
+              {P.notes.slice(1, 3).map((n, i) => (
+                <FeatureNote key={i} n={n} c={c} />
+              ))}
+            </div>
+            <div className="grid gap-6 content-start md:col-span-2 lg:col-span-1">
+              <FeatureNote n={P.notes[3]} c={c} />
               <div
-                style={{
-                  fontFamily: display,
-                  fontSize: 18,
-                  color: c.ink,
-                  lineHeight: 1.2,
-                  marginBottom: 10,
-                }}
+                className="p-4 border"
+                style={{ background: c.bg, borderColor: c.rule }}
               >
-                Dispatches, monthly.
+                <div className="o3-kicker mb-2">Subscribe</div>
+                <div
+                  className="font-serif text-[17px] md:text-[18px] leading-[1.2] mb-2.5"
+                  style={{ color: c.ink }}
+                >
+                  Dispatches, monthly.
+                </div>
+                <input
+                  placeholder="you@domain.dev"
+                  className="w-full px-2.5 py-2 font-mono text-[12px] mb-1.5 outline-none"
+                  style={{
+                    background: c.bg,
+                    border: `1px solid ${c.rule}`,
+                    color: c.ink,
+                  }}
+                />
+                <button
+                  className="w-full py-2 font-mono text-[11px] uppercase tracking-widest cursor-pointer"
+                  style={{ background: c.ink, color: c.bg, border: "none" }}
+                >
+                  Subscribe →
+                </button>
               </div>
-              <input
-                placeholder="you@domain.dev"
-                style={{
-                  width: "100%",
-                  padding: "8px 10px",
-                  background: c.bg,
-                  border: `1px solid ${c.rule}`,
-                  color: c.ink,
-                  fontFamily: mono,
-                  fontSize: 12,
-                  marginBottom: 6,
-                  outline: "none",
-                }}
-              />
-              <button
-                style={{
-                  width: "100%",
-                  padding: 8,
-                  background: c.ink,
-                  color: c.bg,
-                  border: "none",
-                  fontFamily: mono,
-                  fontSize: 11,
-                  letterSpacing: 1,
-                  textTransform: "uppercase",
-                  cursor: "pointer",
-                }}
-              >
-                Subscribe →
-              </button>
             </div>
           </div>
         </div>
       </section>
 
       {/* CONTACT */}
-      <section id="contact" style={{ padding: "80px 40px" }}>
-        <div className="o3-kicker" style={{ marginBottom: 20 }}>
-          Colophon · Contact
-        </div>
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1.3fr 1fr",
-            gap: 64,
-            alignItems: "end",
-          }}
-        >
-          <h2
-            style={{
-              fontFamily: display,
-              fontWeight: 400,
-              fontSize: 96,
-              lineHeight: 0.92,
-              letterSpacing: -3,
-              margin: 0,
-              color: c.ink,
-            }}
-          >
-            <span style={{ fontStyle: "italic", fontWeight: 300 }}>Write,</span> and
-            <br />
-            I&apos;ll write back<span style={{ color: c.accent }}>.</span>
-          </h2>
-          <div style={{ fontFamily: serif }}>
-            {(
-              [
-                ["email", P.email],
-                ["github", P.github],
-                ["linkedin", P.linkedin],
-                ["location", P.location],
-                ["best for", "SWE interviews · real-time systems"],
-              ] as const
-            ).map(([k, v]) => (
-              <div
-                key={k}
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "100px 1fr",
-                  padding: "10px 0",
-                  borderBottom: `1px solid ${c.rule}`,
-                  alignItems: "baseline",
-                  gap: 16,
-                }}
-              >
-                <div className="o3-kicker">{k}</div>
-                <div style={{ fontSize: 16, color: c.ink }}>{v}</div>
-              </div>
-            ))}
+      <section id="contact">
+        <div className={`${WRAP} ${PAD} py-16 md:py-20`}>
+          <div className="o3-kicker mb-5">Colophon · Contact</div>
+          <div className="grid grid-cols-1 lg:grid-cols-[1.3fr_1fr] gap-10 lg:gap-16 items-end">
+            <h2
+              className="font-serif font-normal m-0"
+              style={{
+                color: c.ink,
+                fontSize: "clamp(44px, 9vw, 96px)",
+                lineHeight: 0.92,
+                letterSpacing: "clamp(-1.5px, -0.4vw, -3px)",
+              }}
+            >
+              <span className="italic font-light">Write,</span> and
+              <br />
+              I&apos;ll write back<span style={{ color: c.accent }}>.</span>
+            </h2>
+            <div className="font-serif">
+              {(
+                [
+                  ["email", P.email],
+                  ["github", P.github],
+                  ["linkedin", P.linkedin],
+                  ["location", P.location],
+                  ["best for", "SWE interviews · real-time systems"],
+                ] as const
+              ).map(([k, v]) => (
+                <div
+                  key={k}
+                  className="grid grid-cols-[80px_1fr] sm:grid-cols-[100px_1fr] py-2.5 border-b items-baseline gap-4"
+                  style={{ borderColor: c.rule }}
+                >
+                  <div className="o3-kicker">{k}</div>
+                  <div
+                    className="text-[14px] sm:text-[15px] md:text-[16px] break-words"
+                    style={{ color: c.ink }}
+                  >
+                    {v}
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
       {/* MASTHEAD FOOTER */}
       <footer
-        style={{
-          padding: "32px 40px",
-          borderTop: `2px solid ${c.ink}`,
-          background: c.cover,
-          display: "grid",
-          gridTemplateColumns: "2fr 1fr 1fr",
-          gap: 32,
-          fontFamily: mono,
-          fontSize: 11,
-        }}
+        style={{ background: c.cover, borderTop: `2px solid ${c.ink}` }}
       >
-        <div>
-          <div
-            style={{
-              fontFamily: display,
-              fontSize: 20,
-              letterSpacing: 2,
-              color: c.ink,
-              marginBottom: 8,
-            }}
-          >
-            G.MARSHALL — FIELD NOTES
+        <div
+          className={`${WRAP} ${PAD} py-8 grid grid-cols-1 md:grid-cols-[2fr_1fr_1fr] gap-8 font-mono text-[11px]`}
+        >
+          <div>
+            <div
+              className="font-serif text-[18px] md:text-[20px] tracking-[0.15em] mb-2"
+              style={{ color: c.ink }}
+            >
+              G.MARSHALL — FIELD NOTES
+            </div>
+            <div className="leading-[1.6]" style={{ color: c.sub }}>
+              Set in Fraunces &amp; Inter. Built in React. Hosted on the open web.
+              <br />
+              Best read with a coffee and something loud in the background.
+            </div>
           </div>
-          <div style={{ color: c.sub, lineHeight: 1.6 }}>
-            Set in Fraunces &amp; Inter. Built in React. Hosted on the open web.
-            <br />
-            Best read with a coffee and something loud in the background.
+          <div>
+            <div className="o3-kicker mb-2">Masthead</div>
+            <div className="leading-[1.7]" style={{ color: c.ink }}>
+              Editor · Gray Marshall
+              <br />
+              Engineering · Gray Marshall
+              <br />
+              Design · Gray Marshall
+            </div>
           </div>
-        </div>
-        <div>
-          <div className="o3-kicker" style={{ marginBottom: 8 }}>
-            Masthead
-          </div>
-          <div style={{ color: c.ink, lineHeight: 1.7 }}>
-            Editor · Gray Marshall
-            <br />
-            Engineering · Gray Marshall
-            <br />
-            Design · Gray Marshall
-          </div>
-        </div>
-        <div>
-          <div className="o3-kicker" style={{ marginBottom: 8 }}>
-            Publication
-          </div>
-          <div style={{ color: c.ink, lineHeight: 1.7 }}>
-            Vol. 03 · 2026
-            <br />© Gray Marshall
-            <br />
-            Austin, Texas
+          <div>
+            <div className="o3-kicker mb-2">Publication</div>
+            <div className="leading-[1.7]" style={{ color: c.ink }}>
+              Vol. 03 · 2026
+              <br />© Gray Marshall
+              <br />
+              Austin, Texas
+            </div>
           </div>
         </div>
       </footer>
@@ -1135,23 +871,16 @@ function SpreadHead({
 }) {
   return (
     <div
-      style={{
-        display: "grid",
-        gridTemplateColumns: "80px 1fr",
-        gap: 24,
-        alignItems: "baseline",
-        borderBottom: compact ? "none" : `2px solid ${c.ink}`,
-        paddingBottom: compact ? 0 : 20,
-      }}
+      className={`grid grid-cols-[60px_1fr] md:grid-cols-[80px_1fr] gap-5 md:gap-6 items-baseline ${
+        compact ? "" : "border-b-2 pb-4 md:pb-5"
+      }`}
+      style={{ borderColor: compact ? "transparent" : c.ink }}
     >
       <div
+        className="font-serif italic font-light leading-[0.9]"
         style={{
-          fontFamily: display,
-          fontSize: 48,
-          fontStyle: "italic",
           color: c.accent,
-          fontWeight: 300,
-          lineHeight: 0.9,
+          fontSize: "clamp(32px, 5vw, 48px)",
         }}
       >
         {roman}
@@ -1159,27 +888,20 @@ function SpreadHead({
       <div>
         <div className="o3-kicker">{kicker}</div>
         <div
+          className="font-serif font-normal mt-1"
           style={{
-            fontFamily: display,
-            fontSize: 48,
-            lineHeight: 1,
             color: c.ink,
-            fontWeight: 400,
+            fontSize: "clamp(28px, 5vw, 48px)",
+            lineHeight: 1,
             letterSpacing: -1,
-            marginTop: 4,
           }}
         >
           {title}
         </div>
         {sub && (
           <div
-            style={{
-              color: c.sub,
-              fontSize: 14,
-              fontFamily: "inherit",
-              marginTop: 6,
-              fontStyle: "italic",
-            }}
+            className="text-[13px] md:text-[14px] mt-1.5 italic"
+            style={{ color: c.sub }}
           >
             {sub}
           </div>
@@ -1202,24 +924,16 @@ function EditorialFeature({
   return (
     <a
       href="#"
-      className="o3-feat"
-      style={{
-        display: "grid",
-        gridTemplateColumns: flip ? "1fr 1.4fr" : "1.4fr 1fr",
-        gap: 40,
-        textDecoration: "none",
-        color: "inherit",
-        alignItems: "center",
-      }}
+      className={`o3-feat grid grid-cols-1 lg:grid-cols-[1.4fr_1fr] gap-6 md:gap-8 lg:gap-10 no-underline items-center ${
+        flip ? "lg:[&>*:first-child]:order-2" : ""
+      }`}
+      style={{ color: "inherit" }}
     >
       <div
+        className="relative overflow-hidden border"
         style={{
-          gridColumn: flip ? 2 : 1,
-          gridRow: 1,
-          aspectRatio: "16/10",
-          overflow: "hidden",
-          position: "relative",
-          border: `1px solid ${c.rule}`,
+          aspectRatio: "16 / 10",
+          borderColor: c.rule,
           background: c.soft,
         }}
       >
@@ -1230,101 +944,61 @@ function EditorialFeature({
             loop
             muted
             playsInline
-            className="o3-img"
-            style={{
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-              display: "block",
-            }}
+            className="o3-img w-full h-full object-cover block"
           />
         ) : (
           // eslint-disable-next-line @next/next/no-img-element
           <img
             src={p.image}
             alt={p.title}
-            className="o3-img"
-            style={{
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-              display: "block",
-            }}
+            className="o3-img w-full h-full object-cover block"
           />
         )}
         <div
-          style={{
-            position: "absolute",
-            top: 12,
-            left: 12,
-            fontFamily: mono,
-            fontSize: 9,
-            color: c.ink,
-            background: c.bg,
-            padding: "3px 8px",
-            letterSpacing: 2,
-            textTransform: "uppercase",
-            border: `1px solid ${c.rule}`,
-          }}
+          className="absolute top-3 left-3 font-mono text-[9px] uppercase tracking-[0.15em] px-2 py-0.5 border"
+          style={{ background: c.bg, borderColor: c.rule, color: c.ink }}
         >
           FIG. 0{idx + 2} · {p.slug}
         </div>
       </div>
-      <div style={{ gridColumn: flip ? 1 : 2 }}>
+      <div className="min-w-0">
         <div
-          style={{
-            fontFamily: mono,
-            fontSize: 10,
-            letterSpacing: 2,
-            textTransform: "uppercase",
-            color: c.sub,
-            marginBottom: 12,
-          }}
+          className="font-mono text-[10px] uppercase tracking-[0.15em] mb-3"
+          style={{ color: c.sub }}
         >
           Case {String(idx + 1).padStart(2, "0")} ·{" "}
-          <span style={{ color: p.status === "Live" ? c.accent : c.sub }}>{p.status}</span> ·{" "}
-          {p.year}
+          <span style={{ color: p.status === "Live" ? c.accent : c.sub }}>
+            {p.status}
+          </span>{" "}
+          · {p.year}
         </div>
         <h3
-          className="o3-title"
+          className="o3-title font-serif font-normal m-0 mb-3"
           style={{
-            fontFamily: display,
-            fontSize: 44,
-            lineHeight: 0.98,
-            margin: "0 0 12px",
-            fontWeight: 400,
-            letterSpacing: -1,
             color: c.ink,
+            fontSize: "clamp(28px, 5vw, 44px)",
+            lineHeight: 0.98,
+            letterSpacing: -1,
           }}
         >
           {p.title}
         </h3>
         <div
-          style={{
-            fontFamily: serif,
-            fontSize: 19,
-            fontStyle: "italic",
-            color: c.sub,
-            lineHeight: 1.4,
-            marginBottom: 20,
-          }}
+          className="font-serif italic leading-[1.4] mb-5 text-[16px] md:text-[18px] lg:text-[19px]"
+          style={{ color: c.sub }}
         >
           {p.tagline}
         </div>
-        <div style={{ display: "grid", gap: 10, marginBottom: 20 }}>
+        <div className="grid gap-2.5 mb-5">
           {p.bullets.map((b, i) => (
             <div
               key={i}
-              style={{
-                display: "grid",
-                gridTemplateColumns: "20px 1fr",
-                fontSize: 14,
-                lineHeight: 1.5,
-                color: c.ink,
-              }}
+              className="grid grid-cols-[20px_1fr] text-[13px] md:text-[14px] leading-[1.5]"
+              style={{ color: c.ink }}
             >
               <span
-                style={{ color: c.accent, fontFamily: display, fontStyle: "italic" }}
+                className="font-serif italic"
+                style={{ color: c.accent }}
               >
                 ›
               </span>
@@ -1334,44 +1008,33 @@ function EditorialFeature({
         </div>
         {p.metrics && (
           <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(3, 1fr)",
-              gap: 0,
-              borderTop: `1px solid ${c.ink}`,
-              marginBottom: 16,
-            }}
+            className="grid grid-cols-3 border-t mb-4"
+            style={{ borderColor: c.ink }}
           >
             {p.metrics.map((m, i) => (
               <div
                 key={i}
+                className="py-3"
                 style={{
-                  padding: "12px 0",
                   borderRight:
-                    i < (p.metrics?.length ?? 0) - 1 ? `1px solid ${c.rule}` : "none",
+                    i < (p.metrics?.length ?? 0) - 1
+                      ? `1px solid ${c.rule}`
+                      : "none",
                 }}
               >
                 <div
+                  className="font-serif font-normal leading-none"
                   style={{
-                    fontFamily: display,
-                    fontSize: 28,
                     color: c.ink,
-                    fontWeight: 400,
+                    fontSize: "clamp(22px, 3.5vw, 28px)",
                     letterSpacing: -0.5,
-                    lineHeight: 1,
                   }}
                 >
                   {m.v}
                 </div>
                 <div
-                  style={{
-                    fontFamily: mono,
-                    fontSize: 9,
-                    color: c.sub,
-                    letterSpacing: 1,
-                    textTransform: "uppercase",
-                    marginTop: 4,
-                  }}
+                  className="font-mono text-[9px] uppercase tracking-widest mt-1"
+                  style={{ color: c.sub }}
                 >
                   {m.k}
                 </div>
@@ -1379,17 +1042,14 @@ function EditorialFeature({
             ))}
           </div>
         )}
-        <div
-          style={{
-            display: "flex",
-            gap: 16,
-            alignItems: "center",
-            fontFamily: mono,
-            fontSize: 11,
-          }}
-        >
+        <div className="flex flex-wrap gap-x-4 gap-y-1 items-center font-mono text-[11px]">
           <span style={{ color: c.sub }}>{p.tech.join(" · ")}</span>
-          <span style={{ marginLeft: "auto", color: c.accent }}>Read the case study →</span>
+          <span
+            className="sm:ml-auto"
+            style={{ color: c.accent }}
+          >
+            Read the case study →
+          </span>
         </div>
       </div>
     </a>
@@ -1408,36 +1068,30 @@ function FeatureNote({
   return (
     <a
       href="#"
-      style={{ display: "block", textDecoration: "none", color: "inherit" }}
-      className="o3-feat"
+      className="o3-feat block no-underline"
+      style={{ color: "inherit" }}
     >
-      <div className="o3-kicker" style={{ marginBottom: 10, color: c.accent }}>
+      <div
+        className="o3-kicker mb-2.5"
+        style={{ color: c.accent }}
+      >
         #{n.tag} · {n.date}
       </div>
       <div
-        className="o3-title"
+        className="o3-title font-serif font-normal mb-2.5"
         style={{
-          fontFamily: display,
-          fontSize: lead ? 40 : 22,
-          lineHeight: lead ? 1 : 1.2,
           color: c.ink,
-          fontWeight: 400,
+          fontSize: lead ? "clamp(28px, 4.5vw, 40px)" : "clamp(18px, 2.5vw, 22px)",
+          lineHeight: lead ? 1 : 1.2,
           letterSpacing: lead ? -1 : 0,
-          marginBottom: 10,
         }}
       >
         {n.title}
       </div>
       {lead && (
         <div
-          style={{
-            fontFamily: serif,
-            fontSize: 16,
-            fontStyle: "italic",
-            color: c.sub,
-            lineHeight: 1.5,
-            marginBottom: 12,
-          }}
+          className="font-serif italic text-[15px] md:text-[16px] leading-[1.5] mb-3"
+          style={{ color: c.sub }}
         >
           A field report on building a distributed telemetry stack that delivers race-car
           bytes to a driver dashboard in under 20 milliseconds — what worked, what didn&apos;t,
@@ -1445,13 +1099,8 @@ function FeatureNote({
         </div>
       )}
       <div
-        style={{
-          fontFamily: mono,
-          fontSize: 10,
-          color: c.sub,
-          letterSpacing: 1,
-          textTransform: "uppercase",
-        }}
+        className="font-mono text-[10px] uppercase tracking-widest"
+        style={{ color: c.sub }}
       >
         {n.read} · Read →
       </div>
@@ -1478,78 +1127,52 @@ function LiveTelemetry({ c }: { c: Palette }) {
 
   return (
     <div
-      style={{
-        marginTop: 12,
-        padding: 14,
-        border: `1px solid ${c.rule}`,
-        background: c.card,
-        fontFamily: mono,
-      }}
+      className="mt-3 p-3.5 border font-mono"
+      style={{ borderColor: c.rule, background: c.card }}
     >
       <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          marginBottom: 10,
-          fontSize: 9,
-          letterSpacing: 1,
-          textTransform: "uppercase",
-          color: c.sub,
-        }}
+        className="flex justify-between mb-2.5 text-[9px] uppercase tracking-widest"
+        style={{ color: c.sub }}
       >
         <span>Live · Telemetry</span>
         <span style={{ color: c.accent }}>● streaming</span>
       </div>
-      <svg viewBox="0 0 320 40" style={{ width: "100%", height: 30 }}>
+      <svg viewBox="0 0 320 40" className="w-full h-[30px]">
         <polyline points={wave} fill="none" stroke={c.accent} strokeWidth="1.2" />
       </svg>
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(3, 1fr)",
-          gap: 8,
-          marginTop: 8,
-          fontSize: 10,
-        }}
-      >
+      <div className="grid grid-cols-3 gap-2 mt-2 text-[10px]">
         <div>
           <div
-            style={{
-              color: c.sub,
-              fontSize: 8,
-              letterSpacing: 1,
-              textTransform: "uppercase",
-            }}
+            className="text-[8px] uppercase tracking-widest"
+            style={{ color: c.sub }}
           >
             speed
           </div>
-          <div style={{ color: c.ink, fontSize: 14 }}>{mph} mph</div>
+          <div className="text-[14px]" style={{ color: c.ink }}>
+            {mph} mph
+          </div>
         </div>
         <div>
           <div
-            style={{
-              color: c.sub,
-              fontSize: 8,
-              letterSpacing: 1,
-              textTransform: "uppercase",
-            }}
+            className="text-[8px] uppercase tracking-widest"
+            style={{ color: c.sub }}
           >
             pack
           </div>
-          <div style={{ color: c.ink, fontSize: 14 }}>{kw} kw</div>
+          <div className="text-[14px]" style={{ color: c.ink }}>
+            {kw} kw
+          </div>
         </div>
         <div>
           <div
-            style={{
-              color: c.sub,
-              fontSize: 8,
-              letterSpacing: 1,
-              textTransform: "uppercase",
-            }}
+            className="text-[8px] uppercase tracking-widest"
+            style={{ color: c.sub }}
           >
             motor
           </div>
-          <div style={{ color: c.ink, fontSize: 14 }}>{tempMotor}°C</div>
+          <div className="text-[14px]" style={{ color: c.ink }}>
+            {tempMotor}°C
+          </div>
         </div>
       </div>
     </div>
