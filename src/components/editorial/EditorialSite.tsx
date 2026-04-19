@@ -1,6 +1,15 @@
 "use client";
 
 import { Fragment, useEffect, useState, type CSSProperties } from "react";
+import {
+  Area,
+  AreaChart,
+  CartesianGrid,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
 import { PORTFOLIO, type FeaturedProject, type Note } from "@/data/portfolio";
 import { useGithubActivity } from "@/lib/github";
 import { useAustinTemp } from "@/lib/weather";
@@ -1172,26 +1181,22 @@ function FeatureNote({
   );
 }
 
+type ChartPoint = { date: string; label: string; count: number };
+
 function LiveTelemetry({ c, username }: { c: Palette; username: string }) {
   const activity = useGithubActivity(username);
 
-  const W = 320;
-  const H = 48;
-  const pad = 4;
-
   const daily = activity?.daily ?? new Array<number>(30).fill(0);
-  const N = daily.length;
-  const step = W / (N - 1);
-  const maxVal = Math.max(1, ...daily);
 
-  const pts = daily.map((v, i) => {
-    const x = i * step;
-    const y = H - pad - (v / maxVal) * (H - pad * 2);
-    return [x, y] as const;
+  const chartData: ChartPoint[] = daily.map((count, i) => {
+    const d = new Date();
+    d.setDate(d.getDate() - (daily.length - 1 - i));
+    return {
+      date: d.toISOString().slice(0, 10),
+      label: d.toLocaleDateString("en-US", { month: "short", day: "numeric" }),
+      count,
+    };
   });
-  const polyline = pts.map(([x, y]) => `${x.toFixed(1)},${y.toFixed(1)}`).join(" ");
-  const area = `0,${H} ${polyline} ${W},${H}`;
-  const [lastX, lastY] = pts[pts.length - 1];
 
   const metrics: Array<[string, string, string]> = activity
     ? [
@@ -1204,6 +1209,8 @@ function LiveTelemetry({ c, username }: { c: Palette; username: string }) {
         ["reviews", "—", "given"],
         ["repos", "—", "touched"],
       ];
+
+  const gradientId = `o3-area-${username}`;
 
   return (
     <div
@@ -1228,53 +1235,64 @@ function LiveTelemetry({ c, username }: { c: Palette; username: string }) {
         </a>
       </div>
 
-      {/* waveform */}
-      <div className="px-4 py-3">
-        <svg
-          viewBox={`0 0 ${W} ${H}`}
-          preserveAspectRatio="none"
-          className="block w-full"
-          style={{ height: 52 }}
-        >
-          {/* gridlines */}
-          {[0.25, 0.5, 0.75].map((frac) => (
-            <line
-              key={frac}
-              x1={0}
-              y1={H * frac}
-              x2={W}
-              y2={H * frac}
+      {/* chart */}
+      <div className="px-2 pt-3 pb-2" style={{ height: 84 }}>
+        <ResponsiveContainer width="100%" height="100%">
+          <AreaChart
+            data={chartData}
+            margin={{ top: 4, right: 6, bottom: 0, left: 6 }}
+          >
+            <defs>
+              <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor={c.accent} stopOpacity={0.28} />
+                <stop offset="100%" stopColor={c.accent} stopOpacity={0.02} />
+              </linearGradient>
+            </defs>
+            <CartesianGrid
+              vertical={false}
               stroke={c.rule}
-              strokeWidth={0.5}
               strokeDasharray="2 3"
-              opacity={frac === 0.5 ? 0.85 : 0.5}
+              opacity={0.7}
             />
-          ))}
-          {/* area fill */}
-          <polygon points={area} fill={c.accent} opacity={0.12} />
-          {/* waveform stroke */}
-          <polyline
-            points={polyline}
-            fill="none"
-            stroke={c.accent}
-            strokeWidth={1.4}
-            strokeLinejoin="round"
-            strokeLinecap="round"
-          />
-          {/* pulsing "now" marker */}
-          {activity && (
-            <>
-              <circle
-                className="o3-pulse"
-                cx={lastX}
-                cy={lastY}
-                r={2.5}
-                fill={c.accent}
-              />
-              <circle cx={lastX} cy={lastY} r={2} fill={c.accent} />
-            </>
-          )}
-        </svg>
+            <XAxis dataKey="label" hide />
+            <YAxis hide domain={[0, (max: number) => Math.max(1, max)]} />
+            <Tooltip
+              cursor={{ stroke: c.accent, strokeWidth: 0.6, strokeDasharray: "2 3" }}
+              contentStyle={{
+                background: c.card,
+                border: `1px solid ${c.rule}`,
+                borderRadius: 0,
+                padding: "6px 8px",
+                fontFamily: "var(--font-mono)",
+                fontSize: 10,
+                color: c.ink,
+                boxShadow: "none",
+              }}
+              labelStyle={{
+                color: c.sub,
+                fontSize: 9,
+                letterSpacing: 1.2,
+                textTransform: "uppercase",
+                marginBottom: 2,
+              }}
+              itemStyle={{ color: c.ink, padding: 0 }}
+              formatter={(v) => [`${v}`, "events"]}
+            />
+            <Area
+              type="monotone"
+              dataKey="count"
+              stroke={c.accent}
+              strokeWidth={1.4}
+              strokeLinejoin="round"
+              strokeLinecap="round"
+              fill={`url(#${gradientId})`}
+              isAnimationActive
+              animationDuration={600}
+              dot={false}
+              activeDot={{ r: 3, fill: c.accent, stroke: c.card, strokeWidth: 1.5 }}
+            />
+          </AreaChart>
+        </ResponsiveContainer>
       </div>
 
       {/* metrics */}
