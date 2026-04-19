@@ -2,6 +2,7 @@
 
 import { Fragment, useEffect, useState, type CSSProperties } from "react";
 import { PORTFOLIO, type FeaturedProject, type Note } from "@/data/portfolio";
+import { useGithubActivity } from "@/lib/github";
 import { useAustinTemp } from "@/lib/weather";
 import { useModeTheme } from "../ModeThemeProvider";
 
@@ -133,6 +134,8 @@ export function EditorialSite() {
         .o3-t { transition: color .15s; }
         @keyframes o3-blip { 0%,100% { opacity: 0.3 } 50% { opacity: 1 } }
         .o3-blip { animation: o3-blip 1.8s ease-in-out infinite; }
+        @keyframes o3-pulse { 0%,100% { transform: scale(1); opacity: 0.65 } 50% { transform: scale(1.8); opacity: 0 } }
+        .o3-pulse { transform-origin: center; transform-box: fill-box; animation: o3-pulse 1.8s ease-out infinite; }
         .o3-kicker { font-family: var(--font-mono); font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--sub); }
       `}</style>
 
@@ -273,7 +276,7 @@ export function EditorialSite() {
                   PLATE 01
                 </div>
               </div>
-              <LiveTelemetry c={c} />
+              <LiveTelemetry c={c} username={P.github.replace(/^github\.com\//, "")} />
             </div>
           </div>
         </div>
@@ -1173,46 +1176,38 @@ function FeatureNote({
   );
 }
 
-function LiveTelemetry({ c }: { c: Palette }) {
-  const [t, setT] = useState(0);
-  useEffect(() => {
-    let raf = 0;
-    const start = performance.now();
-    const tick = (now: number) => {
-      setT((now - start) / 200);
-      raf = requestAnimationFrame(tick);
-    };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
-  }, []);
+function LiveTelemetry({ c, username }: { c: Palette; username: string }) {
+  const activity = useGithubActivity(username);
 
-  const N = 56;
   const W = 320;
   const H = 48;
-  const step = W / (N - 1);
-  const mid = H / 2;
-  const amp = 13;
+  const pad = 4;
 
-  const pts = Array.from({ length: N }, (_, i) => {
+  const daily = activity?.daily ?? new Array<number>(30).fill(0);
+  const N = daily.length;
+  const step = W / (N - 1);
+  const maxVal = Math.max(1, ...daily);
+
+  const pts = daily.map((v, i) => {
     const x = i * step;
-    const y =
-      mid +
-      Math.sin((i + t * 0.45) * 0.32) * amp * 0.62 +
-      Math.sin((i + t * 0.22) * 0.72) * amp * 0.34;
+    const y = H - pad - (v / maxVal) * (H - pad * 2);
     return [x, y] as const;
   });
   const polyline = pts.map(([x, y]) => `${x.toFixed(1)},${y.toFixed(1)}`).join(" ");
   const area = `0,${H} ${polyline} ${W},${H}`;
+  const [lastX, lastY] = pts[pts.length - 1];
 
-  const mph = Math.round(58 + Math.sin(t * 0.15) * 8);
-  const kw = Math.round(42 + Math.sin(t * 0.18) * 6);
-  const tempMotor = Math.round(68 + Math.sin(t * 0.1) * 2);
-
-  const metrics: Array<[string, string, string]> = [
-    ["speed", `${mph}`, "mph"],
-    ["pack", `${kw}`, "kW"],
-    ["motor", `${tempMotor}`, "°C"],
-  ];
+  const metrics: Array<[string, string, string]> = activity
+    ? [
+        ["commits", `${activity.totalCommits}`, "30d"],
+        ["repos", `${activity.reposTouched}`, "touched"],
+        ["streak", `${activity.streak}`, activity.streak === 1 ? "day" : "days"],
+      ]
+    : [
+        ["commits", "—", "30d"],
+        ["repos", "—", "touched"],
+        ["streak", "—", "days"],
+      ];
 
   return (
     <div
@@ -1224,14 +1219,17 @@ function LiveTelemetry({ c }: { c: Palette }) {
         className="flex items-center justify-between px-4 py-2.5 border-b text-[9px] uppercase tracking-widest"
         style={{ borderColor: c.rule, color: c.sub }}
       >
-        <span>Live · Telemetry</span>
-        <span
-          className="flex items-center gap-1.5"
+        <span>Recent · Activity</span>
+        <a
+          href={`https://github.com/${username}`}
+          target="_blank"
+          rel="noreferrer"
+          className="flex items-center gap-1.5 no-underline"
           style={{ color: c.accent }}
         >
           <span className="o3-blip">●</span>
-          <span>streaming · 5 Hz</span>
-        </span>
+          <span>github/{username}</span>
+        </a>
       </div>
 
       {/* waveform */}
@@ -1257,7 +1255,7 @@ function LiveTelemetry({ c }: { c: Palette }) {
             />
           ))}
           {/* area fill */}
-          <polygon points={area} fill={c.accent} opacity={0.1} />
+          <polygon points={area} fill={c.accent} opacity={0.12} />
           {/* waveform stroke */}
           <polyline
             points={polyline}
@@ -1267,6 +1265,19 @@ function LiveTelemetry({ c }: { c: Palette }) {
             strokeLinejoin="round"
             strokeLinecap="round"
           />
+          {/* pulsing "now" marker */}
+          {activity && (
+            <>
+              <circle
+                className="o3-pulse"
+                cx={lastX}
+                cy={lastY}
+                r={2.5}
+                fill={c.accent}
+              />
+              <circle cx={lastX} cy={lastY} r={2} fill={c.accent} />
+            </>
+          )}
         </svg>
       </div>
 
