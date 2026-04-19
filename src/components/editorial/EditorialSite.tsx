@@ -58,7 +58,22 @@ export function EditorialSite() {
   const c = theme === "dark" ? o3Styles.dark : o3Styles.light;
   const P = PORTFOLIO;
   const [active, setActive] = useState<NavId>(NAV_ITEMS[0].id);
+  const [today, setToday] = useState<Date | null>(null);
   const temp = useAustinTemp();
+
+  useEffect(() => setToday(new Date()), []);
+
+  const mastheadDate = today
+    ? today.toLocaleDateString("en-US", { month: "long", year: "numeric" })
+    : null;
+  const nowSub = today
+    ? `As of ${today.toLocaleDateString("en-US", {
+        month: "long",
+        day: "numeric",
+        year: "numeric",
+      })}`
+    : "";
+  const currentYear = today ? today.getFullYear() : 2026;
 
   useEffect(() => {
     const threshold = 96;
@@ -129,7 +144,7 @@ export function EditorialSite() {
           className={`${WRAP} ${PAD} py-3 md:py-3.5 grid grid-cols-[auto_1fr] md:grid-cols-[1fr_auto_1fr] items-center gap-4 md:gap-6`}
         >
           <div className="hidden md:block font-mono text-[10px] tracking-widest uppercase text-[color:var(--sub)]">
-            Vol. 03 · Issue 01 · April 2026
+            Vol. 03 · Issue 01{mastheadDate ? ` · ${mastheadDate}` : ""}
           </div>
           <div className="font-serif text-[18px] sm:text-[20px] md:text-[22px] font-medium tracking-[0.12em] md:tracking-[0.18em] whitespace-nowrap text-left md:text-center">
             <span style={{ color: c.accent }}>G.</span>MARSHALL{" "}
@@ -405,11 +420,7 @@ export function EditorialSite() {
             roman="II."
             kicker="Dispatch"
             title="Currently at the bench"
-            sub={`As of ${new Date().toLocaleDateString("en-US", {
-              month: "long",
-              day: "numeric",
-              year: "numeric",
-            })}`}
+            sub={nowSub}
           />
           <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 md:gap-6">
             {P.now.map((n, i) => (
@@ -890,7 +901,7 @@ export function EditorialSite() {
           <div>
             <div className="o3-kicker mb-2">Publication</div>
             <div className="leading-[1.7]" style={{ color: c.ink }}>
-              Vol. 03 · 2026
+              Vol. 03 · {currentYear}
               <br />© Gray Marshall
               <br />
               Austin, Texas
