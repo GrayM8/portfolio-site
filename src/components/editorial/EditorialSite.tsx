@@ -101,7 +101,7 @@ export function EditorialSite() {
       </header>
 
       {/* NAV */}
-      <nav className="border-b border-[color:var(--rule)]">
+      <nav className="sticky top-0 z-40 border-b border-[color:var(--rule)] bg-[color:var(--bg)]/95 backdrop-blur supports-[backdrop-filter]:bg-[color:var(--bg)]/80">
         <div
           className={`${WRAP} ${PAD} py-2.5 md:py-3 flex justify-between items-center gap-4 font-mono text-[11px] tracking-widest uppercase`}
         >
@@ -113,16 +113,16 @@ export function EditorialSite() {
             <a href="#notes" className="o3-link shrink-0">Notes</a>
             <a href="#contact" className="o3-link shrink-0">Contact</a>
           </div>
-          <div className="hidden md:block text-[color:var(--accent)] whitespace-nowrap">
-            <span className="o3-blip">●</span>{" "}
-            <span className="text-[color:var(--sub)]">Available for Summer 2026</span>
+          <div className="hidden md:block whitespace-nowrap text-[color:var(--sub)]">
+            Available for Summer 2026
           </div>
         </div>
       </nav>
 
       {/* COVER */}
       <section
-        className="border-b border-[color:var(--rule)] relative"
+        id="about"
+        className="border-b border-[color:var(--rule)] relative scroll-mt-20"
         style={{
           background: `
             radial-gradient(ellipse at 50% 30%, transparent 55%, ${
@@ -328,7 +328,7 @@ export function EditorialSite() {
       </section>
 
       {/* FEATURED */}
-      <section id="work" className="border-b border-[color:var(--rule)]">
+      <section id="work" className="border-b border-[color:var(--rule)] scroll-mt-20">
         <div className={`${WRAP} ${PAD} py-16 md:py-24 lg:py-28`}>
           <SpreadHead
             c={c}
@@ -348,7 +348,7 @@ export function EditorialSite() {
       {/* NOW */}
       <section
         id="now"
-        className="border-b border-[color:var(--rule)]"
+        className="border-b border-[color:var(--rule)] scroll-mt-20"
         style={{ background: c.soft }}
       >
         <div className={`${WRAP} ${PAD} py-10 md:py-12`}>
@@ -496,7 +496,7 @@ export function EditorialSite() {
       {/* EXPERIENCE */}
       <section
         id="experience"
-        className="border-b border-[color:var(--rule)]"
+        className="border-b border-[color:var(--rule)] scroll-mt-20"
       >
         <div className={`${WRAP} ${PAD} py-12 md:py-16`}>
           <SpreadHead
@@ -710,7 +710,7 @@ export function EditorialSite() {
       {/* NOTES */}
       <section
         id="notes"
-        className="border-b border-[color:var(--rule)]"
+        className="border-b border-[color:var(--rule)] scroll-mt-20"
         style={{ background: c.cover }}
       >
         <div className={`${WRAP} ${PAD} py-12 md:py-16`}>
@@ -763,7 +763,7 @@ export function EditorialSite() {
       </section>
 
       {/* CONTACT */}
-      <section id="contact">
+      <section id="contact" className="scroll-mt-20">
         <div className={`${WRAP} ${PAD} py-16 md:py-20`}>
           <div className="o3-kicker mb-5">Colophon · Contact</div>
           <div className="grid grid-cols-1 lg:grid-cols-[1.3fr_1fr] gap-10 lg:gap-16 items-end">
