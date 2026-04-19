@@ -41,10 +41,48 @@ const o3Styles: { light: Palette; dark: Palette } = {
 const WRAP = "mx-auto w-full max-w-[1440px]";
 const PAD = "px-5 sm:px-8 md:px-10 lg:px-12";
 
+type NavId = "about" | "work" | "now" | "experience" | "notes" | "contact";
+
+const NAV_ITEMS: ReadonlyArray<{ id: NavId; label: string }> = [
+  { id: "about", label: "About" },
+  { id: "work", label: "Work" },
+  { id: "now", label: "Now" },
+  { id: "experience", label: "Experience" },
+  { id: "notes", label: "Notes" },
+  { id: "contact", label: "Contact" },
+];
+
 export function EditorialSite() {
   const { theme } = useModeTheme();
   const c = theme === "dark" ? o3Styles.dark : o3Styles.light;
   const P = PORTFOLIO;
+  const [active, setActive] = useState<NavId>(NAV_ITEMS[0].id);
+
+  useEffect(() => {
+    const threshold = 96;
+    let raf = 0;
+    const handle = () => {
+      raf = 0;
+      let current: NavId = NAV_ITEMS[0].id;
+      for (const { id } of NAV_ITEMS) {
+        const el = document.getElementById(id);
+        if (!el) continue;
+        if (el.getBoundingClientRect().top <= threshold) current = id;
+      }
+      setActive(current);
+    };
+    const schedule = () => {
+      if (!raf) raf = window.requestAnimationFrame(handle);
+    };
+    handle();
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule);
+    return () => {
+      if (raf) window.cancelAnimationFrame(raf);
+      window.removeEventListener("scroll", schedule);
+      window.removeEventListener("resize", schedule);
+    };
+  }, []);
 
   const cssVars = {
     "--bg": c.bg,
@@ -65,8 +103,10 @@ export function EditorialSite() {
       <style>{`
         .o3-link { color: inherit; text-decoration: none; position: relative; padding-bottom: 3px; display: inline-block; }
         .o3-link::after { content:''; position:absolute; left:0; right:0; bottom:0; height:1px; background:currentColor; transform: scaleX(0); transform-origin: right; transition: transform .25s ease; }
-        .o3-link:hover::after { transform: scaleX(1); transform-origin: left; }
-        .o3-link:hover { color: var(--accent); }
+        .o3-link:hover::after,
+        .o3-link[data-active="true"]::after { transform: scaleX(1); transform-origin: left; }
+        .o3-link:hover,
+        .o3-link[data-active="true"] { color: var(--accent); }
         .o3-feat:hover .o3-img { transform: scale(1.02); }
         .o3-feat:hover .o3-title { color: var(--accent); }
         .o3-img { transition: transform .5s ease; }
@@ -106,12 +146,16 @@ export function EditorialSite() {
           className={`${WRAP} ${PAD} py-2.5 md:py-3 flex justify-between items-center gap-4 font-mono text-[11px] tracking-widest uppercase`}
         >
           <div className="flex gap-4 sm:gap-5 md:gap-7 text-[color:var(--sub)] overflow-x-auto scrollbar-none -mx-1 px-1">
-            <a href="#about" className="o3-link shrink-0">About</a>
-            <a href="#work" className="o3-link shrink-0">Work</a>
-            <a href="#now" className="o3-link shrink-0">Now</a>
-            <a href="#experience" className="o3-link shrink-0">Experience</a>
-            <a href="#notes" className="o3-link shrink-0">Notes</a>
-            <a href="#contact" className="o3-link shrink-0">Contact</a>
+            {NAV_ITEMS.map((item) => (
+              <a
+                key={item.id}
+                href={`#${item.id}`}
+                data-active={active === item.id}
+                className="o3-link shrink-0"
+              >
+                {item.label}
+              </a>
+            ))}
           </div>
           <div className="hidden md:block whitespace-nowrap text-[color:var(--sub)]">
             Available for Summer 2026
