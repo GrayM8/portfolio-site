@@ -1176,8 +1176,14 @@ function FeatureNote({
 function LiveTelemetry({ c }: { c: Palette }) {
   const [t, setT] = useState(0);
   useEffect(() => {
-    const id = window.setInterval(() => setT((x) => x + 1), 200);
-    return () => window.clearInterval(id);
+    let raf = 0;
+    const start = performance.now();
+    const tick = (now: number) => {
+      setT((now - start) / 200);
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
   }, []);
 
   const N = 56;
