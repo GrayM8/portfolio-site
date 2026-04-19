@@ -1222,7 +1222,7 @@ function LiveTelemetry({ c, username }: { c: Palette; username: string }) {
         className="flex items-center justify-between px-4 py-2.5 border-b text-[9px] uppercase tracking-widest"
         style={{ borderColor: c.rule, color: c.sub }}
       >
-        <span>Recent · Activity</span>
+        <span>Public · Activity</span>
         <a
           href={`https://github.com/${username}`}
           target="_blank"
