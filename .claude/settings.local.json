@@ -30,7 +30,9 @@
       "Bash(node -e \"const l = require\\('lucide-react'\\); console.log\\(Object.keys\\(l\\).filter\\(k => k.toLowerCase\\(\\).includes\\('github'\\)\\).slice\\(0,20\\)\\)\")",
       "Bash(node -e \"const l = require\\('lucide-react'\\); console.log\\('version:', require\\('lucide-react/package.json'\\).version\\); console.log\\('total exports:', Object.keys\\(l\\).length\\); console.log\\('first 5:', Object.keys\\(l\\).slice\\(0,5\\)\\)\")",
       "Bash(npm uninstall *)",
-      "Bash(python -c \"import json,sys; p=json.load\\(sys.stdin\\); print\\('lucide-react:', \\(p.get\\('dependencies',{}\\) | p.get\\('devDependencies',{}\\)\\).get\\('lucide-react'\\)\\)\")"
+      "Bash(python -c \"import json,sys; p=json.load\\(sys.stdin\\); print\\('lucide-react:', \\(p.get\\('dependencies',{}\\) | p.get\\('devDependencies',{}\\)\\).get\\('lucide-react'\\)\\)\")",
+      "Bash(node -e \"const l = require\\('lucide-react'\\); console.log\\('version:', require\\('lucide-react/package.json'\\).version\\); console.log\\('Github present:', typeof l.Github === 'function'\\)\")",
+      "Bash(node -e \"const l = require\\('lucide-react'\\); const ks = Object.keys\\(l\\); console.log\\('matches:', ks.filter\\(k => /github/i.test\\(k\\)\\)\\)\")"
     ]
   }
 }
