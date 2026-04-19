@@ -63,8 +63,8 @@ export function EditorialSite() {
       className="min-h-full bg-[color:var(--bg)] text-[color:var(--ink)] font-sans text-[14px] leading-[1.55]"
     >
       <style>{`
-        .o3-link { color: inherit; text-decoration: none; position: relative; }
-        .o3-link::after { content:''; position:absolute; left:0; right:0; bottom:-2px; height:1px; background:var(--ink); transform: scaleX(0); transform-origin: right; transition: transform .25s ease; }
+        .o3-link { color: inherit; text-decoration: none; position: relative; padding-bottom: 3px; display: inline-block; }
+        .o3-link::after { content:''; position:absolute; left:0; right:0; bottom:0; height:1px; background:currentColor; transform: scaleX(0); transform-origin: right; transition: transform .25s ease; }
         .o3-link:hover::after { transform: scaleX(1); transform-origin: left; }
         .o3-link:hover { color: var(--accent); }
         .o3-feat:hover .o3-img { transform: scale(1.02); }
