@@ -176,9 +176,13 @@ export function EditorialSite() {
               </a>
             ))}
           </div>
-          <div className="hidden md:block whitespace-nowrap text-[color:var(--sub)]">
-            Available for Summer 2026
-          </div>
+          <a
+            href="/resume.pdf"
+            download
+            className="o3-link hidden md:inline-block whitespace-nowrap text-[color:var(--sub)]"
+          >
+            ↓ Download Resume
+          </a>
         </div>
       </nav>
 
@@ -200,7 +204,7 @@ export function EditorialSite() {
       >
         <div className={`${WRAP} ${PAD} py-12 md:py-16 lg:py-20`}>
           <div className="o3-kicker mb-6">Feature · 01</div>
-          <div className="grid grid-cols-1 lg:grid-cols-[1.5fr_1fr] gap-8 md:gap-10 lg:gap-12 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-[1.5fr_1fr] gap-8 md:gap-10 lg:gap-12 items-center">
             <div>
               <h1
                 className="font-serif font-normal m-0 text-[color:var(--ink)]"
@@ -243,7 +247,7 @@ export function EditorialSite() {
             <div className="max-w-[460px] w-full mx-auto lg:mx-0">
               <div
                 className="relative overflow-hidden border border-[color:var(--rule)]"
-                style={{ aspectRatio: "4 / 5" }}
+                style={{ aspectRatio: "1 / 1" }}
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
@@ -1176,65 +1180,126 @@ function LiveTelemetry({ c }: { c: Palette }) {
     return () => window.clearInterval(id);
   }, []);
 
-  const wave = Array.from({ length: 40 }, (_, i) => {
-    const x = i;
-    const y = 20 + Math.sin((i + t * 0.4) * 0.35) * 8 + Math.sin((i + t * 0.2) * 0.7) * 4;
-    return `${x * 8},${y}`;
-  }).join(" ");
+  const N = 56;
+  const W = 320;
+  const H = 48;
+  const step = W / (N - 1);
+  const mid = H / 2;
+  const amp = 13;
+
+  const pts = Array.from({ length: N }, (_, i) => {
+    const x = i * step;
+    const y =
+      mid +
+      Math.sin((i + t * 0.45) * 0.32) * amp * 0.62 +
+      Math.sin((i + t * 0.22) * 0.72) * amp * 0.34;
+    return [x, y] as const;
+  });
+  const polyline = pts.map(([x, y]) => `${x.toFixed(1)},${y.toFixed(1)}`).join(" ");
+  const area = `0,${H} ${polyline} ${W},${H}`;
 
   const mph = Math.round(58 + Math.sin(t * 0.15) * 8);
   const kw = Math.round(42 + Math.sin(t * 0.18) * 6);
   const tempMotor = Math.round(68 + Math.sin(t * 0.1) * 2);
 
+  const metrics: Array<[string, string, string]> = [
+    ["speed", `${mph}`, "mph"],
+    ["pack", `${kw}`, "kW"],
+    ["motor", `${tempMotor}`, "°C"],
+  ];
+
   return (
     <div
-      className="mt-3 p-3.5 border font-mono"
+      className="mt-4 border font-mono"
       style={{ borderColor: c.rule, background: c.card }}
     >
+      {/* header */}
       <div
-        className="flex justify-between mb-2.5 text-[9px] uppercase tracking-widest"
-        style={{ color: c.sub }}
+        className="flex items-center justify-between px-4 py-2.5 border-b text-[9px] uppercase tracking-widest"
+        style={{ borderColor: c.rule, color: c.sub }}
       >
         <span>Live · Telemetry</span>
-        <span style={{ color: c.accent }}>● streaming</span>
+        <span
+          className="flex items-center gap-1.5"
+          style={{ color: c.accent }}
+        >
+          <span className="o3-blip">●</span>
+          <span>streaming · 5 Hz</span>
+        </span>
       </div>
-      <svg viewBox="0 0 320 40" className="w-full h-[30px]">
-        <polyline points={wave} fill="none" stroke={c.accent} strokeWidth="1.2" />
-      </svg>
-      <div className="grid grid-cols-3 gap-2 mt-2 text-[10px]">
-        <div>
+
+      {/* waveform */}
+      <div className="px-4 py-3">
+        <svg
+          viewBox={`0 0 ${W} ${H}`}
+          preserveAspectRatio="none"
+          className="block w-full"
+          style={{ height: 52 }}
+        >
+          {/* gridlines */}
+          {[0.25, 0.5, 0.75].map((frac) => (
+            <line
+              key={frac}
+              x1={0}
+              y1={H * frac}
+              x2={W}
+              y2={H * frac}
+              stroke={c.rule}
+              strokeWidth={0.5}
+              strokeDasharray="2 3"
+              opacity={frac === 0.5 ? 0.85 : 0.5}
+            />
+          ))}
+          {/* area fill */}
+          <polygon points={area} fill={c.accent} opacity={0.1} />
+          {/* waveform stroke */}
+          <polyline
+            points={polyline}
+            fill="none"
+            stroke={c.accent}
+            strokeWidth={1.4}
+            strokeLinejoin="round"
+            strokeLinecap="round"
+          />
+        </svg>
+      </div>
+
+      {/* metrics */}
+      <div
+        className="grid grid-cols-3 border-t"
+        style={{ borderColor: c.rule }}
+      >
+        {metrics.map(([label, value, unit], i) => (
           <div
-            className="text-[8px] uppercase tracking-widest"
-            style={{ color: c.sub }}
+            key={label}
+            className="px-4 py-3"
+            style={{
+              borderRight:
+                i < metrics.length - 1 ? `1px solid ${c.rule}` : "none",
+            }}
           >
-            speed
+            <div
+              className="text-[8px] uppercase tracking-widest"
+              style={{ color: c.sub }}
+            >
+              {label}
+            </div>
+            <div className="flex items-baseline gap-1 mt-1">
+              <span
+                className="text-[18px] leading-none font-medium tabular-nums"
+                style={{ color: c.ink }}
+              >
+                {value}
+              </span>
+              <span
+                className="text-[10px] uppercase tracking-wider"
+                style={{ color: c.sub }}
+              >
+                {unit}
+              </span>
+            </div>
           </div>
-          <div className="text-[14px]" style={{ color: c.ink }}>
-            {mph} mph
-          </div>
-        </div>
-        <div>
-          <div
-            className="text-[8px] uppercase tracking-widest"
-            style={{ color: c.sub }}
-          >
-            pack
-          </div>
-          <div className="text-[14px]" style={{ color: c.ink }}>
-            {kw} kw
-          </div>
-        </div>
-        <div>
-          <div
-            className="text-[8px] uppercase tracking-widest"
-            style={{ color: c.sub }}
-          >
-            motor
-          </div>
-          <div className="text-[14px]" style={{ color: c.ink }}>
-            {tempMotor}°C
-          </div>
-        </div>
+        ))}
       </div>
     </div>
   );
