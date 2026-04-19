@@ -237,7 +237,7 @@ export function EditorialSite() {
                 className="mt-7 md:mt-9 text-[15px] md:text-[17px] lg:text-[18px] leading-[1.5] max-w-[620px] font-serif"
                 style={{ color: c.ink }}
               >
-                <span className="o3-kicker mr-2">Dispatch</span>
+                <span className="o3-kicker mr-2">Summary</span>
                 Gray Marshall is a second-year CS student at UT Austin building the real-time
                 telemetry stack for a Formula SAE electric race car — and co-leading a
                 production web platform as CTO of Longhorn Sim Racing. This is where the work
@@ -245,7 +245,7 @@ export function EditorialSite() {
               </div>
               <div className="mt-6 md:mt-8 flex flex-wrap gap-x-5 gap-y-1 items-center font-mono text-[11px] md:text-[12px] text-[color:var(--sub)]">
                 <span>
-                  by <span style={{ color: c.ink }}>the engineer himself</span>
+                  by <span style={{ color: c.ink }}>Gray Marshall</span>
                 </span>
                 <span className="hidden sm:inline">·</span>
                 <span>{P.about[0].length > 80 ? "6 min read" : "4 min read"}</span>
