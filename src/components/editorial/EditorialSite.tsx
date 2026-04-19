@@ -302,45 +302,38 @@ export function EditorialSite() {
             <ol className="list-none p-0 m-0 font-serif">
               {(
                 [
-                  ["I.", "Featured Projects", "three things, shipping"],
-                  ["II.", "Now", "currently at the bench"],
-                  ["III.", "Index", "everything, listed"],
-                  ["IV.", "Experience", "where I spend my weeks"],
-                  ["V.", "Education", "ut austin, cs"],
-                  ["VI.", "Systems", "what I reach for"],
-                  ["VII.", "Notes", "writing on process"],
+                  ["I.", "Featured Projects", "three things, shipping", "#work"],
+                  ["II.", "Now", "currently at the bench", "#now"],
+                  ["III.", "Index", "everything, listed", "#index"],
+                  ["IV.", "Experience", "where I spend my weeks", "#experience"],
+                  ["V.", "Education", "ut austin, cs", "#education"],
+                  ["VI.", "Systems", "what I reach for", "#systems"],
+                  ["VII.", "Notes", "writing on process", "#notes"],
                 ] as const
-              ).map(([r, t, sub]) => (
-                <li
-                  key={r}
-                  className="grid grid-cols-[36px_1fr_auto] py-2.5 border-b border-dotted border-[color:var(--rule)] items-baseline gap-3"
-                >
-                  <span
-                    className="italic text-[14px]"
-                    style={{ color: c.sub }}
+              ).map(([r, t, sub, href]) => (
+                <li key={href}>
+                  <a
+                    href={href}
+                    className="group grid grid-cols-[36px_1fr_auto] py-2.5 border-b border-dotted border-[color:var(--rule)] items-baseline gap-3 no-underline"
                   >
-                    {r}
-                  </span>
-                  <div>
-                    <div
-                      className="text-[17px] sm:text-[19px] md:text-[20px] leading-[1.15]"
-                      style={{ color: c.ink }}
-                    >
-                      {t}
+                    <span className="italic text-[14px] text-[color:var(--sub)]">
+                      {r}
+                    </span>
+                    <div>
+                      <div className="text-[17px] sm:text-[19px] md:text-[20px] leading-[1.15] text-[color:var(--ink)] transition-colors group-hover:text-[color:var(--accent)]">
+                        {t}
+                      </div>
+                      <div
+                        className="text-[11px] font-mono mt-0.5 text-[color:var(--sub)]"
+                        style={{ letterSpacing: 0.3 }}
+                      >
+                        {sub}
+                      </div>
                     </div>
-                    <div
-                      className="text-[11px] font-mono mt-0.5"
-                      style={{ color: c.sub, letterSpacing: 0.3 }}
-                    >
-                      {sub}
-                    </div>
-                  </div>
-                  <span
-                    className="font-mono text-[10px]"
-                    style={{ color: c.sub }}
-                  >
-                    →
-                  </span>
+                    <span className="inline-block font-mono text-[10px] text-[color:var(--sub)] transition group-hover:text-[color:var(--accent)] group-hover:translate-x-0.5">
+                      →
+                    </span>
+                  </a>
                 </li>
               ))}
             </ol>
@@ -461,7 +454,10 @@ export function EditorialSite() {
       </section>
 
       {/* INDEX */}
-      <section className="border-b border-[color:var(--rule)]">
+      <section
+        id="index"
+        className="border-b border-[color:var(--rule)] scroll-mt-20"
+      >
         <div className={`${WRAP} ${PAD} py-12 md:py-16`}>
           <SpreadHead
             c={c}
@@ -667,7 +663,7 @@ export function EditorialSite() {
         <div
           className={`${WRAP} ${PAD} py-12 md:py-16 grid grid-cols-1 lg:grid-cols-[1fr_1.4fr] gap-10 lg:gap-12`}
         >
-          <div>
+          <div id="education" className="scroll-mt-20">
             <SpreadHead
               c={c}
               roman="V."
@@ -731,7 +727,7 @@ export function EditorialSite() {
               </div>
             </div>
           </div>
-          <div>
+          <div id="systems" className="scroll-mt-20">
             <SpreadHead
               c={c}
               roman="VI."
