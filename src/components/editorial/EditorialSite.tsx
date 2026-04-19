@@ -339,61 +339,65 @@ export function EditorialSite() {
             </ol>
           </div>
           <div
-            className="hidden lg:block w-px"
+            className="hidden lg:block w-px self-stretch"
             style={{ background: c.rule }}
           />
-          <div>
-            <div className="o3-kicker mb-4">At a Glance</div>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-5 md:gap-6 mb-7">
-              {(
-                [
-                  ["2nd", "year at UT Austin"],
-                  ["1 race car", "shipping telemetry for"],
-                  ["1 platform", "built as CTO · live"],
-                  ["3+", "featured projects"],
-                  ["127", "signals streaming"],
-                  ["<40ms", "p99 telemetry latency"],
-                ] as const
-              ).map(([v, k]) => (
-                <div
-                  key={k}
-                  className="pt-3 border-t"
-                  style={{ borderColor: c.ink }}
-                >
+          <div className="flex flex-col gap-6 lg:gap-7">
+            <div>
+              <div className="o3-kicker mb-4">At a Glance</div>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-5 md:gap-6">
+                {(
+                  [
+                    ["2nd", "year at UT Austin"],
+                    ["1 race car", "shipping telemetry for"],
+                    ["1 platform", "built as CTO · live"],
+                    ["3+", "featured projects"],
+                    ["127", "signals streaming"],
+                    ["<40ms", "p99 telemetry latency"],
+                  ] as const
+                ).map(([v, k]) => (
                   <div
-                    className="font-serif font-normal leading-none"
-                    style={{
-                      color: c.ink,
-                      fontSize: "clamp(28px, 4.5vw, 40px)",
-                      letterSpacing: -1,
-                    }}
+                    key={k}
+                    className="pt-3 border-t"
+                    style={{ borderColor: c.ink }}
                   >
-                    {v}
+                    <div
+                      className="font-serif font-normal leading-none"
+                      style={{
+                        color: c.ink,
+                        fontSize: "clamp(28px, 4.5vw, 40px)",
+                        letterSpacing: -1,
+                      }}
+                    >
+                      {v}
+                    </div>
+                    <div
+                      className="text-[11px] mt-1.5 font-mono"
+                      style={{ color: c.sub, letterSpacing: 0.3 }}
+                    >
+                      {k}
+                    </div>
                   </div>
-                  <div
-                    className="text-[11px] mt-1.5 font-mono"
-                    style={{ color: c.sub, letterSpacing: 0.3 }}
-                  >
-                    {k}
-                  </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
             <div
-              className="p-5 font-serif italic text-[15px] md:text-[17px] leading-[1.5]"
+              className="flex flex-col justify-center p-5 md:p-6 lg:flex-1 font-serif italic text-[15px] md:text-[17px] leading-[1.5]"
               style={{
                 background: c.soft,
                 borderLeft: `3px solid ${c.accent}`,
                 color: c.ink,
               }}
             >
-              &ldquo;I optimize for tight feedback loops, clear abstractions, and durable
-              software that ships fast and performs under pressure.&rdquo;
-              <div
-                className="mt-3 font-mono text-[10px] uppercase tracking-widest not-italic"
-                style={{ color: c.sub }}
-              >
-                — Gray, on how he works
+              <div>
+                &ldquo;I optimize for tight feedback loops, clear abstractions, and
+                durable software that ships fast and performs under pressure.&rdquo;
+                <div
+                  className="mt-3 font-mono text-[10px] uppercase tracking-widest not-italic"
+                  style={{ color: c.sub }}
+                >
+                  — Gray, on how he works
+                </div>
               </div>
             </div>
           </div>
