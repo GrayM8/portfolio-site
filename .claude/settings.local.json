@@ -6,7 +6,12 @@
       "Bash(git add *)",
       "Bash(git commit *)",
       "Bash(mkdir -p \"C:/Users/Gray/WebstormProjects/portfolio-site/public/assets\")",
-      "Bash(cp \"C:/Users/Gray/Downloads/Dev Site V3/assets/\"* \"C:/Users/Gray/WebstormProjects/portfolio-site/public/assets/\")"
+      "Bash(cp \"C:/Users/Gray/Downloads/Dev Site V3/assets/\"* \"C:/Users/Gray/WebstormProjects/portfolio-site/public/assets/\")",
+      "Bash(npx tsc *)",
+      "Bash(npm run *)",
+      "Bash(curl -s -o /dev/null -w \"HTTP %{http_code}\\\\n\" http://localhost:3000/)",
+      "Bash(curl -s http://localhost:3000/)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://localhost:3000/assets/headshot.jpg)"
     ]
   }
 }

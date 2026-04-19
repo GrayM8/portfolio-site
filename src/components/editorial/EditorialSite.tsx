@@ -4,7 +4,18 @@ import { Fragment, useEffect, useState } from "react";
 import { PORTFOLIO, type FeaturedProject, type Note } from "@/data/portfolio";
 import { useModeTheme } from "../ModeThemeProvider";
 
-const o3Styles = {
+type Palette = {
+  bg: string;
+  cover: string;
+  ink: string;
+  sub: string;
+  rule: string;
+  accent: string;
+  soft: string;
+  card: string;
+};
+
+const o3Styles: { light: Palette; dark: Palette } = {
   light: {
     bg: "#f5ecd8",
     cover: "#e8dcbe",
@@ -25,9 +36,7 @@ const o3Styles = {
     soft: "#1f1c13",
     card: "#16140d",
   },
-} as const;
-
-type Palette = typeof o3Styles.light;
+};
 
 const serif = 'var(--font-serif), "Instrument Serif", Georgia, serif';
 const display = "var(--font-serif), Georgia, serif";
