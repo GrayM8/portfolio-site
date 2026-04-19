@@ -4,7 +4,9 @@
       "Bash(npm --version)",
       "Bash(npx --yes create-next-app@latest . --typescript --tailwind --eslint --app --src-dir --import-alias \"@/*\" --use-npm --turbopack --yes)",
       "Bash(git add *)",
-      "Bash(git commit *)"
+      "Bash(git commit *)",
+      "Bash(mkdir -p \"C:/Users/Gray/WebstormProjects/portfolio-site/public/assets\")",
+      "Bash(cp \"C:/Users/Gray/Downloads/Dev Site V3/assets/\"* \"C:/Users/Gray/WebstormProjects/portfolio-site/public/assets/\")"
     ]
   }
 }
