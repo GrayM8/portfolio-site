@@ -76,6 +76,9 @@ const COMMAND_NAMES = [
   "cv",
   "contact",
   "resume",
+  "cat",
+  "ls",
+  "systemctl",
   "clear",
   "theme",
 ];
@@ -160,7 +163,7 @@ export function TerminalSite() {
       {
         t: "out",
         content:
-          "commands: work · projects · case <slug> · experience · education · skills · now · notes · cv · contact · about · whoami · resume · help · theme · clear",
+          "commands: work · projects · case <slug> · experience · education · skills · now · notes · cv · contact · about · whoami · resume · ls · cat · systemctl · help · theme · clear",
       },
       {
         t: "out",
@@ -201,6 +204,46 @@ export function TerminalSite() {
         ]
       : [{ t: "rule", content: "─".repeat(60) }];
 
+  // Virtual filesystem backing `cat` / `ls`. All content sourced from PORTFOLIO.
+  const VFS = useMemo<Record<string, string[]>>(
+    () => ({
+      "about.md": P.about,
+      ".now": P.now.map((n) => `• ${n.where.padEnd(22)} ${n.what}`),
+      "contact.txt": [
+        `email    ${P.email}`,
+        `github   ${P.github}`,
+        `linkedin ${P.linkedin}`,
+        `location ${P.location}`,
+      ],
+      "skills.txt": Object.entries(P.skills).map(
+        ([k, v]) => `${k.padEnd(12)} ${v.join(" · ")}`,
+      ),
+      "education.md": [
+        `${P.education.school}`,
+        `${P.education.degree}`,
+        `${P.education.period} · ${P.education.location}`,
+        "",
+        "Coursework:",
+        ...P.education.coursework.map((c) => `  - ${c}`),
+      ],
+      "experience.md": P.experience.flatMap((e) => [
+        `${e.title} — ${e.org}`,
+        `  ${e.period} · ${e.location} · ${e.tenure}`,
+        ...e.bullets.map((b) => `  - ${b}`),
+        "",
+      ]),
+      "README.md": [
+        `${P.name} — ${P.role}`,
+        `${P.location} · ${P.status}`,
+        "",
+        P.tagline,
+        "",
+        "Type `help` for commands.",
+      ],
+    }),
+    [P],
+  );
+
   const commands = useMemo<Record<string, (arg?: string) => Line[] | "CLEAR">>(
     () => ({
       help: () => [
@@ -232,6 +275,10 @@ export function TerminalSite() {
         { t: "out", content: "  whoami       — one-liner", color: "accent" },
         { t: "out", content: "  resume       — download resume.pdf", color: "accent" },
         { t: "out", content: "" },
+        { t: "out", content: "shell:", muted: true },
+        { t: "out", content: "  ls [-l]      — list virtual files", muted: true },
+        { t: "out", content: "  cat <file>   — print file (supports | head -N)", muted: true },
+        { t: "out", content: "  systemctl    — status · list-units", muted: true },
         { t: "out", content: "  theme        — toggle light/dark", muted: true },
         { t: "out", content: "  clear        — wipe screen", muted: true },
         { t: "out", content: "" },
@@ -488,9 +535,128 @@ export function TerminalSite() {
           { t: "out", content: "check your browser downloads.", muted: true },
         ];
       },
+      ls: (arg) => {
+        const flag = (arg ?? "").trim();
+        const files = Object.keys(VFS).sort();
+        if (flag.startsWith("-l") || flag.startsWith("-la")) {
+          return files.map((f) => ({
+            t: "out" as const,
+            content: `-rw-r--r--  1 gray  staff  ${String(
+              VFS[f].join("\n").length,
+            ).padStart(5)}  ${f}`,
+          }));
+        }
+        return [{ t: "out", content: files.join("  ") }];
+      },
+      cat: (arg) => {
+        if (!arg) {
+          return [
+            {
+              t: "out",
+              content: "cat: missing file operand",
+              color: "red",
+            },
+            {
+              t: "out",
+              content: `try: ls  (files: ${Object.keys(VFS).join(", ")})`,
+              muted: true,
+            },
+          ];
+        }
+        const [srcRaw, ...pipeParts] = arg.split("|").map((s) => s.trim());
+        const src = srcRaw.replace(/^~\//, "").replace(/^\.\//, "");
+        const lookup = VFS[src] ?? VFS[`~/${src}`] ?? VFS[srcRaw];
+        if (!lookup) {
+          return [
+            {
+              t: "out",
+              content: `cat: ${srcRaw}: No such file or directory`,
+              color: "red",
+            },
+          ];
+        }
+        let lines: string[] = [...lookup];
+        for (const part of pipeParts) {
+          const tokens = part.split(/\s+/);
+          const op = tokens[0]?.toLowerCase();
+          const flag = tokens[1] ?? "";
+          if (op === "head") {
+            const n = Math.max(0, parseInt(flag.replace(/^-/, ""), 10) || 10);
+            lines = lines.slice(0, n);
+          } else if (op === "tail") {
+            const n = Math.max(0, parseInt(flag.replace(/^-/, ""), 10) || 10);
+            lines = lines.slice(-n);
+          } else if (op === "wc" && flag === "-l") {
+            lines = [String(lines.length)];
+          } else if (op) {
+            return [
+              {
+                t: "out",
+                content: `zsh: no such pipe target: ${op}`,
+                color: "red",
+              },
+            ];
+          }
+        }
+        return lines.map((line) => ({ t: "out" as const, content: line }));
+      },
+      systemctl: (arg) => {
+        const subcmd = (arg ?? "").trim().split(/\s+/)[0] || "status";
+        if (subcmd === "status") {
+          return [
+            {
+              t: "out",
+              content: "● gray.service — loaded, active (running)",
+              color: "green",
+            },
+            ...P.now.slice(0, 2).map((n, idx) => ({
+              t: "out" as const,
+              content: `  ${idx === 0 ? "shipping" : "also    "}: ${n.what} (${n.where})`,
+              muted: true,
+            })),
+            {
+              t: "out",
+              content: `  ${P.status.toLowerCase()}`,
+              color: "accent",
+            },
+          ];
+        }
+        if (subcmd === "list-units") {
+          return [
+            { t: "out", content: "UNIT                     LOAD   ACTIVE" },
+            {
+              t: "out",
+              content: "gray.service             loaded active",
+              color: "green",
+            },
+            {
+              t: "out",
+              content: "telemetry.service        loaded active",
+              color: "green",
+            },
+            {
+              t: "out",
+              content: "lsr.service              loaded active",
+              color: "green",
+            },
+          ];
+        }
+        return [
+          {
+            t: "out",
+            content: `systemctl: unknown subcommand: ${subcmd}`,
+            color: "red",
+          },
+          {
+            t: "out",
+            content: "usage: systemctl status | systemctl list-units",
+            muted: true,
+          },
+        ];
+      },
       clear: () => "CLEAR",
     }),
-    [P, theme, toggleTheme],
+    [P, VFS, theme, toggleTheme],
   );
 
   const runCmd = (raw: string) => {
