@@ -195,6 +195,7 @@ export function ProjectDetail({ project }: { project: AnyProject }) {
                     video,
                   }}
                   c={c}
+                  isEven={false}
                   label={`FIG. · ${project.slug}`}
                 />
               </div>
