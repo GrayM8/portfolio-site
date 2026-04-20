@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { Menu, X } from "lucide-react";
 import { ModeControls } from "../ModeControls";
 import { useModeTheme } from "../ModeThemeProvider";
 import { paletteFor } from "./palette";
@@ -42,10 +44,27 @@ type Props = {
 export function EditorialHeader({ active, homeRoute = false }: Props) {
   const { theme } = useModeTheme();
   const c = paletteFor(theme);
+  const pathname = usePathname();
   const [today, setToday] = useState<Date | null>(null);
+  const [menuOpen, setMenuOpen] = useState(false);
   const temp = useAustinTemp();
 
   useEffect(() => setToday(new Date()), []);
+
+  // Close the drawer on route change
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [pathname]);
+
+  // Close on ESC
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setMenuOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [menuOpen]);
 
   const mastheadDate = today
     ? today.toLocaleDateString("en-US", { month: "long", year: "numeric" })
@@ -55,18 +74,16 @@ export function EditorialHeader({ active, homeRoute = false }: Props) {
 
   return (
     <>
-      <header
-        className="border-b border-[color:var(--ink)] bg-[color:var(--bg)]"
-      >
+      <header className="border-b border-[color:var(--ink)] bg-[color:var(--bg)]">
         <div
-          className={`${WRAP} ${PAD} py-3 md:py-3.5 grid grid-cols-[auto_1fr] md:grid-cols-[1fr_auto_1fr] items-center gap-4 md:gap-6`}
+          className={`${WRAP} ${PAD} py-3 md:py-3.5 grid grid-cols-[1fr_auto] md:grid-cols-[1fr_auto_1fr] items-center gap-4 md:gap-6`}
         >
           <div className="hidden md:block font-mono text-[10px] tracking-widest uppercase text-[color:var(--sub)]">
             Vol. 03 · Issue 01{mastheadDate ? ` · ${mastheadDate}` : ""}
           </div>
           <Link
             href="/"
-            className="font-serif text-[18px] sm:text-[20px] md:text-[22px] font-medium tracking-tight whitespace-nowrap text-left md:text-center no-underline"
+            className="font-serif text-[16px] sm:text-[20px] md:text-[22px] font-medium tracking-tight whitespace-nowrap text-left md:text-center no-underline"
             style={{ color: "inherit" }}
           >
             graymarshall
@@ -86,7 +103,8 @@ export function EditorialHeader({ active, homeRoute = false }: Props) {
         <div
           className={`${WRAP} ${PAD} py-2.5 md:py-3 flex justify-between items-center gap-4 font-mono text-[11px] tracking-widest uppercase`}
         >
-          <div className="flex gap-4 sm:gap-5 md:gap-7 text-[color:var(--sub)] overflow-x-auto scrollbar-none -mx-1 px-1">
+          {/* Desktop: inline link list */}
+          <div className="hidden md:flex gap-4 sm:gap-5 md:gap-7 text-[color:var(--sub)] overflow-x-auto scrollbar-none -mx-1 px-1">
             {NAV_ITEMS.map((item) =>
               homeRoute ? (
                 <a
@@ -108,6 +126,24 @@ export function EditorialHeader({ active, homeRoute = false }: Props) {
               ),
             )}
           </div>
+
+          {/* Mobile: hamburger */}
+          <button
+            type="button"
+            onClick={() => setMenuOpen((o) => !o)}
+            aria-label={menuOpen ? "Close menu" : "Open menu"}
+            aria-expanded={menuOpen}
+            aria-controls="mobile-nav"
+            className="md:hidden inline-flex items-center gap-1.5 text-[color:var(--sub)] transition-colors hover:text-[color:var(--accent)]"
+          >
+            {menuOpen ? (
+              <X size={16} strokeWidth={1.75} aria-hidden />
+            ) : (
+              <Menu size={16} strokeWidth={1.75} aria-hidden />
+            )}
+            <span>{menuOpen ? "close" : "menu"}</span>
+          </button>
+
           <div className="flex items-center gap-3 shrink-0">
             <a
               href="/resume.pdf"
@@ -119,6 +155,44 @@ export function EditorialHeader({ active, homeRoute = false }: Props) {
             <ModeControls palette="editorial" />
           </div>
         </div>
+
+        {/* Mobile drawer */}
+        {menuOpen && (
+          <div
+            id="mobile-nav"
+            className="md:hidden border-t border-[color:var(--rule)] bg-[color:var(--bg)]"
+          >
+            <div
+              className={`${WRAP} ${PAD} py-3 flex flex-col font-mono text-[12px] tracking-widest uppercase`}
+            >
+              {NAV_ITEMS.map((item) => {
+                const common = {
+                  onClick: () => setMenuOpen(false),
+                  "data-active": active === item.id,
+                  className:
+                    "o3-link py-2 text-[color:var(--sub)] w-fit",
+                } as const;
+                return homeRoute ? (
+                  <a key={item.id} href={hrefFor(item.id)} {...common}>
+                    {item.label}
+                  </a>
+                ) : (
+                  <Link key={item.id} href={hrefFor(item.id)} {...common}>
+                    {item.label}
+                  </Link>
+                );
+              })}
+              <a
+                href="/resume.pdf"
+                download
+                onClick={() => setMenuOpen(false)}
+                className="o3-link py-2 text-[color:var(--sub)] w-fit"
+              >
+                ↓ Resume
+              </a>
+            </div>
+          </div>
+        )}
       </nav>
     </>
   );
