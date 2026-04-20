@@ -80,10 +80,13 @@ const COMMAND_NAMES = [
 ];
 
 const SLASH_NAV: Array<{ label: string; cmd: string }> = [
+  { label: "about", cmd: "about" },
   { label: "work", cmd: "work" },
+  { label: "projects", cmd: "projects" },
   { label: "now", cmd: "now" },
+  { label: "experience", cmd: "experience" },
+  { label: "education", cmd: "education" },
   { label: "notes", cmd: "notes" },
-  { label: "cv", cmd: "cv" },
   { label: "contact", cmd: "contact" },
 ];
 
@@ -396,6 +399,12 @@ export function TerminalSite() {
           content: `  ✓ ${cc}`,
           color: "green" as const,
         })),
+        { t: "out", content: "" },
+        ...printRule("systems · stack"),
+        ...Object.entries(P.skills).map(([k, v]) => ({
+          t: "out" as const,
+          content: `${k.padEnd(12)} ${v.join(" · ")}`,
+        })),
       ],
       skills: () => [
         ...printRule("skills"),
@@ -656,7 +665,8 @@ export function TerminalSite() {
         {booted && (
           <form
             onSubmit={onSubmit}
-            style={{ display: "flex", alignItems: "center", marginTop: 4 }}
+            style={{ display: "flex", alignItems: "center", marginTop: 4, flexWrap: "wrap" }}
+            onClick={() => inputRef.current?.focus()}
           >
             <span style={{ color: c.green }}>gray@austin</span>
             <span style={{ color: c.sub }}>:</span>
@@ -670,8 +680,11 @@ export function TerminalSite() {
               autoFocus
               spellCheck={false}
               autoComplete="off"
+              size={Math.max(1, input.length)}
               style={{
-                flex: 1,
+                width: "auto",
+                minWidth: "1ch",
+                maxWidth: "100%",
                 background: "transparent",
                 border: "none",
                 outline: "none",
@@ -679,6 +692,7 @@ export function TerminalSite() {
                 fontFamily: mono,
                 fontSize: 13,
                 padding: 0,
+                caretColor: "transparent",
               }}
             />
             <span
