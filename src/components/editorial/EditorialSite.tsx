@@ -822,9 +822,8 @@ function EditorialFeature({
           · {p.year}
         </div>
         <h3
-          className="o3-title font-serif font-normal m-0 mb-4 md:mb-5"
+          className="o3-title font-serif font-normal m-0 mb-4 md:mb-5 text-[color:var(--ink)]"
           style={{
-            color: c.ink,
             fontSize: "clamp(28px, 5vw, 44px)",
             lineHeight: 0.98,
             letterSpacing: -1,
@@ -1003,9 +1002,8 @@ function ProjectTile({
         }`}
       >
         <h3
-          className="o3-tile-title font-serif font-normal leading-[1.15] m-0"
+          className="o3-tile-title font-serif font-normal leading-[1.15] m-0 text-[color:var(--ink)]"
           style={{
-            color: c.ink,
             fontSize: compact
               ? "clamp(15px, 1.6vw, 18px)"
               : "clamp(20px, 2.5vw, 26px)",
@@ -1057,9 +1055,8 @@ function FeatureNote({
         #{n.tag} · {n.date}
       </div>
       <div
-        className="o3-title font-serif font-normal mb-2.5"
+        className="o3-title font-serif font-normal mb-2.5 text-[color:var(--ink)]"
         style={{
-          color: c.ink,
           fontSize: lead ? "clamp(28px, 4.5vw, 40px)" : "clamp(18px, 2.5vw, 22px)",
           lineHeight: lead ? 1 : 1.2,
           letterSpacing: lead ? -1 : 0,

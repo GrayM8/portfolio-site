@@ -73,10 +73,14 @@ export function ProjectDetail({ project }: { project: AnyProject }) {
         .pd-card { transition: border-color .2s ease, background-color .2s ease; }
         .pd-card:hover { border-color: var(--accent); }
         .pd-card:hover .pd-card-title { color: var(--accent); }
+        .pd-card:hover .pd-card-arrow { transform: translateX(4px); color: var(--accent); }
         .pd-card-title { transition: color .2s ease; }
+        .pd-card-arrow { transition: transform .25s ease, color .2s ease; }
         .pd-btn { transition: background-color .2s ease, border-color .2s ease, color .2s ease; }
-        .pd-btn-primary:hover { background: var(--accent); border-color: var(--accent); }
-        .pd-btn-secondary:hover { border-color: var(--accent); color: var(--accent); background: color-mix(in srgb, var(--accent) 6%, transparent); }
+        .pd-btn-primary { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+        .pd-btn-primary:hover { background: var(--accent); border-color: var(--accent); color: var(--bg); }
+        .pd-btn-secondary { background: transparent; color: var(--ink); border-color: var(--rule); }
+        .pd-btn-secondary:hover { border-color: var(--accent); color: var(--accent); background: color-mix(in srgb, var(--accent) 8%, transparent); }
         .pd-crumb { transition: color .2s ease, gap .2s ease; }
         .pd-crumb:hover { color: var(--accent); }
         .pd-crumb:hover svg { transform: translateX(-2px); }
@@ -148,11 +152,6 @@ export function ProjectDetail({ project }: { project: AnyProject }) {
                       target="_blank"
                       rel="noreferrer"
                       className="pd-btn pd-btn-primary inline-flex items-center gap-2 px-4 py-2.5 border"
-                      style={{
-                        background: c.ink,
-                        color: c.bg,
-                        borderColor: c.ink,
-                      }}
                     >
                       <ExternalLink size={13} strokeWidth={1.75} aria-hidden />
                       <span>Visit live</span>
@@ -164,11 +163,6 @@ export function ProjectDetail({ project }: { project: AnyProject }) {
                       target="_blank"
                       rel="noreferrer"
                       className="pd-btn pd-btn-secondary inline-flex items-center gap-2 px-4 py-2.5 border"
-                      style={{
-                        background: "transparent",
-                        color: c.ink,
-                        borderColor: c.rule,
-                      }}
                     >
                       <Github size={13} strokeWidth={1.75} aria-hidden />
                       <span>
@@ -466,7 +460,12 @@ export function ProjectDetail({ project }: { project: AnyProject }) {
                     style={{ color: c.sub, letterSpacing: 0.5 }}
                   >
                     <span>{r.tech.slice(0, 3).join(" · ")}</span>
-                    <ArrowRight size={12} strokeWidth={1.75} aria-hidden />
+                    <ArrowRight
+                      size={12}
+                      strokeWidth={1.75}
+                      aria-hidden
+                      className="pd-card-arrow"
+                    />
                   </div>
                 </Link>
               ))}

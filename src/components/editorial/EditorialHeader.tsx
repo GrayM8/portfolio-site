@@ -12,18 +12,22 @@ const PAD = "px-5 sm:px-8 md:px-10 lg:px-12";
 export type NavId =
   | "about"
   | "work"
-  | "index"
   | "now"
+  | "index"
   | "experience"
+  | "education"
+  | "systems"
   | "notes"
   | "contact";
 
 export const NAV_ITEMS: ReadonlyArray<{ id: NavId; label: string }> = [
   { id: "about", label: "About" },
   { id: "work", label: "Featured" },
-  { id: "index", label: "Projects" },
   { id: "now", label: "Now" },
+  { id: "index", label: "Projects" },
   { id: "experience", label: "Experience" },
+  { id: "education", label: "Education" },
+  { id: "systems", label: "Systems" },
   { id: "notes", label: "Notes" },
   { id: "contact", label: "Contact" },
 ];
