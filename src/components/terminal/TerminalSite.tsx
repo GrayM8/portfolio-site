@@ -9,6 +9,7 @@ import {
   type FormEvent,
   type KeyboardEvent,
 } from "react";
+import { useRouter } from "next/navigation";
 import { PORTFOLIO } from "@/data/portfolio";
 import { ModeControls } from "../ModeControls";
 import { useModeTheme } from "../ModeThemeProvider";
@@ -62,6 +63,7 @@ type Line = {
 };
 
 const COMMAND_NAMES = [
+  // content
   "help",
   "whoami",
   "about",
@@ -71,16 +73,38 @@ const COMMAND_NAMES = [
   "experience",
   "education",
   "skills",
+  "stack",
   "now",
   "notes",
   "cv",
   "contact",
   "resume",
-  "cat",
+  // shell
   "ls",
+  "cat",
+  "echo",
+  "date",
+  "pwd",
+  "uname",
+  "uptime",
+  "history",
+  "which",
+  "man",
   "systemctl",
-  "clear",
+  "neofetch",
   "theme",
+  "clear",
+  // nav
+  "open",
+  "goto",
+  "exit",
+  "logout",
+  // fun
+  "fortune",
+  "cowsay",
+  "sl",
+  "sudo",
+  "rm",
 ];
 
 const SLASH_NAV: Array<{ label: string; cmd: string }> = [
@@ -99,6 +123,7 @@ export function TerminalSite() {
   const c = theme === "dark" ? o2Styles.dark : o2Styles.light;
   const P = PORTFOLIO;
   const temp = useAustinTemp();
+  const router = useRouter();
 
   const [history, setHistory] = useState<Line[]>([]);
   const [input, setInput] = useState("");
@@ -163,7 +188,7 @@ export function TerminalSite() {
       {
         t: "out",
         content:
-          "commands: work · projects · case <slug> · experience · education · skills · now · notes · cv · contact · about · whoami · resume · ls · cat · systemctl · help · theme · clear",
+          "commands: work · projects · case · experience · education · skills · stack · now · notes · cv · contact · about · whoami · resume · ls · cat · echo · date · pwd · uname · uptime · history · which · man · systemctl · neofetch · theme · clear · open · goto · exit · fortune · cowsay · sl",
       },
       {
         t: "out",
@@ -248,25 +273,15 @@ export function TerminalSite() {
     () => ({
       help: () => [
         { t: "out", content: "available commands:" },
-        {
-          t: "out",
-          content:
-            "  work         — featured projects",
-          color: "accent",
-        },
-        {
-          t: "out",
-          content: "  projects     — full project index (incl. archived)",
-          color: "accent",
-        },
-        {
-          t: "out",
-          content: "  case <slug>  — deep dive on one project",
-          color: "accent",
-        },
+        { t: "out", content: "" },
+        { t: "out", content: "content:", muted: true },
+        { t: "out", content: "  work         — featured projects", color: "accent" },
+        { t: "out", content: "  projects     — full project index (incl. archived)", color: "accent" },
+        { t: "out", content: "  case <slug>  — deep dive on one project", color: "accent" },
         { t: "out", content: "  experience   — roles & tenures", color: "accent" },
         { t: "out", content: "  education    — school & coursework", color: "accent" },
         { t: "out", content: "  skills       — stack by category", color: "accent" },
+        { t: "out", content: "  stack        — skills as ascii bar chart", color: "accent" },
         { t: "out", content: "  now          — currently shipping", color: "accent" },
         { t: "out", content: "  notes        — writing", color: "accent" },
         { t: "out", content: "  cv           — experience + education", color: "accent" },
@@ -277,10 +292,29 @@ export function TerminalSite() {
         { t: "out", content: "" },
         { t: "out", content: "shell:", muted: true },
         { t: "out", content: "  ls [-l]      — list virtual files", muted: true },
-        { t: "out", content: "  cat <file>   — print file (supports | head -N)", muted: true },
+        { t: "out", content: "  cat <file>   — print file (| head -N | tail -N | wc -l)", muted: true },
+        { t: "out", content: "  echo <text>  — print arguments", muted: true },
+        { t: "out", content: "  date         — current time (CST)", muted: true },
+        { t: "out", content: "  pwd          — current directory", muted: true },
+        { t: "out", content: "  uname [-a]   — system banner", muted: true },
+        { t: "out", content: "  uptime       — time since Aug 2024", muted: true },
+        { t: "out", content: "  history      — command history", muted: true },
+        { t: "out", content: "  which <cmd>  — resolve command path", muted: true },
+        { t: "out", content: "  man <cmd>    — manual page", muted: true },
         { t: "out", content: "  systemctl    — status · list-units", muted: true },
+        { t: "out", content: "  neofetch     — ascii banner + system info", muted: true },
         { t: "out", content: "  theme        — toggle light/dark", muted: true },
         { t: "out", content: "  clear        — wipe screen", muted: true },
+        { t: "out", content: "" },
+        { t: "out", content: "nav:", muted: true },
+        { t: "out", content: "  open <t>     — github · linkedin · email · site · tui · resume · <slug>", muted: true },
+        { t: "out", content: "  goto <slug>  — jump to a project detail page", muted: true },
+        { t: "out", content: "  exit / logout — back to /", muted: true },
+        { t: "out", content: "" },
+        { t: "out", content: "fun:", muted: true },
+        { t: "out", content: "  fortune      — random quote", muted: true },
+        { t: "out", content: "  cowsay <txt> — ascii cow", muted: true },
+        { t: "out", content: "  sl           — oops, try ls", muted: true },
         { t: "out", content: "" },
         {
           t: "out",
@@ -659,9 +693,484 @@ export function TerminalSite() {
           },
         ];
       },
+      echo: (arg) => [{ t: "out", content: arg ?? "" }],
+      date: () => [
+        {
+          t: "out",
+          content: new Date().toLocaleString("en-US", {
+            timeZone: "America/Chicago",
+            weekday: "short",
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+            hour: "numeric",
+            minute: "2-digit",
+            second: "2-digit",
+            timeZoneName: "short",
+          }),
+        },
+      ],
+      pwd: () => [{ t: "out", content: "/home/gray" }],
+      history: () => {
+        if (cmdHistory.length === 0)
+          return [{ t: "out", content: "(no commands yet)", muted: true }];
+        return [...cmdHistory].reverse().map((cmd, i) => ({
+          t: "out" as const,
+          content: `  ${String(i + 1).padStart(4)}  ${cmd}`,
+        }));
+      },
+      uname: (arg) => {
+        const flag = (arg ?? "").trim().toLowerCase();
+        if (flag === "-a" || flag === "--all") {
+          return [
+            {
+              t: "out",
+              content:
+                "portfolio 3.0.0 gray@austin #1 SMP Next.js 16.2 React 19 x86_64 editorial/terminal",
+            },
+          ];
+        }
+        return [{ t: "out", content: "portfolio" }];
+      },
+      uptime: () => {
+        const start = new Date("2024-08-26T00:00:00-05:00");
+        const now = new Date();
+        const diffDays = Math.max(
+          0,
+          Math.floor((now.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)),
+        );
+        const years = Math.floor(diffDays / 365);
+        const remainAfterYears = diffDays - years * 365;
+        const months = Math.floor(remainAfterYears / 30);
+        const days = remainAfterYears - months * 30;
+        const parts: string[] = [];
+        if (years) parts.push(`${years} year${years !== 1 ? "s" : ""}`);
+        if (months) parts.push(`${months} month${months !== 1 ? "s" : ""}`);
+        if (days || parts.length === 0)
+          parts.push(`${days} day${days !== 1 ? "s" : ""}`);
+        return [
+          {
+            t: "out",
+            content: `up ${parts.join(", ")} (since Aug 26 2024 · UT Austin)`,
+          },
+        ];
+      },
+      stack: () => {
+        const entries = Object.entries(P.skills);
+        const max = Math.max(...entries.map(([, v]) => v.length));
+        const barWidth = 18;
+        return [
+          ...printRule("stack"),
+          ...entries.map(([k, v]) => {
+            const filled = Math.max(1, Math.round((v.length / max) * barWidth));
+            const bar = "█".repeat(filled) + "░".repeat(barWidth - filled);
+            const preview =
+              v.slice(0, 3).join(" · ") +
+              (v.length > 3 ? ` · +${v.length - 3}` : "");
+            return {
+              t: "out" as const,
+              content: `${k.padEnd(12)} ${bar}  ${preview}`,
+            };
+          }),
+        ];
+      },
+      neofetch: () => {
+        const ascii = [
+          "   ██████╗   ███╗   ███╗",
+          "   ██╔═══╝   ████╗ ████║",
+          "   ██║  ██╗  ██╔████╔██║",
+          "   ██║  ╚██╗ ██║╚██╔╝██║",
+          "   ╚██████╔╝ ██║ ╚═╝ ██║",
+          "    ╚═════╝  ╚═╝     ╚═╝",
+        ];
+        const start = new Date("2024-08-26T00:00:00-05:00");
+        const now = new Date();
+        const days = Math.max(
+          0,
+          Math.floor((now.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)),
+        );
+        const host =
+          typeof window !== "undefined" ? window.location.host : "vercel.app";
+        const res =
+          typeof window !== "undefined"
+            ? `${window.innerWidth}x${window.innerHeight}`
+            : "responsive";
+        const info: string[] = [
+          `${P.name.toLowerCase().replace(/ /g, "")}@austin`,
+          "───────────────────────────",
+          `OS ········· portfolio v3 (next.js 16.2)`,
+          `Host ······· ${host}`,
+          `Kernel ····· react 19 / tailwind v4`,
+          `Shell ······ portfolio-zsh`,
+          `Uptime ····· ${days} days (since Aug 2024)`,
+          `Resolution · ${res}`,
+          `Theme ······ ${theme}`,
+          `Stack ······ ${P.skills.Languages.slice(0, 3).join(" · ")}`,
+          `Role ······· ${P.role}`,
+          `Status ····· ${P.status}`,
+        ];
+        const rows = Math.max(ascii.length, info.length);
+        const out: Line[] = [];
+        for (let i = 0; i < rows; i++) {
+          const left = (ascii[i] ?? "").padEnd(26);
+          const right = info[i] ?? "";
+          out.push({
+            t: "out",
+            content: `${left}  ${right}`,
+            color: i < ascii.length ? "accent" : undefined,
+          });
+        }
+        return out;
+      },
+      open: (arg) => {
+        if (!arg) {
+          return [
+            {
+              t: "out",
+              content: "open: missing target",
+              color: "red",
+            },
+            {
+              t: "out",
+              content:
+                "targets: github · linkedin · email · site · tui · resume · <project-slug>",
+              muted: true,
+            },
+          ];
+        }
+        const target = arg.trim().toLowerCase();
+        const slugs = [
+          ...P.featured.map((p) => p.slug),
+          ...P.projects
+            .map((p) => p.slug)
+            .filter((s): s is string => Boolean(s)),
+        ];
+        if (slugs.includes(target)) {
+          router.push(`/projects/${target}`);
+          return [
+            { t: "out", content: `→ /projects/${target}`, color: "blue" },
+          ];
+        }
+        const map: Record<string, string> = {
+          github: `https://${P.github}`,
+          gh: `https://${P.github}`,
+          linkedin: `https://${P.linkedin}`,
+          li: `https://${P.linkedin}`,
+          email: `mailto:${P.email}`,
+          mail: `mailto:${P.email}`,
+          site: "/",
+          home: "/",
+          editorial: "/",
+          tui: "/tui",
+          terminal: "/tui",
+          resume: "/resume.pdf",
+          cv: "/resume.pdf",
+        };
+        const url = map[target];
+        if (!url) {
+          return [
+            {
+              t: "out",
+              content: `open: unknown target: ${target}`,
+              color: "red",
+            },
+          ];
+        }
+        if (typeof window !== "undefined") {
+          if (url.startsWith("/")) router.push(url);
+          else if (url.startsWith("mailto:")) window.location.href = url;
+          else window.open(url, "_blank", "noreferrer");
+        }
+        return [{ t: "out", content: `→ ${url}`, color: "blue" }];
+      },
+      goto: (arg) => {
+        if (!arg) {
+          return [
+            {
+              t: "out",
+              content:
+                "goto: missing project slug (lsr, fsae, dash, personal-website-v3, agentworkspaces)",
+              color: "red",
+            },
+          ];
+        }
+        const slug = arg.trim().toLowerCase();
+        const slugs = [
+          ...P.featured.map((p) => p.slug),
+          ...P.projects
+            .map((p) => p.slug)
+            .filter((s): s is string => Boolean(s)),
+        ];
+        if (!slugs.includes(slug)) {
+          return [
+            { t: "out", content: `goto: no such project: ${slug}`, color: "red" },
+          ];
+        }
+        router.push(`/projects/${slug}`);
+        return [{ t: "out", content: `→ /projects/${slug}`, color: "blue" }];
+      },
+      exit: () => {
+        router.push("/");
+        return [{ t: "out", content: "goodbye.", muted: true }];
+      },
+      logout: () => {
+        router.push("/");
+        return [{ t: "out", content: "logout", muted: true }];
+      },
+      which: (arg) => {
+        if (!arg)
+          return [
+            {
+              t: "out",
+              content: "which: usage: which <command>",
+              color: "red",
+            },
+          ];
+        const cmd = arg.trim().toLowerCase().split(/\s+/)[0];
+        if (COMMAND_NAMES.includes(cmd)) {
+          return [{ t: "out", content: `/usr/local/bin/${cmd}` }];
+        }
+        return [
+          {
+            t: "out",
+            content: `which: no ${cmd} in (/usr/local/bin:/usr/bin:/bin)`,
+            color: "red",
+          },
+        ];
+      },
+      man: (arg) => {
+        if (!arg)
+          return [
+            { t: "out", content: "What manual page do you want?" },
+            { t: "out", content: "try: man help", muted: true },
+          ];
+        const cmd = arg.trim().toLowerCase();
+        const pages: Record<string, string[]> = {
+          help: [
+            "HELP(1)                  Portfolio Manual",
+            "",
+            "NAME",
+            "    help — list every command, grouped.",
+            "",
+            "DESCRIPTION",
+            "    Prints the full command set, split into content, shell, nav, and fun.",
+            "    All commands are case-insensitive.",
+          ],
+          work: [
+            "WORK(1)                  Portfolio Manual",
+            "",
+            "NAME",
+            "    work — list the three featured projects.",
+            "",
+            "DESCRIPTION",
+            "    Prints LSR, FSAE telemetry, and the driver dash with status, stack, and live links.",
+            "    For a deep dive on one: case <slug>.",
+          ],
+          projects: [
+            "PROJECTS(1)              Portfolio Manual",
+            "",
+            "NAME",
+            "    projects — full project index.",
+            "",
+            "DESCRIPTION",
+            "    Prints FEATURED and ARCHIVE sections with year + title per row.",
+          ],
+          case: [
+            "CASE(1)                  Portfolio Manual",
+            "",
+            "NAME",
+            "    case — deep dive on one project.",
+            "",
+            "SYNOPSIS",
+            "    case <slug>",
+            "",
+            "SLUGS",
+            "    lsr · fsae · dash · personal-website-v3 · agentworkspaces",
+          ],
+          cv: [
+            "CV(1)                    Portfolio Manual",
+            "",
+            "NAME",
+            "    cv — resume-formatted experience + education.",
+          ],
+          resume: [
+            "RESUME(1)                Portfolio Manual",
+            "",
+            "NAME",
+            "    resume — download the resume PDF.",
+            "",
+            "DESCRIPTION",
+            "    Triggers a browser download of /resume.pdf as gray-marshall-resume.pdf.",
+          ],
+          open: [
+            "OPEN(1)                  Portfolio Manual",
+            "",
+            "NAME",
+            "    open — navigate to a named target.",
+            "",
+            "SYNOPSIS",
+            "    open <target>",
+            "",
+            "TARGETS",
+            "    github · linkedin · email · site · tui · resume · <project-slug>",
+          ],
+          goto: [
+            "GOTO(1)                  Portfolio Manual",
+            "",
+            "NAME",
+            "    goto — client-side navigate to a project detail page.",
+            "",
+            "SYNOPSIS",
+            "    goto <slug>",
+          ],
+          cat: [
+            "CAT(1)                   Portfolio Manual",
+            "",
+            "NAME",
+            "    cat — print the contents of a virtual file.",
+            "",
+            "SYNOPSIS",
+            "    cat <file> [| head -N | tail -N | wc -l]",
+            "",
+            "FILES",
+            "    ls to see what's available.",
+          ],
+          ls: [
+            "LS(1)                    Portfolio Manual",
+            "",
+            "NAME",
+            "    ls — list virtual filesystem entries.",
+            "",
+            "SYNOPSIS",
+            "    ls [-l | -la]",
+          ],
+          echo: [
+            "ECHO(1)                  Portfolio Manual",
+            "",
+            "NAME",
+            "    echo — print arguments to stdout.",
+          ],
+          neofetch: [
+            "NEOFETCH(1)              Portfolio Manual",
+            "",
+            "NAME",
+            "    neofetch — ASCII banner + system info.",
+          ],
+          theme: [
+            "THEME(1)                 Portfolio Manual",
+            "",
+            "NAME",
+            "    theme — toggle between light and dark.",
+          ],
+          exit: [
+            "EXIT(1)                  Portfolio Manual",
+            "",
+            "NAME",
+            "    exit — leave the TUI and return to the editorial site.",
+          ],
+        };
+        const page = pages[cmd];
+        if (page) return page.map((line) => ({ t: "out" as const, content: line }));
+        if (COMMAND_NAMES.includes(cmd)) {
+          return [
+            {
+              t: "out",
+              content: `${cmd.toUpperCase()}(1)`,
+              color: "accent",
+            },
+            {
+              t: "out",
+              content: `no detailed page yet — try 'help' for the one-liner`,
+              muted: true,
+            },
+          ];
+        }
+        return [
+          { t: "out", content: `No manual entry for ${cmd}`, color: "red" },
+        ];
+      },
+      fortune: () => {
+        const quotes = [
+          P.tagline,
+          P.about[0],
+          "I optimize for tight feedback loops, clear abstractions, and durable software that ships fast and performs under pressure.",
+          "Ship small, ship often.",
+          "There are only two hard things: naming things, cache invalidation, and off-by-one errors.",
+          "Always tired, never done.",
+          "Code is cheap; correctness is expensive.",
+          "The best error message is the one that never shows up.",
+          "Move fast with stable infrastructure.",
+          "Make it work, make it right, make it fast — in that order.",
+        ];
+        return [
+          {
+            t: "out",
+            content: quotes[Math.floor(Math.random() * quotes.length)],
+            color: "accent",
+          },
+        ];
+      },
+      cowsay: (arg) => {
+        const text = (arg ?? "Moo.").trim() || "Moo.";
+        const top = " " + "_".repeat(text.length + 2);
+        const mid = `< ${text} >`;
+        const bot = " " + "-".repeat(text.length + 2);
+        return [
+          { t: "out", content: top },
+          { t: "out", content: mid },
+          { t: "out", content: bot },
+          { t: "out", content: "        \\   ^__^" },
+          { t: "out", content: "         \\  (oo)\\_______" },
+          { t: "out", content: "            (__)\\       )\\/\\" },
+          { t: "out", content: "                ||----w |" },
+          { t: "out", content: "                ||     ||" },
+        ];
+      },
+      sl: () => {
+        const train = [
+          "      ====        ________                ___________",
+          "  _D _|  |_______/        \\__I_I_____===__|_________|",
+          "   |(_)---  |   H\\________/ |   |        =|___ ___|  ",
+          "   /     |  |   H  |  |     |   |         ||_| |_||  ",
+          "  |      |  |   H  |__--------------------| [___] |  ",
+          "  | ________|___H__/__|_____/[][]~\\_______|       |  ",
+          "  |/ |   |-----------I_____I [][] []  D   |=======|__",
+          "__/ =| o |=-~~\\  /~~\\  /~~\\  /~~\\ ____Y___________|__",
+          " |/-=|___|=    ||    ||    ||    |_____/~\\___/        ",
+          "  \\_/      \\O=====O=====O=====O_/      \\_/            ",
+        ];
+        return train.map((l) => ({ t: "out" as const, content: l, color: "accent" as const }));
+      },
+      sudo: (arg) => [
+        {
+          t: "out",
+          content: `gray is not in the sudoers file. This incident will be reported.${arg ? ` (attempted: ${arg})` : ""}`,
+          color: "red",
+        },
+      ],
+      rm: (arg) => {
+        const a = (arg ?? "").trim();
+        if (/-[rR]f/.test(a) && (a.endsWith("/") || a.includes(" /"))) {
+          return [
+            { t: "out", content: "nice try.", color: "accent" },
+            {
+              t: "out",
+              content: "this shell is write-protected by laziness.",
+              muted: true,
+            },
+          ];
+        }
+        return [
+          {
+            t: "out",
+            content: "rm: operation not permitted in this shell",
+            color: "red",
+          },
+        ];
+      },
       clear: () => "CLEAR",
     }),
-    [P, VFS, theme, toggleTheme],
+    [P, VFS, theme, toggleTheme, cmdHistory, router],
   );
 
   const runCmd = (raw: string) => {
