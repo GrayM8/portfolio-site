@@ -272,6 +272,27 @@ export const PORTFOLIO: Portfolio = {
   ],
   projects: [
     {
+      title: "Longhorn Racing Autonomous Platform",
+      slug: "lhr-autonomy",
+      tagline:
+        "FSAE driverless simulation + control stack for Longhorn Racing's autonomous program.",
+      tech: ["ROS 2", "Python", "Gazebo", "RViz", "Pure Pursuit"],
+      status: "In Development",
+      year: "2026 — Present",
+      overview:
+        "A ROS 2 workspace implementing the full FSAE driverless pipeline — procedural cone track generation, FOV-limited sensor simulation, centerline extraction, pure-pursuit control, the competition state machine, and a metrics harness — running on a pluggable simulation backend (lightweight kinematic model or Gazebo physics). Built as the starting point for next season's autonomous program at Longhorn Racing.",
+      detailBullets: [
+        "Built a 9-package ROS 2 workspace covering the full driverless loop — track generation, sensor simulation, centerline extraction, mission state machine, pure-pursuit control, vehicle simulation, metrics, and a Gazebo physics backend — orchestrated by a single `lhr_demo` launch file.",
+        "Procedural cone track generator (`lhr_trackgen`) — Catmull-Rom spline autocross courses parameterized by seed, waypoint count, radius, jitter, track width, and cone spacing, publishing ground-truth blue/yellow cone markers.",
+        "FOV-limited sensor simulation (`lhr_sensor_sim`) — configurable field-of-view, max/min range, Gaussian position noise, and false-negative rate; accumulates detections over time and publishes bright/dim seen-vs-unseen visualization plus an FOV frustum.",
+        "Pure-pursuit controller (`lhr_control`) with a curvature-driven speed law — `v = clamp(sqrt(a_lat_max / |κ|), v_min, v_max)` — plus separate longitudinal accel/decel limits. Parametric lookahead, wheelbase, and curvature estimation window.",
+        "FSAE driverless state machine (`lhr_mission_manager`) — `Off → Ready → Driving → Finished` with an `Emergency → Off` reset path. Mission selectors for inspection / autocross / acceleration / skidpad / EBS-test / manual. The control node is gated by mission state and only publishes drive commands when `DRIVING`.",
+        "Metrics harness (`lhr_metrics`) — live cross-track error, off-track threshold events, and lap detection with start-radius + hysteresis + min-lap-time filters. Emits lap-complete events back to the mission manager and appends a per-run row to `data/metrics.csv`.",
+        "Two interchangeable simulation backends: a lightweight kinematic bicycle model for fast iteration, and a full Gazebo physics world generated from the same track definition — identical downstream ROS 2 topic surface, so the upper stack doesn't know which is running.",
+        "Developer ergonomics: Humble/Jazzy auto-detecting build and run scripts, pre-configured RViz layout, PlotJuggler integration for curvature / speed / state debug plots, single-command full-stack launch.",
+      ],
+    },
+    {
       title: "PitLane Director AC",
       slug: "pitlane",
       tagline: "Broadcast director for Assetto Corsa sim racing leagues",
