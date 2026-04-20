@@ -9,8 +9,9 @@ import {
   type FormEvent,
   type KeyboardEvent,
 } from "react";
+import Link from "next/link";
 import { PORTFOLIO } from "@/data/portfolio";
-import { ModeControls } from "../ModeControls";
+import { ThemeToggle } from "../ThemeToggle";
 import { useModeTheme } from "../ModeThemeProvider";
 
 type Palette = {
@@ -74,9 +75,9 @@ const COMMAND_NAMES = [
   "notes",
   "cv",
   "contact",
+  "resume",
   "clear",
   "theme",
-  "mode",
 ];
 
 const SLASH_NAV: Array<{ label: string; cmd: string }> = [
@@ -91,7 +92,7 @@ const SLASH_NAV: Array<{ label: string; cmd: string }> = [
 ];
 
 export function TerminalSite() {
-  const { theme, toggleTheme, setMode } = useModeTheme();
+  const { theme, toggleTheme } = useModeTheme();
   const c = theme === "dark" ? o2Styles.dark : o2Styles.light;
   const P = PORTFOLIO;
 
@@ -228,9 +229,9 @@ export function TerminalSite() {
         { t: "out", content: "  contact      — how to reach me", color: "accent" },
         { t: "out", content: "  about        — longer introduction", color: "accent" },
         { t: "out", content: "  whoami       — one-liner", color: "accent" },
+        { t: "out", content: "  resume       — download resume.pdf", color: "accent" },
         { t: "out", content: "" },
         { t: "out", content: "  theme        — toggle light/dark", muted: true },
-        { t: "out", content: "  mode         — back to editorial layout", muted: true },
         { t: "out", content: "  clear        — wipe screen", muted: true },
         { t: "out", content: "" },
         {
@@ -471,15 +472,24 @@ export function TerminalSite() {
           },
         ];
       },
-      mode: () => {
-        setMode("editorial");
+      resume: () => {
+        if (typeof window !== "undefined") {
+          const a = document.createElement("a");
+          a.href = "/resume.pdf";
+          a.download = "gray-marshall-resume.pdf";
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+        }
         return [
-          { t: "out", content: "switching to editorial mode…", color: "accent" },
+          { t: "out", content: "fetching resume.pdf ...", color: "accent" },
+          { t: "out", content: "→ /resume.pdf", color: "blue" },
+          { t: "out", content: "check your browser downloads.", muted: true },
         ];
       },
       clear: () => "CLEAR",
     }),
-    [P, theme, toggleTheme, setMode],
+    [P, theme, toggleTheme],
   );
 
   const runCmd = (raw: string) => {
@@ -639,7 +649,14 @@ export function TerminalSite() {
             status: <span style={{ color: c.green }}>available</span>
           </span>
           <span>tz: CST</span>
-          <ModeControls palette="terminal" />
+          <Link
+            href="/"
+            className="tui-slash"
+            style={{ color: c.sub, textDecoration: "none" }}
+          >
+            <span style={{ color: c.accent }}>:</span>editorial
+          </Link>
+          <ThemeToggle palette="terminal" />
         </div>
       </header>
 

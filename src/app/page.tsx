@@ -1,5 +1,5 @@
-import { SiteShell } from "@/components/SiteShell";
+import { EditorialSite } from "@/components/editorial/EditorialSite";
 
 export default function Home() {
-  return <SiteShell />;
+  return <EditorialSite />;
 }
