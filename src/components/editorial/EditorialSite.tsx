@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment, useEffect, useState, type ElementType } from "react";
+import { Fragment, useEffect, useRef, useState, type ElementType } from "react";
 import Link from "next/link";
 import { Github, Linkedin, Mail, MapPin } from "lucide-react";
 import {
@@ -74,10 +74,8 @@ export function EditorialSite() {
     >
       <style>{`
         .o3-feat:hover .o3-title { color: var(--accent); }
-        .o3-feat:hover .o3-feat-frame { border-color: var(--accent); }
         .o3-feat-frame { transition: border-color .25s ease; }
-        .o3-feat:hover .o3-feat-img { transform: translate(-50%, -50%) rotateX(50deg) rotateZ(20deg) scale(2.35); }
-        .o3-feat-img { transition: transform .6s ease; transform: translate(-50%, -50%) rotateX(50deg) rotateZ(20deg) scale(2.2); }
+        .o3-feat:hover .o3-feat-frame { border-color: var(--accent); }
         .o3-title { transition: color .2s; }
         .o3-row:hover { background: var(--soft); }
         .o3-row:hover .o3-t { color: var(--accent); }
@@ -805,6 +803,81 @@ function SpreadHead({
   );
 }
 
+function FeatureTile({
+  p,
+  c,
+  idx,
+  isEven,
+}: {
+  p: FeaturedProject;
+  c: Palette;
+  idx: number;
+  isEven: boolean;
+}) {
+  const restRotateY = isEven ? 8 : -8;
+  const restRotateX = -4;
+  const [tilt, setTilt] = useState({
+    x: restRotateX,
+    y: restRotateY,
+    s: 1,
+  });
+  const ref = useRef<HTMLDivElement | null>(null);
+
+  const onMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const el = ref.current;
+    if (!el) return;
+    const r = el.getBoundingClientRect();
+    const xPct = (e.clientX - r.left) / r.width - 0.5;
+    const yPct = (e.clientY - r.top) / r.height - 0.5;
+    setTilt({ y: xPct * 22, x: yPct * -22, s: 1.03 });
+  };
+  const onMouseLeave = () => {
+    setTilt({ x: restRotateX, y: restRotateY, s: 1 });
+  };
+
+  return (
+    <div
+      ref={ref}
+      onMouseMove={onMouseMove}
+      onMouseLeave={onMouseLeave}
+      className="o3-feat-frame relative overflow-hidden border border-[color:var(--rule)]"
+      style={{
+        aspectRatio: p.video ? "5 / 3" : "16 / 10",
+        background: c.soft,
+        transformStyle: "preserve-3d",
+        transform: `rotateX(${tilt.x}deg) rotateY(${tilt.y}deg) scale(${tilt.s})`,
+        transition: "transform .45s cubic-bezier(.2,.8,.2,1)",
+        boxShadow:
+          "0 30px 60px -24px rgba(0,0,0,0.35), 0 18px 36px -18px rgba(0,0,0,0.25)",
+      }}
+    >
+      {p.video ? (
+        <video
+          src={p.video}
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover pointer-events-none"
+        />
+      ) : (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={p.image}
+          alt={p.title}
+          className="absolute inset-0 w-full h-full object-cover pointer-events-none"
+        />
+      )}
+      <div
+        className="absolute top-3 left-3 font-mono text-[9px] uppercase tracking-[0.15em] px-2 py-0.5 border pointer-events-none"
+        style={{ background: c.bg, borderColor: c.rule, color: c.ink }}
+      >
+        FIG. 0{idx + 2} · {p.slug}
+      </div>
+    </div>
+  );
+}
+
 function EditorialFeature({
   p,
   c,
@@ -822,62 +895,10 @@ function EditorialFeature({
       style={{ color: "inherit" }}
     >
       <div
-        className={`o3-feat-frame relative overflow-hidden border border-[color:var(--rule)] w-full ${
-          flip ? "lg:order-2" : "lg:order-1"
-        }`}
-        style={{
-          aspectRatio: "16 / 10",
-          background: c.soft,
-        }}
+        className={`w-full ${flip ? "lg:order-2" : "lg:order-1"}`}
+        style={{ perspective: "1200px" }}
       >
-        <div
-          aria-hidden
-          className="absolute inset-0"
-          style={{ perspective: "700px", perspectiveOrigin: "50% 50%" }}
-        >
-          <div
-            className="o3-feat-img absolute"
-            style={{
-              width: 340,
-              aspectRatio: p.video ? "5 / 3" : "16 / 10",
-              left: "50%",
-              top: "50%",
-              transformOrigin: "center center",
-            }}
-          >
-            {p.video ? (
-              <video
-                src={p.video}
-                autoPlay
-                loop
-                muted
-                playsInline
-                className="absolute inset-0 w-full h-full object-cover"
-              />
-            ) : (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={p.image}
-                alt=""
-                className="absolute inset-0 w-full h-full object-cover"
-              />
-            )}
-          </div>
-        </div>
-        {/* edge vignette — fades the tilted plane into the frame background */}
-        <div
-          aria-hidden
-          className="absolute inset-0"
-          style={{
-            background: `radial-gradient(ellipse 75% 110% at 50% 50%, transparent 40%, ${c.soft}cc 75%, ${c.soft} 98%)`,
-          }}
-        />
-        <div
-          className="absolute top-3 left-3 font-mono text-[9px] uppercase tracking-[0.15em] px-2 py-0.5 border"
-          style={{ background: c.bg, borderColor: c.rule, color: c.ink }}
-        >
-          FIG. 0{idx + 2} · {p.slug}
-        </div>
+        <FeatureTile p={p} c={c} idx={idx} isEven={!flip} />
       </div>
       <div className={`min-w-0 ${flip ? "lg:order-1" : "lg:order-2"}`}>
         <div
