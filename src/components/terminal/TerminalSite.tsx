@@ -160,7 +160,7 @@ export function TerminalSite() {
       {
         t: "out",
         content:
-          "commands: about · work · projects · case <slug> · experience · education · skills · now · notes · cv · contact · theme · mode · clear",
+          "commands: work · projects · case <slug> · experience · education · skills · now · notes · cv · contact · about · whoami · resume · help · theme · clear",
       },
       {
         t: "out",
