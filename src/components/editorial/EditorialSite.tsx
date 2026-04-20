@@ -73,9 +73,11 @@ export function EditorialSite() {
       className="min-h-full bg-[color:var(--bg)] text-[color:var(--ink)] font-sans text-[14px] leading-[1.55]"
     >
       <style>{`
-        .o3-feat:hover .o3-img { transform: scale(1.02); }
         .o3-feat:hover .o3-title { color: var(--accent); }
-        .o3-img { transition: transform .5s ease; }
+        .o3-feat:hover .o3-feat-frame { border-color: var(--accent); }
+        .o3-feat-frame { transition: border-color .25s ease; }
+        .o3-feat:hover .o3-feat-img { transform: translate(-50%, -50%) rotateX(50deg) rotateZ(20deg) scale(2.35); }
+        .o3-feat-img { transition: transform .6s ease; transform: translate(-50%, -50%) rotateX(50deg) rotateZ(20deg) scale(2.2); }
         .o3-title { transition: color .2s; }
         .o3-row:hover { background: var(--soft); }
         .o3-row:hover .o3-t { color: var(--accent); }
@@ -820,7 +822,7 @@ function EditorialFeature({
       style={{ color: "inherit" }}
     >
       <div
-        className={`relative overflow-hidden border border-[color:var(--rule)] w-full ${
+        className={`o3-feat-frame relative overflow-hidden border border-[color:var(--rule)] w-full ${
           flip ? "lg:order-2" : "lg:order-1"
         }`}
         style={{
@@ -828,23 +830,48 @@ function EditorialFeature({
           background: c.soft,
         }}
       >
-        {p.video ? (
-          <video
-            src={p.video}
-            autoPlay
-            loop
-            muted
-            playsInline
-            className="o3-img w-full h-full object-cover block"
-          />
-        ) : (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={p.image}
-            alt={p.title}
-            className="o3-img w-full h-full object-cover block"
-          />
-        )}
+        <div
+          aria-hidden
+          className="absolute inset-0"
+          style={{ perspective: "700px", perspectiveOrigin: "50% 50%" }}
+        >
+          <div
+            className="o3-feat-img absolute"
+            style={{
+              width: 340,
+              aspectRatio: p.video ? "5 / 3" : "16 / 10",
+              left: "50%",
+              top: "50%",
+              transformOrigin: "center center",
+            }}
+          >
+            {p.video ? (
+              <video
+                src={p.video}
+                autoPlay
+                loop
+                muted
+                playsInline
+                className="absolute inset-0 w-full h-full object-cover"
+              />
+            ) : (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={p.image}
+                alt=""
+                className="absolute inset-0 w-full h-full object-cover"
+              />
+            )}
+          </div>
+        </div>
+        {/* edge vignette — fades the tilted plane into the frame background */}
+        <div
+          aria-hidden
+          className="absolute inset-0"
+          style={{
+            background: `radial-gradient(ellipse 75% 110% at 50% 50%, transparent 40%, ${c.soft}cc 75%, ${c.soft} 98%)`,
+          }}
+        />
         <div
           className="absolute top-3 left-3 font-mono text-[9px] uppercase tracking-[0.15em] px-2 py-0.5 border"
           style={{ background: c.bg, borderColor: c.rule, color: c.ink }}
