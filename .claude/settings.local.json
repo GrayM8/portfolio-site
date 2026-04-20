@@ -39,7 +39,10 @@
       "Bash(cp \"C:/Users/Gray/WebstormProjects/distribution-site/public/og.png\" \"C:/Users/Gray/WebstormProjects/portfolio-site/public/assets/proj-pitlane-site.png\")",
       "Bash(curl *)",
       "Bash(node -e ' *)",
-      "Bash(node *)"
+      "Bash(node *)",
+      "Bash(git push *)",
+      "Bash(npx next *)",
+      "Bash(npm install *)"
     ]
   }
 }

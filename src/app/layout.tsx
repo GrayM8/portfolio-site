@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { Inter, JetBrains_Mono, Fraunces, Instrument_Serif } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { ModeThemeProvider } from "@/components/ModeThemeProvider";
+import { SITE_URL } from "@/lib/site";
 import "./globals.css";
 
 const inter = Inter({
@@ -33,12 +36,6 @@ const instrumentSerif = Instrument_Serif({
   display: "swap",
 });
 
-const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL ??
-  process.env.VERCEL_PROJECT_PRODUCTION_URL
-    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-    : "https://graymarshall.dev";
-
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: "Gray Marshall — Software Engineer",
@@ -54,11 +51,24 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      data-theme="dark"
       className={`${inter.variable} ${jetbrainsMono.variable} ${fraunces.variable} ${instrumentSerif.variable}`}
       suppressHydrationWarning
     >
+      <head>
+        {/* Pre-hydration theme script — runs synchronously before first paint
+            so pages without an EditorialSite/TerminalSite wrapper (like the
+            404 page) don't flash white before React hydrates. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem('gm_theme');var v=(t==='light'||t==='dark')?t:'dark';document.documentElement.setAttribute('data-theme',v);}catch(e){document.documentElement.setAttribute('data-theme','dark');}})();`,
+          }}
+        />
+      </head>
       <body>
         <ModeThemeProvider>{children}</ModeThemeProvider>
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getAllProjectSlugs, getProjectBySlug } from "@/data/portfolio";
+import { ProjectJsonLd } from "@/components/seo/ProjectJsonLd";
 import { ProjectDetail } from "./ProjectDetail";
 
 type Params = Promise<{ slug: string }>;
@@ -43,5 +44,10 @@ export default async function ProjectPage({ params }: { params: Params }) {
   const { slug } = await params;
   const project = getProjectBySlug(slug);
   if (!project) notFound();
-  return <ProjectDetail project={project} />;
+  return (
+    <>
+      <ProjectJsonLd project={project} />
+      <ProjectDetail project={project} />
+    </>
+  );
 }

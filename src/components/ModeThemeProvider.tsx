@@ -67,6 +67,7 @@ export function ModeThemeProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     document.body.style.background = bodyBgFor(mode, theme);
+    document.documentElement.setAttribute("data-theme", theme);
   }, [mode, theme]);
 
   const setMode = useCallback((next: Mode) => {

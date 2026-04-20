@@ -466,7 +466,7 @@ export function EditorialSite() {
                       // eslint-disable-next-line @next/next/no-img-element
                       <img
                         src={e.logo}
-                        alt=""
+                        alt={`${e.org} logo`}
                         className="w-full h-full object-contain p-2"
                       />
                     )}
@@ -562,7 +562,7 @@ export function EditorialSite() {
                     // eslint-disable-next-line @next/next/no-img-element
                     <img
                       src={P.education.logo}
-                      alt=""
+                      alt={`${P.education.school} logo`}
                       className="w-full h-full object-contain p-2"
                     />
                   )}
@@ -1015,7 +1015,7 @@ function ProjectTile({
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={p.image}
-                alt=""
+                alt={`${p.title} screenshot`}
                 className="absolute inset-0 w-full h-full object-cover"
               />
             </div>

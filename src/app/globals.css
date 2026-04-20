@@ -17,7 +17,34 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Root-level palette vars. Mirrors src/components/editorial/palette.ts so
+   any route (even ones that don't mount EditorialSite/TerminalSite, like
+   the 404 page) still gets theme-correct colors without a flash. Nested
+   component wrappers can still override these for their subtree. */
+:root {
+  --bg: #0b0a07;
+  --cover: #18160f;
+  --ink: #f4ecd6;
+  --sub: #948b78;
+  --rule: #2b2820;
+  --accent: #ff7a1a;
+  --soft: #1f1c13;
+  --card: #16140d;
+}
+:root[data-theme="light"] {
+  --bg: #f5ecd8;
+  --cover: #e8dcbe;
+  --ink: #18140a;
+  --sub: #6f6650;
+  --rule: #cfc09c;
+  --accent: #b94610;
+  --soft: #ddcea8;
+  --card: #fbf5e6;
+}
+
 body {
+  background: var(--bg);
+  color: var(--ink);
   transition: background-color 0.5s ease, color 0.5s ease;
 }
 
