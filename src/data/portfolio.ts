@@ -123,10 +123,22 @@ export const PORTFOLIO: Portfolio = {
     "Across both domains, I optimize for tight feedback loops, clear abstractions, and durable software that ships fast and performs under pressure.",
   ],
   now: [
-    { what: "Redesigning the telemetry backend for 2026 season", where: "Longhorn Racing" },
-    { what: "Shipping payment integration on LSR platform", where: "Longhorn Sim Racing" },
-    { what: "Reading: Designing Data-Intensive Applications", where: "evenings" },
-    { what: "Refactoring dashd frontend for sub-20ms latency", where: "side-of-desk" },
+    {
+      what: "Building the perception pipeline and simulation suite for next year's autonomous program.",
+      where: "Longhorn Racing",
+    },
+    {
+      what: "Tightening user experience and admin workflows across the platform.",
+      where: "Longhorn Sim Racing",
+    },
+    {
+      what: "Developing PitLane Director AC through closed beta.",
+      where: "PitLane Systems",
+    },
+    {
+      what: "Ideating an affiliate-linking sim configuration tool.",
+      where: "Trophy Sim Solutions",
+    },
   ],
   featured: [
     {
