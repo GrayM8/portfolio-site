@@ -64,3 +64,11 @@ body {
 .o3-link[data-active="true"] {
   color: var(--accent);
 }
+
+.o3-kicker {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--sub);
+}

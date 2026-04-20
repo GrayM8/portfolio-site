@@ -15,6 +15,7 @@ import {
 import { PORTFOLIO, type FeaturedProject, type Note } from "@/data/portfolio";
 import { useGithubActivity } from "@/lib/github";
 import { useModeTheme } from "../ModeThemeProvider";
+import { EditorialFooter } from "./EditorialFooter";
 import { EditorialHeader, NAV_ITEMS, type NavId } from "./EditorialHeader";
 import { paletteFor, paletteToVars, type Palette } from "./palette";
 
@@ -37,7 +38,6 @@ export function EditorialSite() {
         year: "numeric",
       })}`
     : "";
-  const currentYear = today ? today.getFullYear() : 2026;
 
   useEffect(() => {
     const threshold = 96;
@@ -84,7 +84,6 @@ export function EditorialSite() {
         .o3-blip { animation: o3-blip 1.8s ease-in-out infinite; }
         @keyframes o3-pulse { 0%,100% { transform: scale(1); opacity: 0.65 } 50% { transform: scale(1.8); opacity: 0 } }
         .o3-pulse { transform-origin: center; transform-box: fill-box; animation: o3-pulse 1.8s ease-out infinite; }
-        .o3-kicker { font-family: var(--font-mono); font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--sub); }
         .o3-tile { transition: border-color .2s ease, transform .2s ease; }
         .o3-tile:hover { border-color: var(--accent); }
         .o3-tile:hover .o3-tile-title { color: var(--accent); }
@@ -648,33 +647,6 @@ export function EditorialSite() {
             </div>
             <div className="grid gap-6 content-start md:col-span-2 lg:col-span-1">
               <FeatureNote n={P.notes[3]} c={c} />
-              <div
-                className="p-4 border"
-                style={{ background: c.bg, borderColor: c.rule }}
-              >
-                <div className="o3-kicker mb-2">Subscribe</div>
-                <div
-                  className="font-serif text-[17px] md:text-[18px] leading-[1.2] mb-2.5"
-                  style={{ color: c.ink }}
-                >
-                  Dispatches, monthly.
-                </div>
-                <input
-                  placeholder="you@domain.dev"
-                  className="w-full px-2.5 py-2 font-mono text-[12px] mb-1.5 outline-none"
-                  style={{
-                    background: c.bg,
-                    border: `1px solid ${c.rule}`,
-                    color: c.ink,
-                  }}
-                />
-                <button
-                  className="w-full py-2 font-mono text-[11px] uppercase tracking-widest cursor-pointer"
-                  style={{ background: c.ink, color: c.bg, border: "none" }}
-                >
-                  Subscribe →
-                </button>
-              </div>
             </div>
           </div>
         </div>
@@ -705,7 +677,7 @@ export function EditorialSite() {
                   ["github", P.github],
                   ["linkedin", P.linkedin],
                   ["location", P.location],
-                  ["best for", "technical leadership · distributed systems · real-time infrastructure"],
+                  ["best for", "full-stack development · technical leadership · distributed systems · real-time infrastructure"],
                 ] as const
               ).map(([k, v]) => (
                 <div
@@ -727,45 +699,7 @@ export function EditorialSite() {
         </div>
       </section>
 
-      {/* MASTHEAD FOOTER */}
-      <footer
-        style={{ background: c.cover, borderTop: `2px solid ${c.ink}` }}
-      >
-        <div
-          className={`${WRAP} ${PAD} py-8 grid grid-cols-1 md:grid-cols-[2fr_1fr_1fr] gap-8 font-mono text-[11px]`}
-        >
-          <div>
-            <div
-              className="font-serif text-[18px] md:text-[20px] tracking-[0.15em] mb-2"
-              style={{ color: c.ink }}
-            >
-              G.MARSHALL — FIELD NOTES
-            </div>
-            <div className="leading-[1.6]" style={{ color: c.sub }}>
-              Set in Fraunces &amp; Inter. Built in React. Hosted on the open web.
-              <br />
-              Best read with a coffee and something loud in the background.
-            </div>
-          </div>
-          <div>
-            <div className="o3-kicker mb-2">Masthead</div>
-            <div className="leading-[1.7]" style={{ color: c.ink }}>
-              Editor, engineer &amp; designer
-              <br />
-              Gray Marshall
-            </div>
-          </div>
-          <div>
-            <div className="o3-kicker mb-2">Publication</div>
-            <div className="leading-[1.7]" style={{ color: c.ink }}>
-              Vol. 03 · {currentYear}
-              <br />© Gray Marshall
-              <br />
-              Austin, Texas
-            </div>
-          </div>
-        </div>
-      </footer>
+      <EditorialFooter />
     </div>
   );
 }

@@ -12,6 +12,7 @@ const PAD = "px-5 sm:px-8 md:px-10 lg:px-12";
 export type NavId =
   | "about"
   | "work"
+  | "index"
   | "now"
   | "experience"
   | "notes"
@@ -19,7 +20,8 @@ export type NavId =
 
 export const NAV_ITEMS: ReadonlyArray<{ id: NavId; label: string }> = [
   { id: "about", label: "About" },
-  { id: "work", label: "Work" },
+  { id: "work", label: "Featured" },
+  { id: "index", label: "Projects" },
   { id: "now", label: "Now" },
   { id: "experience", label: "Experience" },
   { id: "notes", label: "Notes" },

@@ -7,6 +7,7 @@ import {
   type AnyProject,
   type FeaturedProject,
 } from "@/data/portfolio";
+import { EditorialFooter } from "@/components/editorial/EditorialFooter";
 import { EditorialHeader } from "@/components/editorial/EditorialHeader";
 import { paletteFor, paletteToVars } from "@/components/editorial/palette";
 import { useModeTheme } from "@/components/ModeThemeProvider";
@@ -288,7 +289,7 @@ export function ProjectDetail({ project }: { project: AnyProject }) {
       {/* reading body — single centered column */}
       <section>
         <div className={`${WRAP} ${PAD} py-14 md:py-20`}>
-          <div className="mx-auto max-w-[720px] space-y-14 md:space-y-16">
+          <div className="mx-auto max-w-[960px] space-y-14 md:space-y-16">
             {project.overview && (
               <SectionHead c={c} roman="I." kicker="Summary" title="Overview" />
             )}
@@ -474,69 +475,7 @@ export function ProjectDetail({ project }: { project: AnyProject }) {
         </section>
       )}
 
-      {/* colophon footer */}
-      <footer style={{ background: c.cover, borderTop: `2px solid ${c.ink}` }}>
-        <div
-          className={`${WRAP} ${PAD} py-8 md:py-10 grid grid-cols-1 md:grid-cols-[2fr_1fr_1fr] gap-8 font-mono text-[11px]`}
-        >
-          <div>
-            <div className="pd-kicker mb-2">Colophon</div>
-            <div
-              className="font-serif text-[18px] md:text-[20px] tracking-[0.1em]"
-              style={{ color: c.ink }}
-            >
-              {project.title}
-            </div>
-            <div
-              className="mt-1 font-serif italic text-[13px]"
-              style={{ color: c.sub }}
-            >
-              {project.tagline}
-            </div>
-          </div>
-          <div>
-            <div className="pd-kicker mb-2">Stack</div>
-            <div className="leading-[1.7]" style={{ color: c.ink }}>
-              {project.tech.join(" · ")}
-            </div>
-          </div>
-          <div>
-            <div className="pd-kicker mb-2">Links</div>
-            <div className="grid gap-1.5 leading-[1.6]" style={{ color: c.ink }}>
-              {project.link && (
-                <a
-                  href={normalizeUrl(project.link)}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="pd-link inline-flex items-center gap-2"
-                >
-                  <ExternalLink size={11} strokeWidth={1.75} aria-hidden />
-                  {project.link.replace(/^https?:\/\//, "")}
-                </a>
-              )}
-              {repoList.map((r) => (
-                <a
-                  key={r.url}
-                  href={normalizeUrl(r.url)}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="pd-link inline-flex items-center gap-2"
-                >
-                  <Github size={11} strokeWidth={1.75} aria-hidden />
-                  {repoList.length > 1 ? r.label : r.url.replace(/^https?:\/\//, "")}
-                </a>
-              ))}
-              <Link
-                href="/#index"
-                className="pd-link inline-flex items-center gap-2"
-              >
-                <ArrowLeft size={11} strokeWidth={1.75} aria-hidden />
-                Back to index
-              </Link>
-            </div>
-          </div>
-        </div>
-      </footer>
+      <EditorialFooter />
     </div>
   );
 }
