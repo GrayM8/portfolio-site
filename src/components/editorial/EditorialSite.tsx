@@ -11,7 +11,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { PORTFOLIO, type FeaturedProject, type IndexProject, type Note } from "@/data/portfolio";
+import { PORTFOLIO, type FeaturedProject, type Note } from "@/data/portfolio";
 import { useGithubActivity } from "@/lib/github";
 import { useAustinTemp } from "@/lib/weather";
 import { useModeTheme } from "../ModeThemeProvider";
@@ -476,11 +476,48 @@ export function EditorialSite() {
             title="Everything, listed"
             sub={`${P.projects.length + P.featured.length} projects, archived and active.`}
           />
-          <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
-            {P.projects.map((p, i) => (
-              <ProjectTile key={i} p={p} c={c} />
-            ))}
-          </div>
+          {(() => {
+            const active: TileItem[] = [
+              ...P.featured,
+              ...P.projects.filter((p) => p.status !== "Archived"),
+            ];
+            const archived: TileItem[] = P.projects.filter(
+              (p) => p.status === "Archived",
+            );
+            return (
+              <>
+                <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
+                  {active.map((p, i) => (
+                    <ProjectTile key={`a-${i}`} p={p} c={c} />
+                  ))}
+                </div>
+                {archived.length > 0 && (
+                  <div className="mt-10 md:mt-12">
+                    <div
+                      className="o3-kicker mb-4 flex items-baseline gap-3"
+                    >
+                      <span>Archived · {archived.length}</span>
+                      <span
+                        aria-hidden
+                        className="flex-1 h-px"
+                        style={{ background: c.rule }}
+                      />
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                      {archived.map((p, i) => (
+                        <ProjectTile
+                          key={`x-${i}`}
+                          p={p}
+                          c={c}
+                          compact
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </>
+            );
+          })()}
         </div>
       </section>
 
@@ -1047,14 +1084,35 @@ function EditorialFeature({
   );
 }
 
-function ProjectTile({ p, c }: { p: IndexProject; c: Palette }) {
-  const hasImage = Boolean(p.image);
+type TileItem = {
+  title: string;
+  tagline: string;
+  tech: string[];
+  status: string;
+  year: string;
+  image?: string;
+};
+
+function ProjectTile({
+  p,
+  c,
+  compact,
+}: {
+  p: TileItem;
+  c: Palette;
+  compact?: boolean;
+}) {
+  const hasImage = Boolean(p.image) && !compact;
   const statusColor = p.status === "Live" ? c.accent : c.sub;
 
   return (
     <article
       className="o3-tile relative overflow-hidden border font-mono"
-      style={{ borderColor: c.rule, background: c.card, minHeight: 180 }}
+      style={{
+        borderColor: c.rule,
+        background: c.card,
+        minHeight: compact ? 96 : 180,
+      }}
     >
       {hasImage && (
         <div
@@ -1083,7 +1141,6 @@ function ProjectTile({ p, c }: { p: IndexProject; c: Palette }) {
               />
             </div>
           </div>
-          {/* vignette: fades image into the card background */}
           <div
             className="absolute inset-0"
             style={{
@@ -1093,9 +1150,11 @@ function ProjectTile({ p, c }: { p: IndexProject; c: Palette }) {
         </div>
       )}
 
-      {/* header row — mirrors telemetry widget chrome */}
+      {/* header row */}
       <div
-        className="relative z-10 flex items-center justify-between px-4 py-2.5 border-b text-[9px] uppercase tracking-widest"
+        className={`relative z-10 flex items-center justify-between border-b uppercase tracking-widest ${
+          compact ? "px-3 py-2 text-[8px]" : "px-4 py-2.5 text-[9px]"
+        }`}
         style={{ borderColor: c.rule, color: c.sub }}
       >
         <span>{p.year}</span>
@@ -1106,25 +1165,35 @@ function ProjectTile({ p, c }: { p: IndexProject; c: Palette }) {
       </div>
 
       {/* body */}
-      <div className="relative z-10 px-4 py-4 md:px-5 md:py-5">
+      <div
+        className={`relative z-10 ${
+          compact ? "px-3 py-3" : "px-4 py-4 md:px-5 md:py-5"
+        }`}
+      >
         <h3
-          className="o3-tile-title font-serif font-normal leading-[1.1] m-0"
+          className="o3-tile-title font-serif font-normal leading-[1.15] m-0"
           style={{
             color: c.ink,
-            fontSize: "clamp(20px, 2.5vw, 26px)",
-            letterSpacing: -0.3,
+            fontSize: compact
+              ? "clamp(15px, 1.6vw, 18px)"
+              : "clamp(20px, 2.5vw, 26px)",
+            letterSpacing: compact ? -0.2 : -0.3,
           }}
         >
           {p.title}
         </h3>
         <div
-          className="font-serif italic text-[14px] md:text-[15px] mt-2 max-w-[70%]"
+          className={`font-serif italic ${
+            compact ? "text-[12px] mt-1.5" : "text-[14px] md:text-[15px] mt-2 max-w-[70%]"
+          }`}
           style={{ color: c.sub }}
         >
           {p.tagline}
         </div>
         <div
-          className="font-mono text-[10px] mt-4 max-w-[70%]"
+          className={`font-mono ${
+            compact ? "text-[9px] mt-2" : "text-[10px] mt-4 max-w-[70%]"
+          }`}
           style={{ color: c.sub, letterSpacing: 0.5 }}
         >
           {p.tech.join(" · ")}
