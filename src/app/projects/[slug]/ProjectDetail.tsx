@@ -7,6 +7,7 @@ import {
   type AnyProject,
   type FeaturedProject,
 } from "@/data/portfolio";
+import { EditorialHeader } from "@/components/editorial/EditorialHeader";
 import { paletteFor, paletteToVars } from "@/components/editorial/palette";
 import { useModeTheme } from "@/components/ModeThemeProvider";
 
@@ -78,27 +79,26 @@ export function ProjectDetail({ project }: { project: AnyProject }) {
         }
       `}</style>
 
-      {/* top bar */}
-      <header
-        className="sticky top-0 z-40 border-b bg-[color:var(--bg)]/95 backdrop-blur supports-[backdrop-filter]:bg-[color:var(--bg)]/80"
-        style={{ borderColor: c.rule }}
-      >
+      <EditorialHeader />
+
+      {/* back to index strip */}
+      <div className="border-b" style={{ borderColor: c.rule }}>
         <div
-          className={`${WRAP} ${PAD} py-3 md:py-3.5 flex items-center justify-between gap-4 font-mono text-[11px] uppercase tracking-widest`}
+          className={`${WRAP} ${PAD} py-2.5 md:py-3 flex items-center justify-between gap-4 font-mono text-[10px] md:text-[11px] uppercase tracking-widest`}
           style={{ color: c.sub }}
         >
           <Link
             href="/#index"
-            className="pd-link flex items-center gap-2 shrink-0"
+            className="pd-link inline-flex items-center gap-2"
           >
-            <ArrowLeft size={13} strokeWidth={1.75} aria-hidden />
+            <ArrowLeft size={12} strokeWidth={1.75} aria-hidden />
             <span>Back to index</span>
           </Link>
-          <Link href="/" className="pd-link hidden sm:inline-block">
-            <span style={{ color: c.accent }}>G.</span>Marshall
-          </Link>
+          <span className="hidden md:inline">
+            Case · {project.slug}
+          </span>
         </div>
-      </header>
+      </div>
 
       {/* hero */}
       <section

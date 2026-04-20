@@ -14,23 +14,12 @@ import {
 } from "recharts";
 import { PORTFOLIO, type FeaturedProject, type Note } from "@/data/portfolio";
 import { useGithubActivity } from "@/lib/github";
-import { useAustinTemp } from "@/lib/weather";
 import { useModeTheme } from "../ModeThemeProvider";
+import { EditorialHeader, NAV_ITEMS, type NavId } from "./EditorialHeader";
 import { paletteFor, paletteToVars, type Palette } from "./palette";
 
 const WRAP = "mx-auto w-full max-w-[1440px]";
 const PAD = "px-5 sm:px-8 md:px-10 lg:px-12";
-
-type NavId = "about" | "work" | "now" | "experience" | "notes" | "contact";
-
-const NAV_ITEMS: ReadonlyArray<{ id: NavId; label: string }> = [
-  { id: "about", label: "About" },
-  { id: "work", label: "Work" },
-  { id: "now", label: "Now" },
-  { id: "experience", label: "Experience" },
-  { id: "notes", label: "Notes" },
-  { id: "contact", label: "Contact" },
-];
 
 export function EditorialSite() {
   const { theme } = useModeTheme();
@@ -38,13 +27,9 @@ export function EditorialSite() {
   const P = PORTFOLIO;
   const [active, setActive] = useState<NavId>(NAV_ITEMS[0].id);
   const [today, setToday] = useState<Date | null>(null);
-  const temp = useAustinTemp();
 
   useEffect(() => setToday(new Date()), []);
 
-  const mastheadDate = today
-    ? today.toLocaleDateString("en-US", { month: "long", year: "numeric" })
-    : null;
   const nowSub = today
     ? `As of ${today.toLocaleDateString("en-US", {
         month: "long",
@@ -88,12 +73,6 @@ export function EditorialSite() {
       className="min-h-full bg-[color:var(--bg)] text-[color:var(--ink)] font-sans text-[14px] leading-[1.55]"
     >
       <style>{`
-        .o3-link { color: inherit; text-decoration: none; position: relative; padding-bottom: 3px; display: inline-block; }
-        .o3-link::after { content:''; position:absolute; left:0; right:0; bottom:0; height:1px; background:currentColor; transform: scaleX(0); transform-origin: right; transition: transform .25s ease; }
-        .o3-link:hover::after,
-        .o3-link[data-active="true"]::after { transform: scaleX(1); transform-origin: left; }
-        .o3-link:hover,
-        .o3-link[data-active="true"] { color: var(--accent); }
         .o3-feat:hover .o3-img { transform: scale(1.02); }
         .o3-feat:hover .o3-title { color: var(--accent); }
         .o3-img { transition: transform .5s ease; }
@@ -114,55 +93,7 @@ export function EditorialSite() {
         .o3-tile-title { transition: color .2s ease; }
       `}</style>
 
-      {/* MASTHEAD */}
-      <header
-        className={`border-b border-[color:var(--ink)] bg-[color:var(--bg)]`}
-      >
-        <div
-          className={`${WRAP} ${PAD} py-3 md:py-3.5 grid grid-cols-[auto_1fr] md:grid-cols-[1fr_auto_1fr] items-center gap-4 md:gap-6`}
-        >
-          <div className="hidden md:block font-mono text-[10px] tracking-widest uppercase text-[color:var(--sub)]">
-            Vol. 03 · Issue 01{mastheadDate ? ` · ${mastheadDate}` : ""}
-          </div>
-          <div className="font-serif text-[18px] sm:text-[20px] md:text-[22px] font-medium tracking-[0.12em] md:tracking-[0.18em] whitespace-nowrap text-left md:text-center">
-            <span style={{ color: c.accent }}>G.</span>MARSHALL{" "}
-            <span className="text-[color:var(--sub)] font-normal">—</span>{" "}
-            <span className="italic font-normal">field notes</span>
-          </div>
-          <div className="flex items-center justify-end gap-3 font-mono text-[11px] text-[color:var(--sub)]">
-            <span className="hidden sm:inline">
-              Austin, TX{temp !== null ? ` · ${temp}°F` : ""}
-            </span>
-          </div>
-        </div>
-      </header>
-
-      {/* NAV */}
-      <nav className="sticky top-0 z-40 border-b border-[color:var(--rule)] bg-[color:var(--bg)]/95 backdrop-blur supports-[backdrop-filter]:bg-[color:var(--bg)]/80">
-        <div
-          className={`${WRAP} ${PAD} py-2.5 md:py-3 flex justify-between items-center gap-4 font-mono text-[11px] tracking-widest uppercase`}
-        >
-          <div className="flex gap-4 sm:gap-5 md:gap-7 text-[color:var(--sub)] overflow-x-auto scrollbar-none -mx-1 px-1">
-            {NAV_ITEMS.map((item) => (
-              <a
-                key={item.id}
-                href={`#${item.id}`}
-                data-active={active === item.id}
-                className="o3-link shrink-0"
-              >
-                {item.label}
-              </a>
-            ))}
-          </div>
-          <a
-            href="/resume.pdf"
-            download
-            className="o3-link hidden md:inline-block whitespace-nowrap text-[color:var(--sub)]"
-          >
-            ↓ Download Resume
-          </a>
-        </div>
-      </nav>
+      <EditorialHeader active={active} homeRoute />
 
       {/* COVER */}
       <section
