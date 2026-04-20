@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ThemeToggle } from "../ThemeToggle";
+import { ModeControls } from "../ModeControls";
 import { useModeTheme } from "../ModeThemeProvider";
 import { paletteFor } from "./palette";
 import { useAustinTemp } from "@/lib/weather";
@@ -115,13 +115,7 @@ export function EditorialHeader({ active, homeRoute = false }: Props) {
             >
               ↓ Resume
             </a>
-            <Link
-              href="/tui"
-              className="o3-link whitespace-nowrap text-[color:var(--sub)]"
-            >
-              :terminal
-            </Link>
-            <ThemeToggle palette="editorial" />
+            <ModeControls palette="editorial" />
           </div>
         </div>
       </nav>

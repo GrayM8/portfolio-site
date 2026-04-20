@@ -9,9 +9,8 @@ import {
   type FormEvent,
   type KeyboardEvent,
 } from "react";
-import Link from "next/link";
 import { PORTFOLIO } from "@/data/portfolio";
-import { ThemeToggle } from "../ThemeToggle";
+import { ModeControls } from "../ModeControls";
 import { useModeTheme } from "../ModeThemeProvider";
 
 type Palette = {
@@ -649,14 +648,7 @@ export function TerminalSite() {
             status: <span style={{ color: c.green }}>available</span>
           </span>
           <span>tz: CST</span>
-          <Link
-            href="/"
-            className="tui-slash"
-            style={{ color: c.sub, textDecoration: "none" }}
-          >
-            <span style={{ color: c.accent }}>:</span>editorial
-          </Link>
-          <ThemeToggle palette="terminal" />
+          <ModeControls palette="terminal" />
         </div>
       </header>
 
