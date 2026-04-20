@@ -240,8 +240,8 @@ export function EditorialSite() {
                   [
                     ["2nd", "year at UT Austin"],
                     ["2 race cars", "shipping telemetry for"],
-                    ["1 platform", "built as CTO · live"],
-                    ["3+", "featured projects"],
+                    ["3 companies", "co-founded or led"],
+                    ["McCombs Fellow", "2026 cohort"],
                     ["100+", "drivers on LSR"],
                     ["<40ms", "p99 telemetry latency"],
                   ] as const
