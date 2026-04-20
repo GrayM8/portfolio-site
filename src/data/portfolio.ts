@@ -389,7 +389,30 @@ export const PORTFOLIO: Portfolio = {
   ],
   experience: [
     {
-      title: "Founder & CTO",
+      title: "Co-Founder & CTO",
+      org: "Trophy Sim Solutions",
+      period: "Apr 2026 — Present",
+      tenure: "1 mo",
+      location: "Austin, TX",
+      logo: "/assets/trophysim.png",
+      bullets: [
+        "Co-founded Trophy Sim Solutions LLC (operating as TrophySim) with Mark Yuan (CEO) and Dylan Foley (CDO) to design, source, install, and calibrate professional sim racing systems for motorsport teams and training facilities.",
+        "Architected and shipped the marketing platform (Next.js 16, TypeScript, Tailwind v4) as a content-driven site where a single TS source feeds both rendered pages and JSON-LD schema, eliminating drift between visible copy and structured data.",
+        "Built the Zod-validated, Resend-backed contact pipeline and Cloudflare Turnstile gating for quote intake from early prospects.",
+        "Leading technical direction, including an in-progress affiliate-linking sim configuration tool to streamline spec → quote → purchase.",
+      ],
+      skills: [
+        "Next.js",
+        "TypeScript",
+        "Tailwind",
+        "Full-Stack",
+        "SEO",
+        "Entrepreneurship",
+        "Technical Leadership",
+      ],
+    },
+    {
+      title: "Founder",
       org: "PitLane Systems",
       period: "Apr 2026 — Present",
       tenure: "1 mo",
