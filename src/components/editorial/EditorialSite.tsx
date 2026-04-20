@@ -352,7 +352,7 @@ export function EditorialSite() {
                     ["2 race cars", "shipping telemetry for"],
                     ["1 platform", "built as CTO · live"],
                     ["3+", "featured projects"],
-                    ["127", "signals streaming"],
+                    ["300+", "drivers on LSR"],
                     ["<40ms", "p99 telemetry latency"],
                   ] as const
                 ).map(([v, k]) => (
