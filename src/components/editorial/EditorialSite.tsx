@@ -859,7 +859,7 @@ export function EditorialSite() {
                   ["github", P.github],
                   ["linkedin", P.linkedin],
                   ["location", P.location],
-                  ["best for", "SWE interviews · real-time systems"],
+                  ["best for", "technical leadership · distributed systems · real-time infrastructure"],
                 ] as const
               ).map(([k, v]) => (
                 <div
