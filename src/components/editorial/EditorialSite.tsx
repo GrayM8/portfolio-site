@@ -134,10 +134,10 @@ export function EditorialSite() {
                 style={{ color: c.ink }}
               >
                 <span className="o3-kicker mr-2">Summary</span>
-                Gray Marshall is a second-year CS student at UT Austin building the real-time
-                telemetry stack for a Formula SAE electric race car — and co-leading a
-                production web platform as CTO of Longhorn Sim Racing. This is where the work
-                lives.
+                Gray Marshall is a second-year CS student at UT Austin — founder of PitLane
+                Systems, co-founder and CTO at Longhorn Sim Racing and Trophy Sim Solutions,
+                and the telemetry and autonomy engineer at Longhorn Racing. This is where the
+                work lives.
               </div>
               <div className="mt-6 md:mt-8 flex flex-wrap gap-x-5 gap-y-1 items-center font-mono text-[11px] md:text-[12px] text-[color:var(--sub)]">
                 <span>
