@@ -714,7 +714,7 @@ export function EditorialSite() {
                       href={href}
                       target={href.startsWith("mailto:") ? undefined : "_blank"}
                       rel={href.startsWith("mailto:") ? undefined : "noreferrer"}
-                      className="o3-link inline-flex items-center gap-2 text-[14px] sm:text-[15px] md:text-[16px] break-words text-[color:var(--ink)]"
+                      className="group inline-flex items-center gap-2 text-[14px] sm:text-[15px] md:text-[16px] break-words text-[color:var(--ink)] transition-colors hover:text-[color:var(--accent)]"
                     >
                       {Icon && (
                         <Icon
@@ -724,7 +724,13 @@ export function EditorialSite() {
                           className="shrink-0"
                         />
                       )}
-                      <span>{v}</span>
+                      <span className="relative pb-[3px]">
+                        {v}
+                        <span
+                          aria-hidden
+                          className="pointer-events-none absolute left-0 right-0 bottom-0 h-px bg-current origin-right scale-x-0 transition-transform duration-[250ms] group-hover:origin-left group-hover:scale-x-100"
+                        />
+                      </span>
                     </a>
                   ) : (
                     <div
