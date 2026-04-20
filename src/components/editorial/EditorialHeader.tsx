@@ -2,8 +2,9 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { paletteFor } from "./palette";
+import { ModeControls } from "../ModeControls";
 import { useModeTheme } from "../ModeThemeProvider";
+import { paletteFor } from "./palette";
 import { useAustinTemp } from "@/lib/weather";
 
 const WRAP = "mx-auto w-full max-w-[1440px]";
@@ -107,13 +108,16 @@ export function EditorialHeader({ active, homeRoute = false }: Props) {
               ),
             )}
           </div>
-          <a
-            href="/resume.pdf"
-            download
-            className="o3-link hidden md:inline-block whitespace-nowrap text-[color:var(--sub)]"
-          >
-            ↓ Download Resume
-          </a>
+          <div className="flex items-center gap-3 shrink-0">
+            <a
+              href="/resume.pdf"
+              download
+              className="o3-link hidden lg:inline-block whitespace-nowrap text-[color:var(--sub)]"
+            >
+              ↓ Resume
+            </a>
+            <ModeControls palette="editorial" />
+          </div>
         </div>
       </nav>
     </>

@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, type FormEvent, type KeyboardEvent } from "react";
 import { PORTFOLIO, type FeaturedProject, type Portfolio } from "@/data/portfolio";
+import { ModeControls } from "../ModeControls";
 import { useModeTheme } from "../ModeThemeProvider";
 
 type Palette = {
@@ -107,6 +108,7 @@ export function TerminalSite() {
             status: <span style={{ color: c.green }}>available</span>
           </span>
           <span>tz: CST</span>
+          <ModeControls palette="terminal" />
         </div>
       </header>
 
