@@ -261,7 +261,7 @@ export const PORTFOLIO: Portfolio = {
         "WebSockets",
         "OBS",
       ],
-      status: "In Development",
+      status: "Closed Beta",
       year: "2026 — Present",
       image: "/assets/proj-pitlane.png",
       link: "https://www.pitlanesystems.com",
