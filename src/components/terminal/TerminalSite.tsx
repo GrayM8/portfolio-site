@@ -100,10 +100,22 @@ export function TerminalSite() {
   const [booted, setBooted] = useState(false);
   const [cmdHistory, setCmdHistory] = useState<string[]>([]);
   const [histIdx, setHistIdx] = useState(-1);
+  const [inputWidth, setInputWidth] = useState(0);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const scrollRef = useRef<HTMLDivElement | null>(null);
+  const measureRef = useRef<HTMLSpanElement | null>(null);
 
-  // Boot sequence: print identity + hint to try commands
+  // Measure the rendered width of whatever the user has typed, so the cursor
+  // block can sit flush against it instead of relying on the browser's `size`
+  // attribute which includes padding slack.
+  useEffect(() => {
+    if (measureRef.current) {
+      setInputWidth(measureRef.current.getBoundingClientRect().width);
+    }
+  }, [input]);
+
+  // Boot sequence: every line below is sourced from PORTFOLIO so the terminal
+  // stays identical to the editorial home content.
   useEffect(() => {
     const bootLines: Line[] = [
       { t: "out", content: `gray@austin : ~ — zsh`, muted: true },
@@ -121,33 +133,32 @@ export function TerminalSite() {
       { t: "out", content: `${P.name.toLowerCase()} — ${P.role.toLowerCase()}` },
       {
         t: "out",
-        content: `sophomore @ ut austin · cs · class of 2028`,
+        content: `${P.location.toLowerCase()} · ${P.status.toLowerCase()}`,
         muted: true,
       },
-      { t: "cmd", content: "cat about.md | head -3" },
-      { t: "out", content: "➤ telemetry eng @ longhorn racing (fsae ev)" },
-      { t: "out", content: "➤ co-founder & cto @ longhorn sim racing" },
-      {
-        t: "out",
-        content: "➤ interested in: real-time systems, dist. systems, infra",
-      },
+      { t: "cmd", content: "cat ~/about.md | head -1" },
+      { t: "out", content: P.about[0] },
       { t: "cmd", content: "systemctl status" },
       {
         t: "out",
         content: "● gray.service — loaded, active (running)",
         color: "green",
       },
-      { t: "out", content: "  shipping: telemetry v3, lsr payments", muted: true },
+      ...P.now.slice(0, 2).map((n, idx) => ({
+        t: "out" as const,
+        content: `  ${idx === 0 ? "shipping" : "also    "}: ${n.what} (${n.where})`,
+        muted: true,
+      })),
       {
         t: "out",
-        content: "  open to: summer 2026 swe internships",
+        content: `  ${P.status.toLowerCase()}`,
         color: "accent",
       },
       { t: "cmd", content: "help" },
       {
         t: "out",
         content:
-          "commands: work · projects · case <slug> · experience · education · skills · now · notes · cv · contact · theme · mode · clear",
+          "commands: about · work · projects · case <slug> · experience · education · skills · now · notes · cv · contact · theme · mode · clear",
       },
       {
         t: "out",
@@ -172,7 +183,7 @@ export function TerminalSite() {
     return () => {
       if (timer) window.clearTimeout(timer);
     };
-  }, [P.name, P.role]);
+  }, [P]);
 
   // Auto-scroll on new content
   useEffect(() => {
@@ -549,7 +560,7 @@ export function TerminalSite() {
     background: c.bg,
     color: c.ink,
     fontFamily: mono,
-    minHeight: "100vh",
+    height: "100vh",
     display: "flex",
     flexDirection: "column",
   };
@@ -563,9 +574,12 @@ export function TerminalSite() {
         .tui-slash:hover { color: ${c.ink}; }
       `}</style>
 
-      {/* Top bar — preserved terminal chrome */}
+      {/* Top bar — preserved terminal chrome, pinned so it never scrolls away */}
       <header
         style={{
+          position: "sticky",
+          top: 0,
+          zIndex: 40,
           borderBottom: `1px solid ${c.rule}`,
           background: c.panel,
           padding: "10px 16px",
@@ -576,6 +590,7 @@ export function TerminalSite() {
           fontSize: 11,
           letterSpacing: 0.3,
           flexWrap: "wrap",
+          flexShrink: 0,
         }}
       >
         <div
@@ -628,12 +643,13 @@ export function TerminalSite() {
         </div>
       </header>
 
-      {/* Full-height TUI */}
+      {/* Full-height TUI — scrolls internally; header stays pinned above it */}
       <div
         ref={scrollRef}
         onClick={() => inputRef.current?.focus()}
         style={{
           flex: 1,
+          minHeight: 0,
           overflow: "auto",
           padding: "18px 20px 24px",
           fontSize: 13,
@@ -665,41 +681,59 @@ export function TerminalSite() {
         {booted && (
           <form
             onSubmit={onSubmit}
-            style={{ display: "flex", alignItems: "center", marginTop: 4, flexWrap: "wrap" }}
+            style={{ display: "flex", alignItems: "center", marginTop: 4 }}
             onClick={() => inputRef.current?.focus()}
           >
             <span style={{ color: c.green }}>gray@austin</span>
             <span style={{ color: c.sub }}>:</span>
             <span style={{ color: c.blue }}>~</span>
             <span style={{ color: c.accent, marginRight: 6 }}>$</span>
-            <input
-              ref={inputRef}
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={onKey}
-              autoFocus
-              spellCheck={false}
-              autoComplete="off"
-              size={Math.max(1, input.length)}
-              style={{
-                width: "auto",
-                minWidth: "1ch",
-                maxWidth: "100%",
-                background: "transparent",
-                border: "none",
-                outline: "none",
-                color: c.ink,
-                fontFamily: mono,
-                fontSize: 13,
-                padding: 0,
-                caretColor: "transparent",
-              }}
-            />
-            <span
-              aria-hidden
-              className="o2-cursor"
-              style={{ background: c.accent }}
-            />
+            <span style={{ position: "relative", display: "inline-flex", alignItems: "center" }}>
+              <input
+                ref={inputRef}
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={onKey}
+                autoFocus
+                spellCheck={false}
+                autoComplete="off"
+                style={{
+                  width: `${Math.max(inputWidth, 1)}px`,
+                  background: "transparent",
+                  border: "none",
+                  outline: "none",
+                  color: c.ink,
+                  fontFamily: mono,
+                  fontSize: 13,
+                  lineHeight: 1.55,
+                  padding: 0,
+                  margin: 0,
+                  caretColor: "transparent",
+                }}
+              />
+              <span
+                aria-hidden
+                ref={measureRef}
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  visibility: "hidden",
+                  whiteSpace: "pre",
+                  fontFamily: mono,
+                  fontSize: 13,
+                  lineHeight: 1.55,
+                  pointerEvents: "none",
+                }}
+              >
+                {input || " "}
+              </span>
+              <span
+                aria-hidden
+                className="o2-cursor"
+                style={{ background: c.accent, marginLeft: 0 }}
+              />
+            </span>
           </form>
         )}
       </div>
