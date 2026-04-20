@@ -1,5 +1,7 @@
 export type Metric = { k: string; v: string };
 
+export type RepoRef = { label: string; url: string };
+
 export type FeaturedProject = {
   title: string;
   slug: string;
@@ -11,7 +13,9 @@ export type FeaturedProject = {
   image?: string;
   video?: string;
   link?: string;
+  linkNote?: string;
   repo?: string;
+  repos?: RepoRef[];
   metrics?: Metric[];
   overview?: string;
   detailBullets?: string[];
@@ -26,7 +30,9 @@ export type IndexProject = {
   image?: string;
   slug?: string;
   link?: string;
+  linkNote?: string;
   repo?: string;
+  repos?: RepoRef[];
   overview?: string;
   detailBullets?: string[];
 };
@@ -124,39 +130,78 @@ export const PORTFOLIO: Portfolio = {
     {
       title: "Longhorn Sim Racing Platform",
       slug: "lsr",
-      tagline: "Events, membership & competition management",
+      tagline: "Events, Membership & Competition Management Platform",
       year: "2025 — Present",
       status: "Live",
       tech: ["TypeScript", "Next.js", "PostgreSQL", "React"],
       bullets: [
         "Centralized membership, events, and competition results into a single self-serve platform.",
         "Automated race result ingestion and leaderboard/statistics processing.",
-        "Reduced admin workload and improved consistency across event operations.",
+        "Reduced administrative workload and improved consistency across event operations.",
+      ],
+      overview:
+        "A unified operations hub for Longhorn Sim Racing that replaced scattered spreadsheets and manual workflows with structured registration, admin tools, and automated results processing — built for real day-to-day use.",
+      detailBullets: [
+        "Architected and shipped the club's core digital platform end-to-end in TypeScript (React / Next.js), used for day-to-day operations.",
+        "Implemented member accounts and event registration workflows with officer-facing admin tooling for management and approvals.",
+        "Built automated race results ingestion and computation pipelines powering driver statistics, leaderboards, and season standings.",
+        "Integrated a custom merchandise storefront with Shopify-backed checkout, payments, and fulfillment workflows.",
+        "Owned platform discoverability and indexing (structured metadata, sitemaps, Search Console) to ensure reliable SEO and sharing previews.",
       ],
       image: "/assets/proj-lsr.png",
-      link: "longhornsimracing.org",
-      repo: "github.com/GrayM8/lsr-site",
+      link: "https://www.longhornsimracing.org",
+      repo: "https://github.com/GrayM8/lsr-site",
       metrics: [
-        { k: "users", v: "200+" },
-        { k: "events", v: "24" },
+        { k: "drivers", v: "100+" },
+        { k: "events", v: "50+" },
         { k: "uptime", v: "99.9%" },
       ],
     },
     {
-      title: "Formula SAE EV Telemetry",
+      title: "Formula SAE EV Telemetry System",
       slug: "fsae",
-      tagline: "Distributed real-time vehicle telemetry",
+      tagline: "Distributed Real-Time Vehicle Telemetry & Analytics Platform",
       year: "2024 — Present",
       status: "In Development",
-      tech: ["Distributed Systems", "TypeScript", "Python", "Real-Time"],
+      tech: [
+        "Distributed Systems",
+        "Real-Time Data",
+        "TypeScript",
+        "Python",
+        "Telemetry",
+      ],
       bullets: [
-        "Powers live telemetry, timing, and analytics trackside.",
-        "Streams high-frequency vehicle data end-to-end with low latency.",
-        "Enables trackside decisions through real-time dashboards.",
+        "Powers live telemetry, timing, and analytics for engineers and drivers during testing and competition.",
+        "Streams high-frequency vehicle data end-to-end with low latency and fault tolerance.",
+        "Enables trackside decision-making through real-time visualization and post-session analysis.",
+      ],
+      overview:
+        "A distributed, real-time telemetry platform for a Formula SAE electric vehicle, supporting live data ingestion, streaming, storage, and visualization during testing and competition. Designed to deliver reliable, low-latency insight to engineers and drivers under real-world track conditions.",
+      detailBullets: [
+        "Co-architected and maintain a distributed telemetry system spanning on-car ingestion, real-time streaming, persistent storage, and live visualization.",
+        "Led system redesign and modernization after original authorship transitioned, replacing legacy components with a more robust and scalable architecture.",
+        "Owned the design and implementation of the web backend and frontend, delivering real-time dashboards for timing, deltas, vehicle state, driver inputs, and energy usage across mobile and trackside devices.",
+        "Built trackside tooling and configuration workflows to support session setup, data grouping, and reliable live operation.",
+        "Integrated streaming data with backend storage and processing pipelines to support analytics such as energy prediction and performance modeling.",
+        "Focused on system reliability and latency, ensuring graceful behavior under intermittent connectivity and high-frequency data loads.",
       ],
       image: "/assets/proj-telemetry.png",
-      link: "lhrelectric.org",
-      repo: "github.com/LonghornRacingElectric/lhre-2026",
+      link: "https://lhrelectric.org/",
+      linkNote: "Login may be required",
+      repos: [
+        {
+          label: "Monorepo",
+          url: "https://github.com/LonghornRacingElectric/lhre-2026/tree/main",
+        },
+        {
+          label: "Telemetry",
+          url: "https://github.com/LonghornRacingElectric/lhre-2026/tree/main/telemtry",
+        },
+        {
+          label: "Web Tool",
+          url: "https://github.com/LonghornRacingElectric/lhre-2026/tree/main/telemtry/analysis/database/viewer_tool",
+        },
+      ],
       metrics: [
         { k: "hz", v: "1000" },
         { k: "p99", v: "<40ms" },
@@ -164,20 +209,38 @@ export const PORTFOLIO: Portfolio = {
       ],
     },
     {
-      title: "In-Vehicle Driver Dash",
+      title: "In-Vehicle Driver Dash System",
       slug: "dash",
-      tagline: "Real-time driver display: timing, energy, vehicle state",
+      tagline: "Real-Time Driver Display for Vehicle State, Timing, and Energy Data",
       year: "2025 — Present",
       status: "In Development",
-      tech: ["WebSockets", "TypeScript", "Real-Time", "HMI"],
+      tech: ["Real-Time Systems", "WebSockets", "HMI", "TypeScript", "Systems Integration"],
       bullets: [
-        "Displays live timing, energy deltas, and vehicle state to the driver.",
-        "Designed for clarity and reliability under high-speed conditions.",
-        "Integrates telemetry + CAN bus through a low-latency pipeline.",
+        "Displays live timing, energy deltas, and vehicle state directly to the driver in real time.",
+        "Designed for clarity and reliability under high-speed, safety-critical conditions.",
+        "Integrates live telemetry and vehicle bus data through a structured, low-latency pipeline.",
+      ],
+      overview:
+        "A real-time, in-vehicle driver display designed to present critical telemetry, timing, and energy information during testing and competition. Built to operate under strict latency, reliability, and clarity constraints in a high-speed driving environment.",
+      detailBullets: [
+        "Designed and implemented the in-vehicle driver dashboard frontend, presenting real-time telemetry, timing, and energy data with an emphasis on clarity and reliability.",
+        "Defined the data schema and WebSocket interface used to transmit live data to the dash, establishing a clear contract between vehicle-side systems and the display layer.",
+        "Architected the end-to-end data flow from backend telemetry processors through cellular transport to the vehicle, ensuring low-latency delivery of driver-relevant signals.",
+        "Integrated telemetry-derived data (e.g., lap and energy deltas) with vehicle bus signals provided by a Rust-based CAN interface, combining multiple data sources into a unified display model.",
+        "Designed the display for use in a safety- and latency-sensitive environment, prioritizing readable layouts, stable updates, and graceful degradation over visual complexity.",
       ],
       image: "/assets/proj-dash.png",
       video: "/assets/proj-dash.mp4",
-      repo: "github.com/LonghornRacingElectric/lhre-2026",
+      repos: [
+        {
+          label: "Monorepo",
+          url: "https://github.com/LonghornRacingElectric/lhre-2026/tree/main",
+        },
+        {
+          label: "Dash Frontend",
+          url: "https://github.com/LonghornRacingElectric/lhre-2026/tree/main/BEVO/dashd/frontend",
+        },
+      ],
       metrics: [
         { k: "refresh", v: "60fps" },
         { k: "latency", v: "<20ms" },
@@ -189,21 +252,40 @@ export const PORTFOLIO: Portfolio = {
     {
       title: "Personal Website (v3)",
       slug: "personal-website-v3",
-      tagline: "Technical portfolio & personal platform",
-      tech: ["TypeScript", "Next.js", "Tailwind", "Recharts"],
+      tagline: "Third-Generation Editorial + Terminal Portfolio Platform",
+      tech: ["TypeScript", "Next.js 16", "Tailwind v4", "Recharts"],
       status: "Live",
       year: "2026",
       image: "/assets/proj-portfolio.png",
-      repo: "github.com/GrayM8/portfolio-site",
+      repo: "https://github.com/GrayM8/portfolio-site",
+      overview:
+        "A third-generation personal platform with two distinct theming modes — an editorial magazine layout and a terminal REPL — each with its own light and dark variants. Built on Next.js 16, Tailwind v4, and TypeScript, with live data integrations and dedicated case-study pages per project.",
+      detailBullets: [
+        "Designed and implemented dual-mode theming with a shared content layer: editorial (serif magazine) and terminal (mono REPL), each with independent light/dark palettes.",
+        "Live GitHub activity sparkline backed by a cached Route Handler, powered by Recharts and a localStorage hydrate-then-refresh client pattern for instant repeat-visit paint.",
+        "Sticky scroll-spy navigation with animated underline, fluid clamp-based typography, and max-width container scaling to keep layouts usable from mobile to ultrawide.",
+        "Statically generated project detail pages under /projects/[slug] with shared editorial chrome, metadata strip, metrics break-out, and colophon footer.",
+        "Real-time Austin temperature in the masthead via Open-Meteo (no auth) and a dynamic month/year header that updates on mount to avoid hydration mismatch.",
+      ],
     },
     {
       title: "AgentWorkspaces",
       slug: "agentworkspaces",
-      tagline: "Real-time AI collaboration platform",
-      tech: ["TypeScript", "React", "Cloudflare Workers", "Durable Objects"],
+      tagline: "Real-Time AI Collaboration Platform",
+      tech: ["TypeScript", "React", "Cloudflare Workers", "Durable Objects", "WebSockets"],
       status: "Live",
       year: "2025",
       image: "/assets/proj-agents.png",
+      link: "https://agentworkspaces.pages.dev/",
+      repo: "https://github.com/GrayM8/cf_ai_agentworkspaces",
+      overview:
+        "A real-time, multi-user collaboration platform built on Cloudflare's edge infrastructure. Combines persistent WebSocket rooms, shared state synchronization, and a structured LLM tool-calling engine to enable autonomous AI-driven workflows alongside human participants.",
+      detailBullets: [
+        "Engineered a real-time multi-user collaboration platform on Cloudflare's edge using Durable Objects and WebSocket Hibernation to maintain stateful, cost-efficient persistent connections per room.",
+        "Designed a custom WebSocket protocol to synchronize chat, shared memory, todos, artifacts, and settings across concurrent clients with debounced batched writes to durable storage.",
+        "Implemented a structured AI tool-calling engine (Llama 3.3 70B) using a two-pass inference architecture and 9 typed function tools enabling deterministic, autonomous state mutation across sessions.",
+        "Architected a full-stack TypeScript monorepo (React 19, Vite, Tailwind) deployed serverlessly via Cloudflare Pages + Workers, eliminating traditional server infrastructure and minimizing cold-start latency.",
+      ],
     },
     { title: "Pintos OS Kernel", tagline: "Scheduling, virtual memory, file systems", tech: ["C", "Operating Systems"], status: "Archived", year: "2025" },
     { title: "chArm-v3 CPU Simulator", tagline: "Cycle-accurate pipelined CPU + cache", tech: ["C", "Computer Architecture"], status: "Archived", year: "2025" },

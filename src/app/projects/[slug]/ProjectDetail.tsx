@@ -51,6 +51,13 @@ export function ProjectDetail({ project }: { project: AnyProject }) {
   const bullets = hasBullets(project) ? project.bullets : [];
   const metrics = hasMetrics(project) ? project.metrics ?? [] : [];
 
+  const repoList: { label: string; url: string }[] =
+    project.repos && project.repos.length > 0
+      ? project.repos
+      : project.repo
+        ? [{ label: "Source", url: project.repo }]
+        : [];
+
   return (
     <div
       style={cssVars}
@@ -62,10 +69,17 @@ export function ProjectDetail({ project }: { project: AnyProject }) {
         .pd-link:hover::after { transform: scaleX(1); transform-origin: left; }
         .pd-link:hover { color: var(--accent); }
         .pd-kicker { font-family: var(--font-mono); font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--sub); }
-        .pd-card { transition: border-color .2s ease; }
+        .pd-card { transition: border-color .2s ease, background-color .2s ease; }
         .pd-card:hover { border-color: var(--accent); }
         .pd-card:hover .pd-card-title { color: var(--accent); }
         .pd-card-title { transition: color .2s ease; }
+        .pd-btn { transition: background-color .2s ease, border-color .2s ease, color .2s ease; }
+        .pd-btn-primary:hover { background: var(--accent); border-color: var(--accent); }
+        .pd-btn-secondary:hover { border-color: var(--accent); color: var(--accent); background: color-mix(in srgb, var(--accent) 6%, transparent); }
+        .pd-crumb { transition: color .2s ease, gap .2s ease; }
+        .pd-crumb:hover { color: var(--accent); }
+        .pd-crumb:hover svg { transform: translateX(-2px); }
+        .pd-crumb svg { transition: transform .2s ease; }
         .pd-dropcap::first-letter {
           float: left;
           font-family: var(--font-serif);
@@ -81,31 +95,21 @@ export function ProjectDetail({ project }: { project: AnyProject }) {
 
       <EditorialHeader />
 
-      {/* back to index strip */}
-      <div className="border-b" style={{ borderColor: c.rule }}>
-        <div
-          className={`${WRAP} ${PAD} py-2.5 md:py-3 flex items-center justify-between gap-4 font-mono text-[10px] md:text-[11px] uppercase tracking-widest`}
-          style={{ color: c.sub }}
-        >
-          <Link
-            href="/#index"
-            className="pd-link inline-flex items-center gap-2"
-          >
-            <ArrowLeft size={12} strokeWidth={1.75} aria-hidden />
-            <span>Back to index</span>
-          </Link>
-          <span className="hidden md:inline">
-            Case · {project.slug}
-          </span>
-        </div>
-      </div>
-
       {/* hero */}
       <section
         className="border-b"
         style={{ borderColor: c.rule }}
       >
         <div className={`${WRAP} ${PAD} py-12 md:py-16 lg:py-20`}>
+          <Link
+            href="/#index"
+            className="pd-crumb inline-flex items-center gap-2 mb-8 md:mb-10 font-mono text-[10px] md:text-[11px] uppercase tracking-widest"
+            style={{ color: c.sub }}
+          >
+            <ArrowLeft size={12} strokeWidth={1.75} aria-hidden />
+            <span>Back to index</span>
+          </Link>
+
           <div className="pd-kicker mb-5 flex items-center gap-3">
             <span style={{ color: statusColor }}>
               {project.status === "Live" ? "●" : "○"} {project.status}
@@ -135,14 +139,14 @@ export function ProjectDetail({ project }: { project: AnyProject }) {
                 {project.tagline}
               </p>
 
-              {(project.link || project.repo) && (
+              {(project.link || repoList.length > 0) && (
                 <div className="flex flex-wrap gap-3 mt-7 md:mt-8 font-mono text-[11px] uppercase tracking-widest">
                   {project.link && (
                     <a
                       href={normalizeUrl(project.link)}
                       target="_blank"
                       rel="noreferrer"
-                      className="inline-flex items-center gap-2 px-4 py-2.5 border"
+                      className="pd-btn pd-btn-primary inline-flex items-center gap-2 px-4 py-2.5 border"
                       style={{
                         background: c.ink,
                         color: c.bg,
@@ -153,12 +157,12 @@ export function ProjectDetail({ project }: { project: AnyProject }) {
                       <span>Visit live</span>
                     </a>
                   )}
-                  {project.repo && (
+                  {repoList[0] && (
                     <a
-                      href={normalizeUrl(project.repo)}
+                      href={normalizeUrl(repoList[0].url)}
                       target="_blank"
                       rel="noreferrer"
-                      className="pd-card inline-flex items-center gap-2 px-4 py-2.5 border"
+                      className="pd-btn pd-btn-secondary inline-flex items-center gap-2 px-4 py-2.5 border"
                       style={{
                         background: "transparent",
                         color: c.ink,
@@ -166,19 +170,28 @@ export function ProjectDetail({ project }: { project: AnyProject }) {
                       }}
                     >
                       <Github size={13} strokeWidth={1.75} aria-hidden />
-                      <span>Source</span>
+                      <span>
+                        {repoList.length > 1 ? repoList[0].label : "Source"}
+                      </span>
                     </a>
                   )}
+                </div>
+              )}
+              {project.linkNote && (
+                <div
+                  className="mt-3 font-mono text-[10px] italic"
+                  style={{ color: c.sub }}
+                >
+                  {project.linkNote}
                 </div>
               )}
             </div>
 
             {(project.image || video) && (
               <div
-                className="relative overflow-hidden border w-full"
+                className="relative overflow-hidden border border-[color:var(--rule)] w-full"
                 style={{
                   aspectRatio: video ? "5 / 3" : "16 / 10",
-                  borderColor: c.rule,
                   background: c.soft,
                 }}
               >
@@ -200,10 +213,9 @@ export function ProjectDetail({ project }: { project: AnyProject }) {
                   />
                 )}
                 <div
-                  className="absolute top-3 left-3 font-mono text-[9px] uppercase tracking-[0.15em] px-2 py-0.5 border"
+                  className="absolute top-3 left-3 font-mono text-[9px] uppercase tracking-[0.15em] px-2 py-0.5 border border-[color:var(--rule)]"
                   style={{
                     background: c.bg,
-                    borderColor: c.rule,
                     color: c.ink,
                   }}
                 >
@@ -255,16 +267,18 @@ export function ProjectDetail({ project }: { project: AnyProject }) {
                 <span>Visit</span>
               </a>
             )}
-            {project.repo && (
+            {repoList[0] && (
               <a
-                href={normalizeUrl(project.repo)}
+                href={normalizeUrl(repoList[0].url)}
                 target="_blank"
                 rel="noreferrer"
                 className="pd-link inline-flex items-center gap-1.5"
                 style={{ color: c.ink }}
               >
                 <Github size={12} strokeWidth={1.75} aria-hidden />
-                <span>Source</span>
+                <span>
+                  {repoList.length > 1 ? repoList[0].label : "Source"}
+                </span>
               </a>
             )}
           </span>
@@ -497,20 +511,21 @@ export function ProjectDetail({ project }: { project: AnyProject }) {
                   className="pd-link inline-flex items-center gap-2"
                 >
                   <ExternalLink size={11} strokeWidth={1.75} aria-hidden />
-                  {project.link}
+                  {project.link.replace(/^https?:\/\//, "")}
                 </a>
               )}
-              {project.repo && (
+              {repoList.map((r) => (
                 <a
-                  href={normalizeUrl(project.repo)}
+                  key={r.url}
+                  href={normalizeUrl(r.url)}
                   target="_blank"
                   rel="noreferrer"
                   className="pd-link inline-flex items-center gap-2"
                 >
                   <Github size={11} strokeWidth={1.75} aria-hidden />
-                  {project.repo}
+                  {repoList.length > 1 ? r.label : r.url.replace(/^https?:\/\//, "")}
                 </a>
-              )}
+              ))}
               <Link
                 href="/#index"
                 className="pd-link inline-flex items-center gap-2"

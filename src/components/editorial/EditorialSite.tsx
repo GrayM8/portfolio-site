@@ -844,12 +844,11 @@ function EditorialFeature({
       style={{ color: "inherit" }}
     >
       <div
-        className={`relative overflow-hidden border w-full ${
+        className={`relative overflow-hidden border border-[color:var(--rule)] w-full ${
           flip ? "lg:order-2" : "lg:order-1"
         }`}
         style={{
           aspectRatio: "16 / 10",
-          borderColor: c.rule,
           background: c.soft,
         }}
       >
