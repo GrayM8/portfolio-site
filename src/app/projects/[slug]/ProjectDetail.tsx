@@ -9,6 +9,7 @@ import {
 } from "@/data/portfolio";
 import { EditorialFooter } from "@/components/editorial/EditorialFooter";
 import { EditorialHeader } from "@/components/editorial/EditorialHeader";
+import { FeatureTile } from "@/components/editorial/FeatureTile";
 import { paletteFor, paletteToVars } from "@/components/editorial/palette";
 import { useModeTheme } from "@/components/ModeThemeProvider";
 
@@ -185,39 +186,17 @@ export function ProjectDetail({ project }: { project: AnyProject }) {
             </div>
 
             {(project.image || video) && (
-              <div
-                className="relative overflow-hidden border border-[color:var(--rule)] w-full"
-                style={{
-                  aspectRatio: video ? "5 / 3" : "16 / 10",
-                  background: c.soft,
-                }}
-              >
-                {video ? (
-                  <video
-                    src={video}
-                    autoPlay
-                    loop
-                    muted
-                    playsInline
-                    className="w-full h-full object-cover block"
-                  />
-                ) : (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={project.image}
-                    alt={project.title}
-                    className="w-full h-full object-cover block"
-                  />
-                )}
-                <div
-                  className="absolute top-3 left-3 font-mono text-[9px] uppercase tracking-[0.15em] px-2 py-0.5 border border-[color:var(--rule)]"
-                  style={{
-                    background: c.bg,
-                    color: c.ink,
+              <div className="w-full" style={{ perspective: "1200px" }}>
+                <FeatureTile
+                  p={{
+                    title: project.title,
+                    slug: project.slug,
+                    image: project.image,
+                    video,
                   }}
-                >
-                  FIG. · {project.slug}
-                </div>
+                  c={c}
+                  label={`FIG. · ${project.slug}`}
+                />
               </div>
             )}
           </div>
