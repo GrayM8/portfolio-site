@@ -33,7 +33,10 @@
       "Bash(python -c \"import json,sys; p=json.load\\(sys.stdin\\); print\\('lucide-react:', \\(p.get\\('dependencies',{}\\) | p.get\\('devDependencies',{}\\)\\).get\\('lucide-react'\\)\\)\")",
       "Bash(node -e \"const l = require\\('lucide-react'\\); console.log\\('version:', require\\('lucide-react/package.json'\\).version\\); console.log\\('Github present:', typeof l.Github === 'function'\\)\")",
       "Bash(node -e \"const l = require\\('lucide-react'\\); const ks = Object.keys\\(l\\); console.log\\('matches:', ks.filter\\(k => /github/i.test\\(k\\)\\)\\)\")",
-      "Bash(curl -s -w \"\\\\nHTTP %{http_code}\\\\nCache-Control: %{header_json}\\\\n\" -D- -o /tmp/body.json \"http://localhost:3000/api/activity?user=GrayM8\")"
+      "Bash(curl -s -w \"\\\\nHTTP %{http_code}\\\\nCache-Control: %{header_json}\\\\n\" -D- -o /tmp/body.json \"http://localhost:3000/api/activity?user=GrayM8\")",
+      "Bash(cp \"C:/Users/Gray/WebstormProjects/distribution-site/public/pitlane-mark.svg\" \"C:/Users/Gray/WebstormProjects/portfolio-site/public/assets/pitlane.svg\")",
+      "Bash(cp \"C:/Users/Gray/WebstormProjects/distribution-site/public/pitlane-director-ac-broadcast-dashboard.png\" \"C:/Users/Gray/WebstormProjects/portfolio-site/public/assets/proj-pitlane.png\")",
+      "Bash(cp \"C:/Users/Gray/WebstormProjects/distribution-site/public/og.png\" \"C:/Users/Gray/WebstormProjects/portfolio-site/public/assets/proj-pitlane-site.png\")"
     ]
   }
 }
