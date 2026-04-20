@@ -444,8 +444,7 @@ export function ProjectDetail({ project }: { project: AnyProject }) {
                     {r.status} · {r.year}
                   </div>
                   <div
-                    className="pd-card-title font-serif font-normal text-[20px] leading-[1.15]"
-                    style={{ color: c.ink }}
+                    className="pd-card-title font-serif font-normal text-[20px] leading-[1.15] text-[color:var(--ink)]"
                   >
                     {r.title}
                   </div>

@@ -2,7 +2,7 @@
 
 import { Fragment, useEffect, useState, type ElementType } from "react";
 import Link from "next/link";
-import { Github } from "lucide-react";
+import { Github, Linkedin, Mail, MapPin } from "lucide-react";
 import {
   Area,
   AreaChart,
@@ -671,27 +671,69 @@ export function EditorialSite() {
               I&apos;ll write back<span style={{ color: c.accent }}>.</span>
             </h2>
             <div className="font-serif">
-              {(
-                [
-                  ["email", P.email],
-                  ["github", P.github],
-                  ["linkedin", P.linkedin],
-                  ["location", P.location],
-                  ["best for", "full-stack development · technical leadership · distributed systems · real-time infrastructure"],
-                ] as const
-              ).map(([k, v]) => (
+              {([
+                {
+                  k: "email",
+                  v: P.email,
+                  href: `mailto:${P.email}`,
+                  Icon: Mail,
+                },
+                {
+                  k: "github",
+                  v: P.github,
+                  href: `https://${P.github}`,
+                  Icon: Github,
+                },
+                {
+                  k: "linkedin",
+                  v: P.linkedin,
+                  href: `https://${P.linkedin}`,
+                  Icon: Linkedin,
+                },
+                {
+                  k: "location",
+                  v: P.location,
+                  href: `https://maps.google.com/?q=${encodeURIComponent(P.location)}`,
+                  Icon: MapPin,
+                },
+                {
+                  k: "best for",
+                  v: "full-stack development · technical leadership · distributed systems · real-time infrastructure",
+                  href: null,
+                  Icon: null,
+                },
+              ] as const).map(({ k, v, href, Icon }) => (
                 <div
                   key={k}
                   className="grid grid-cols-[80px_1fr] sm:grid-cols-[100px_1fr] py-2.5 border-b items-baseline gap-4"
                   style={{ borderColor: c.rule }}
                 >
                   <div className="o3-kicker">{k}</div>
-                  <div
-                    className="text-[14px] sm:text-[15px] md:text-[16px] break-words"
-                    style={{ color: c.ink }}
-                  >
-                    {v}
-                  </div>
+                  {href ? (
+                    <a
+                      href={href}
+                      target={href.startsWith("mailto:") ? undefined : "_blank"}
+                      rel={href.startsWith("mailto:") ? undefined : "noreferrer"}
+                      className="o3-link inline-flex items-center gap-2 text-[14px] sm:text-[15px] md:text-[16px] break-words text-[color:var(--ink)]"
+                    >
+                      {Icon && (
+                        <Icon
+                          size={14}
+                          strokeWidth={1.75}
+                          aria-hidden
+                          className="shrink-0"
+                        />
+                      )}
+                      <span>{v}</span>
+                    </a>
+                  ) : (
+                    <div
+                      className="text-[14px] sm:text-[15px] md:text-[16px] break-words"
+                      style={{ color: c.ink }}
+                    >
+                      {v}
+                    </div>
+                  )}
                 </div>
               ))}
             </div>

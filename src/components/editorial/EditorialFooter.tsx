@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { PORTFOLIO } from "@/data/portfolio";
 import { paletteFor } from "./palette";
 import { useModeTheme } from "../ModeThemeProvider";
 
@@ -39,7 +40,14 @@ export function EditorialFooter() {
           <div className="leading-[1.7]" style={{ color: c.ink }}>
             Editor, engineer &amp; designer
             <br />
-            Gray Marshall
+            <a
+              href={`https://${PORTFOLIO.linkedin}`}
+              target="_blank"
+              rel="noreferrer"
+              className="o3-link"
+            >
+              Gray Marshall
+            </a>
           </div>
         </div>
         <div>
