@@ -34,7 +34,7 @@ export function EditorialFooter() {
           <div className="leading-[1.6]" style={{ color: c.sub }}>
             Set in Fraunces &amp; Inter. Built in React. Hosted on the open web.
             <br />
-            Best read with a coffee and something loud in the background.
+            Updated when the mood strikes.
           </div>
         </div>
         <div>
