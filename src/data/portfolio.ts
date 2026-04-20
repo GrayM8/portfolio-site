@@ -277,6 +277,33 @@ export const PORTFOLIO: Portfolio = {
       ],
     },
     {
+      title: "trophysim.com",
+      slug: "trophysim",
+      tagline: "Marketing site for Trophy Sim Solutions — championship-standard sim rigs.",
+      tech: [
+        "Next.js 16",
+        "TypeScript",
+        "Tailwind v4",
+        "shadcn/ui",
+        "Framer Motion",
+        "Resend",
+      ],
+      status: "Live",
+      year: "2026 — Present",
+      image: "/assets/proj-trophysim.png",
+      link: "https://www.trophysim.com",
+      overview:
+        "Marketing site for Trophy Sim Solutions LLC — a company I co-founded to design, source, install, and calibrate professional sim racing systems for teams and training facilities. Built as a content-driven site where a single TypeScript source feeds both rendered pages and JSON-LD schema to prevent Google-penalized drift between what a page says and what its schema claims.",
+      detailBullets: [
+        "Single-source-of-truth content layer: tier specs, FAQ, founders, and site config live as plain TS modules under `lib/`, read by both rendering components and JSON-LD schema generators. Eliminates the entire class of FAQ-schema-vs-visible-FAQ mismatches Google penalizes.",
+        "Six routes: Home, Services (three package tiers with FAQ), About (founder profiles), Contact (Zod-validated + Resend-backed), Privacy, and a custom 404.",
+        "Schema cross-linking via stable `@id`s — all JSON-LD references a single ProfessionalService entity; Service and Person schemas point to it as provider / worksFor, consolidating E-E-A-T signals into one graph.",
+        "Custom design system on Tailwind v4 with CSS-first config: brand tokens (gold / amber / carbon / titanium / ivory) exposed as utilities, uniform `rounded-sm` shape language, hover-invert button pattern with uppercase `tracking-[0.12em]`.",
+        "Contact form gracefully degrades when `RESEND_API_KEY` is unset (logs + success state); Cloudflare Turnstile gating, native `<select>` + radios for clean FormData submission.",
+        "Deployed on Vercel — `main` auto-deploys, `dev` skips builds via `vercel.json` ignoreCommand to conserve build minutes.",
+      ],
+    },
+    {
       title: "pitlanesystems.com",
       slug: "pitlane-site",
       tagline: "Marketing, auth, and licensing hub for PitLane Director AC",
