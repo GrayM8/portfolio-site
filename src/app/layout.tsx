@@ -33,7 +33,14 @@ const instrumentSerif = Instrument_Serif({
   display: "swap",
 });
 
+const SITE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL ??
+  process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+    : "https://graymarshall.dev";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: "Gray Marshall — Software Engineer",
   description:
     "Real-time systems. Race-car telemetry. Production web platforms. Portfolio of Gray Marshall.",
