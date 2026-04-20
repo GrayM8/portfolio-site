@@ -12,6 +12,7 @@ import {
 import { PORTFOLIO } from "@/data/portfolio";
 import { ModeControls } from "../ModeControls";
 import { useModeTheme } from "../ModeThemeProvider";
+import { useAustinTemp } from "@/lib/weather";
 
 type Palette = {
   bg: string;
@@ -94,6 +95,7 @@ export function TerminalSite() {
   const { theme, toggleTheme } = useModeTheme();
   const c = theme === "dark" ? o2Styles.dark : o2Styles.light;
   const P = PORTFOLIO;
+  const temp = useAustinTemp();
 
   const [history, setHistory] = useState<Line[]>([]);
   const [input, setInput] = useState("");
@@ -648,6 +650,7 @@ export function TerminalSite() {
             status: <span style={{ color: c.green }}>available</span>
           </span>
           <span>tz: CST</span>
+          {temp !== null && <span>aus: {temp}°F</span>}
           <ModeControls palette="terminal" />
         </div>
       </header>
