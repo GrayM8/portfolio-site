@@ -188,8 +188,7 @@ export function TerminalSite() {
       { t: "cmd", content: "help" },
       {
         t: "out",
-        content:
-          "commands: work · projects · case · experience · education · skills · stack · now · notes · cv · contact · about · whoami · resume · ls · cat · echo · date · pwd · uname · uptime · history · which · man · systemctl · neofetch · theme · clear · open · goto · exit · fortune · cowsay · sl",
+        content: `commands: ${COMMAND_NAMES.join(" · ")}`,
       },
       {
         t: "out",
@@ -289,7 +288,7 @@ export function TerminalSite() {
         { t: "out", content: "  contact      — how to reach me", color: "accent" },
         { t: "out", content: "  about        — longer introduction", color: "accent" },
         { t: "out", content: "  whoami       — one-liner", color: "accent" },
-        { t: "out", content: "  resume       — download resume.pdf", color: "accent" },
+        { t: "out", content: "  resume       — fetch resume.pdf (emails me if unavailable)", color: "accent" },
         { t: "out", content: "" },
         { t: "out", content: "shell:", muted: true },
         { t: "out", content: "  ls [-l]      — list virtual files", muted: true },
@@ -316,6 +315,9 @@ export function TerminalSite() {
         { t: "out", content: "  fortune      — random quote", muted: true },
         { t: "out", content: "  cowsay <txt> — ascii cow", muted: true },
         { t: "out", content: "  sl           — oops, try ls", muted: true },
+        { t: "out", content: "  sudo <cmd>   — denied, always", muted: true },
+        { t: "out", content: "  rm <path>    — write-protected by laziness", muted: true },
+        { t: "out", content: "  mkdir <name> — generates a polite refusal", muted: true },
         { t: "out", content: "" },
         {
           t: "out",
@@ -384,23 +386,23 @@ export function TerminalSite() {
         })),
       ],
       case: (arg) => {
-        if (!arg) {
-          return [
-            {
-              t: "out",
-              content:
-                "usage: case <slug>  (slugs: lsr, fsae, dash, personal-website-v3, agentworkspaces)",
-              color: "red",
-            },
-          ];
-        }
-        const slug = arg.trim().toLowerCase();
         const pool = [
           ...P.featured,
           ...P.projects.filter(
             (p): p is typeof p & { slug: string } => Boolean(p.slug),
           ),
         ];
+        const slugList = pool.map((p) => p.slug).join(", ");
+        if (!arg) {
+          return [
+            {
+              t: "out",
+              content: `usage: case <slug>  (slugs: ${slugList})`,
+              color: "red",
+            },
+          ];
+        }
+        const slug = arg.trim().toLowerCase();
         const match = pool.find((p) => p.slug === slug);
         if (!match) {
           return [{ t: "out", content: `case: no project with slug "${slug}"`, color: "red" }];
@@ -582,17 +584,56 @@ export function TerminalSite() {
       },
       resume: () => {
         if (typeof window !== "undefined") {
-          const a = document.createElement("a");
-          a.href = "/resume.pdf";
-          a.download = "gray-marshall-resume.pdf";
-          document.body.appendChild(a);
-          a.click();
-          document.body.removeChild(a);
+          void (async () => {
+            try {
+              const res = await fetch("/resume.pdf", {
+                method: "HEAD",
+                cache: "no-store",
+              });
+              const type = res.headers.get("content-type") ?? "";
+              if (res.ok && type.includes("pdf")) {
+                const a = document.createElement("a");
+                a.href = "/resume.pdf";
+                a.download = "gray-marshall-resume.pdf";
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                setHistory((h) => [
+                  ...h,
+                  { t: "out", content: "→ /resume.pdf", color: "blue" },
+                  {
+                    t: "out",
+                    content: "check your browser downloads.",
+                    muted: true,
+                  },
+                ]);
+                return;
+              }
+            } catch {
+              // fall through to missing-file branch
+            }
+            setHistory((h) => [
+              ...h,
+              {
+                t: "out",
+                content: "curl: (22) /resume.pdf returned 404",
+                color: "red",
+              },
+              {
+                t: "out",
+                content: `resume.pdf isn't posted yet — email ${PORTFOLIO.email} for a copy.`,
+                muted: true,
+              },
+              {
+                t: "out",
+                content: "hint: `open email` drafts a message.",
+                muted: true,
+              },
+            ]);
+          })();
         }
         return [
           { t: "out", content: "fetching resume.pdf ...", color: "accent" },
-          { t: "out", content: "→ /resume.pdf", color: "blue" },
-          { t: "out", content: "check your browser downloads.", muted: true },
         ];
       },
       ls: (arg) => {
@@ -910,23 +951,22 @@ export function TerminalSite() {
         return [{ t: "out", content: `→ ${url}`, color: "blue" }];
       },
       goto: (arg) => {
-        if (!arg) {
-          return [
-            {
-              t: "out",
-              content:
-                "goto: missing project slug (lsr, fsae, dash, personal-website-v3, agentworkspaces)",
-              color: "red",
-            },
-          ];
-        }
-        const slug = arg.trim().toLowerCase();
         const slugs = [
           ...P.featured.map((p) => p.slug),
           ...P.projects
             .map((p) => p.slug)
             .filter((s): s is string => Boolean(s)),
         ];
+        if (!arg) {
+          return [
+            {
+              t: "out",
+              content: `goto: missing project slug (${slugs.join(", ")})`,
+              color: "red",
+            },
+          ];
+        }
+        const slug = arg.trim().toLowerCase();
         if (!slugs.includes(slug)) {
           return [
             { t: "out", content: `goto: no such project: ${slug}`, color: "red" },
@@ -986,10 +1026,14 @@ export function TerminalSite() {
             "WORK(1)                  Portfolio Manual",
             "",
             "NAME",
-            "    work — list the three featured projects.",
+            "    work — list the featured projects.",
             "",
             "DESCRIPTION",
-            "    Prints LSR, FSAE telemetry, and the driver dash with status, stack, and live links.",
+            `    Prints ${P.featured
+              .map((p) => p.title)
+              .join(
+                ", ",
+              )} with status, stack, and live links.`,
             "    For a deep dive on one: case <slug>.",
           ],
           projects: [
@@ -1011,7 +1055,12 @@ export function TerminalSite() {
             "    case <slug>",
             "",
             "SLUGS",
-            "    lsr · fsae · dash · personal-website-v3 · agentworkspaces",
+            `    ${[
+              ...P.featured.map((p) => p.slug),
+              ...P.projects
+                .map((p) => p.slug)
+                .filter((s): s is string => Boolean(s)),
+            ].join(" · ")}`,
           ],
           cv: [
             "CV(1)                    Portfolio Manual",
@@ -1023,10 +1072,12 @@ export function TerminalSite() {
             "RESUME(1)                Portfolio Manual",
             "",
             "NAME",
-            "    resume — download the resume PDF.",
+            "    resume — fetch the resume PDF.",
             "",
             "DESCRIPTION",
-            "    Triggers a browser download of /resume.pdf as gray-marshall-resume.pdf.",
+            "    HEAD-probes /resume.pdf. If the file is live, downloads it as",
+            "    gray-marshall-resume.pdf. If it's missing (common — the PDF isn't",
+            "    always posted), prints a 404 line and points you at `open email`.",
           ],
           open: [
             "OPEN(1)                  Portfolio Manual",
@@ -1310,49 +1361,67 @@ export function TerminalSite() {
       <style>{`
         @keyframes o2-cursor { 0%,49% { opacity: 1 } 50%,100% { opacity: 0 } }
         .o2-cursor { animation: o2-cursor 1s step-end infinite; display: inline-block; width: 8px; height: 14px; vertical-align: middle; margin-left: 2px; }
-        .tui-slash { cursor: pointer; transition: color .15s ease; background: none; border: none; padding: 0; font: inherit; }
+        .tui-slash { cursor: pointer; transition: color .15s ease; background: none; border: none; padding: 0; font: inherit; white-space: nowrap; }
         .tui-slash:hover { color: ${c.ink}; }
+
+        .tui-header {
+          position: sticky; top: 0; z-index: 40;
+          background: ${c.panel};
+          border-bottom: 1px solid ${c.rule};
+          font-size: 11px; letter-spacing: .3px;
+          flex-shrink: 0;
+          display: flex; flex-direction: column;
+        }
+        .tui-header-row {
+          display: flex; align-items: center; gap: 16px;
+          padding: 10px 16px;
+        }
+        .tui-prompt {
+          font-weight: 700; letter-spacing: 1.5px; white-space: nowrap;
+        }
+        .tui-slash-strip {
+          display: flex; align-items: center; gap: 14px;
+          color: ${c.sub};
+          overflow-x: auto; overflow-y: hidden;
+          scrollbar-width: none;
+          flex: 1; min-width: 0;
+        }
+        .tui-slash-strip::-webkit-scrollbar { display: none; }
+        .tui-meta {
+          display: flex; align-items: center; gap: 14px;
+          color: ${c.sub}; white-space: nowrap; margin-left: auto;
+        }
+        .tui-meta-chip { display: inline-flex; align-items: center; gap: 4px; }
+
+        /* Mobile: split header into two rows — prompt + meta on top,
+           slash nav below in a horizontally-scrolling strip. */
+        @media (max-width: 720px) {
+          .tui-header-row { padding: 8px 12px; gap: 10px; }
+          .tui-header-row--primary { justify-content: space-between; }
+          .tui-header-row--primary .tui-slash-strip { display: none; }
+          .tui-header-row--nav {
+            border-top: 1px dashed ${c.rule};
+            padding: 8px 12px;
+          }
+          .tui-meta { gap: 10px; }
+          .tui-meta-long { display: none; }
+          .tui-slash-strip { gap: 12px; }
+        }
+        @media (min-width: 721px) {
+          .tui-header-row--nav { display: none; }
+        }
       `}</style>
 
-      {/* Top bar — preserved terminal chrome, pinned so it never scrolls away */}
-      <header
-        style={{
-          position: "sticky",
-          top: 0,
-          zIndex: 40,
-          borderBottom: `1px solid ${c.rule}`,
-          background: c.panel,
-          padding: "10px 16px",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          gap: 16,
-          fontSize: 11,
-          letterSpacing: 0.3,
-          flexWrap: "wrap",
-          flexShrink: 0,
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            gap: 20,
-            alignItems: "center",
-            flexWrap: "wrap",
-          }}
-        >
-          <div style={{ fontWeight: 700, letterSpacing: 1.5 }}>
+      {/* Top bar — preserved terminal chrome, pinned so it never scrolls away.
+          Mobile (≤720px) stacks into two rows: prompt + meta on top, slash nav
+          below in a horizontally-scrolling strip. */}
+      <header className="tui-header">
+        <div className="tui-header-row tui-header-row--primary">
+          <div className="tui-prompt">
             <span style={{ color: c.accent }}>$</span>&nbsp;gray@austin:
             <span style={{ color: c.blue }}>~</span>
           </div>
-          <div
-            style={{
-              display: "flex",
-              gap: 14,
-              color: c.sub,
-              flexWrap: "wrap",
-            }}
-          >
+          <div className="tui-slash-strip">
             {SLASH_NAV.map((item) => (
               <button
                 key={item.cmd}
@@ -1365,22 +1434,33 @@ export function TerminalSite() {
               </button>
             ))}
           </div>
+          <div className="tui-meta">
+            <span className="tui-meta-chip tui-meta-long">
+              status:&nbsp;<span style={{ color: c.green }}>available</span>
+            </span>
+            <span className="tui-meta-chip tui-meta-long">tz: CST</span>
+            {temp !== null && (
+              <span className="tui-meta-chip tui-meta-long">
+                aus&nbsp;{temp}°F
+              </span>
+            )}
+            <ModeControls palette="terminal" />
+          </div>
         </div>
-        <div
-          style={{
-            display: "flex",
-            gap: 14,
-            alignItems: "center",
-            color: c.sub,
-            flexWrap: "wrap",
-          }}
-        >
-          <span>
-            status: <span style={{ color: c.green }}>available</span>
-          </span>
-          <span>tz: CST</span>
-          {temp !== null && <span>aus: {temp}°F</span>}
-          <ModeControls palette="terminal" />
+        <div className="tui-header-row tui-header-row--nav">
+          <div className="tui-slash-strip">
+            {SLASH_NAV.map((item) => (
+              <button
+                key={`m-${item.cmd}`}
+                onClick={() => runCmd(item.cmd)}
+                className="tui-slash"
+                style={{ color: c.sub }}
+              >
+                <span style={{ color: c.accent }}>/</span>
+                {item.label}
+              </button>
+            ))}
+          </div>
         </div>
       </header>
 

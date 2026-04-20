@@ -1,0 +1,20 @@
+Copyright (c) 2026 Gray Marshall. All rights reserved.
+
+This repository contains the source code for graymarshall.dev, the personal
+portfolio of Gray Marshall. The source is published for transparency and to
+demonstrate engineering craft to prospective employers and collaborators.
+
+No license — implicit or explicit — is granted to use, copy, modify, merge,
+publish, distribute, sublicense, or sell any portion of this repository, its
+source code, or its assets (including images, copy, design, and data).
+
+"Gray Marshall", "graymarshall.dev", and the distinctive visual and
+editorial treatment of this site are identifiers of the author. Do not
+reproduce this site, republish its content, or present derivatives of it as
+your own work.
+
+Third-party dependencies referenced in package.json and equivalent manifests
+remain governed by their respective upstream licenses.
+
+If you would like to reuse any portion of this work, open an issue or email
+matthew.gray.marshall@gmail.com with the specifics.

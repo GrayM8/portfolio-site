@@ -8,6 +8,31 @@ import { ModeControls } from "../ModeControls";
 import { useModeTheme } from "../ModeThemeProvider";
 import { paletteFor } from "./palette";
 import { useAustinTemp } from "@/lib/weather";
+import { PORTFOLIO } from "@/data/portfolio";
+
+async function requestResume(e: React.MouseEvent<HTMLAnchorElement>) {
+  e.preventDefault();
+  try {
+    const res = await fetch("/resume.pdf", { method: "HEAD", cache: "no-store" });
+    const type = res.headers.get("content-type") ?? "";
+    if (res.ok && type.includes("pdf")) {
+      const a = document.createElement("a");
+      a.href = "/resume.pdf";
+      a.download = "gray-marshall-resume.pdf";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      return;
+    }
+  } catch {
+    // fall through to mailto fallback
+  }
+  const subject = encodeURIComponent("Resume request — graymarshall.dev");
+  const body = encodeURIComponent(
+    "Hi Gray,\n\nCould you send a copy of your resume?\n\nThanks!",
+  );
+  window.location.href = `mailto:${PORTFOLIO.email}?subject=${subject}&body=${body}`;
+}
 
 const WRAP = "mx-auto w-full max-w-[1440px]";
 const PAD = "px-5 sm:px-8 md:px-10 lg:px-12";
@@ -76,14 +101,14 @@ export function EditorialHeader({ active, homeRoute = false }: Props) {
     <>
       <header className="border-b border-[color:var(--ink)] bg-[color:var(--bg)]">
         <div
-          className={`${WRAP} ${PAD} py-3 md:py-3.5 grid grid-cols-[1fr_auto] md:grid-cols-[1fr_auto_1fr] items-center gap-4 md:gap-6`}
+          className={`${WRAP} ${PAD} py-3 md:py-3.5 grid grid-cols-[1fr_auto_1fr] items-center gap-4 md:gap-6`}
         >
-          <div className="hidden md:block font-mono text-[10px] tracking-widest uppercase text-[color:var(--sub)]">
+          <div className="hidden md:block col-start-1 font-mono text-[10px] tracking-widest uppercase text-[color:var(--sub)]">
             Vol. 03 · Issue 01{mastheadDate ? ` · ${mastheadDate}` : ""}
           </div>
           <Link
             href="/"
-            className="font-serif text-[16px] sm:text-[20px] md:text-[22px] font-medium tracking-tight whitespace-nowrap text-left md:text-center no-underline"
+            className="col-start-2 font-serif text-[16px] sm:text-[20px] md:text-[22px] font-medium tracking-tight whitespace-nowrap text-center no-underline"
             style={{ color: "inherit" }}
           >
             graymarshall
@@ -91,7 +116,7 @@ export function EditorialHeader({ active, homeRoute = false }: Props) {
             <span className="text-[color:var(--sub)] font-normal">—</span>{" "}
             <span className="italic font-normal">portfolio</span>
           </Link>
-          <div className="flex items-center justify-end gap-3 font-mono text-[11px] text-[color:var(--sub)]">
+          <div className="col-start-3 flex items-center justify-end gap-3 font-mono text-[11px] text-[color:var(--sub)]">
             <span className="hidden sm:inline">
               Austin, TX{temp !== null ? ` · ${temp}°F` : ""}
             </span>
@@ -148,6 +173,7 @@ export function EditorialHeader({ active, homeRoute = false }: Props) {
             <a
               href="/resume.pdf"
               download
+              onClick={requestResume}
               className="o3-link hidden lg:inline-block whitespace-nowrap text-[color:var(--sub)]"
             >
               ↓ Resume
@@ -185,7 +211,10 @@ export function EditorialHeader({ active, homeRoute = false }: Props) {
               <a
                 href="/resume.pdf"
                 download
-                onClick={() => setMenuOpen(false)}
+                onClick={(e) => {
+                  setMenuOpen(false);
+                  void requestResume(e);
+                }}
                 className="o3-link py-2 text-[color:var(--sub)] w-fit"
               >
                 ↓ Resume

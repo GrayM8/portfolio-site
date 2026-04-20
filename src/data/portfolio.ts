@@ -477,7 +477,7 @@ export const PORTFOLIO: Portfolio = {
       period: "Apr 2026 — Present",
       tenure: "1 mo",
       location: "Austin, TX",
-      logo: "/assets/pitlane.svg",
+      logo: "/assets/pitlane.png",
       bullets: [
         "Founded PitLane Systems LLC to build broadcast software for sim racing leagues — selected as a 2026 McCombs Entrepreneur Summer Fellow at UT Austin.",
         "Architected PitLane Director AC, a Windows desktop broadcast director (Electron + React + TypeScript) with a CSP Lua sidecar feeding live session data over WebSocket and direct OBS integration for scene control.",
@@ -548,7 +548,7 @@ export const PORTFOLIO: Portfolio = {
     period: "Aug 2024 — May 2028 (expected)",
     location: "Austin, TX",
     logo: "/assets/texas.png",
-    coursework: ["Data Structures", "Operating Systems", "Algorithms & Complexity", "Computer Architecture", "Cloud Computing", "Machine Learning I"],
+    coursework: ["Data Structures", "Operating Systems", "Algorithms & Complexity", "Computer Architecture", "Cloud Computing", "Machine Learning I", "Modern Web Applications", "iOS Mobile Computing"],
   },
   skills: {
     Languages: [

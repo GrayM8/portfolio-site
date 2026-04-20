@@ -75,4 +75,19 @@ body {
     text-transform: uppercase;
     color: var(--sub);
   }
+
+  /* Soft inline link — barely visible dotted underline at rest, warms to
+     the accent hue on hover. Intended for prose links inside editorial
+     paragraphs where a full o3-link would be too loud. */
+  .soft-link {
+    color: inherit;
+    text-decoration: underline dotted var(--rule);
+    text-underline-offset: 3px;
+    text-decoration-thickness: 1px;
+    transition: color 0.2s ease, text-decoration-color 0.2s ease, text-decoration-style 0.2s ease;
+  }
+  .soft-link:hover {
+    color: var(--accent);
+    text-decoration: underline solid var(--accent);
+  }
 }

@@ -134,17 +134,50 @@ export function EditorialSite() {
                 style={{ color: c.ink }}
               >
                 <span className="o3-kicker mr-2">Summary</span>
-                Gray Marshall is a second-year CS student at UT Austin — founder of PitLane
-                Systems, co-founder and CTO at Longhorn Sim Racing and Trophy Sim Solutions,
-                and the telemetry and autonomy engineer at Longhorn Racing. This is where the
-                work lives.
+                Gray Marshall is a second-year CS student at UT Austin — founder of{" "}
+                <a
+                  href="https://www.pitlanesystems.com"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="soft-link"
+                >
+                  PitLane Systems
+                </a>
+                , co-founder and CTO at{" "}
+                <a
+                  href="https://www.longhornsimracing.org"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="soft-link"
+                >
+                  Longhorn Sim Racing
+                </a>{" "}
+                and{" "}
+                <a
+                  href="https://www.trophysim.com"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="soft-link"
+                >
+                  Trophy Sim Solutions
+                </a>
+                , and the telemetry and autonomy engineer at{" "}
+                <a
+                  href="https://www.longhornracing.org"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="soft-link"
+                >
+                  Longhorn Racing
+                </a>
+                . This is where the work lives.
               </div>
               <div className="mt-6 md:mt-8 flex flex-wrap gap-x-5 gap-y-1 items-center font-mono text-[11px] md:text-[12px] text-[color:var(--sub)]">
                 <span>
                   by <span style={{ color: c.ink }}>Gray Marshall</span>
                 </span>
                 <span className="hidden sm:inline">·</span>
-                <span>{P.about[0].length > 80 ? "6 min read" : "4 min read"}</span>
+                <span>7 min read</span>
                 <span className="hidden sm:inline">·</span>
                 <a href="#contact" className="o3-link" style={{ color: c.accent }}>
                   Get in touch →
@@ -513,41 +546,47 @@ export function EditorialSite() {
               roman="V."
               kicker="Schooling"
               title="Education"
-              sub=""
+              sub="Second year at UT Austin."
               compact
             />
             <div
               className="mt-6 pt-4 border-t"
               style={{ borderColor: c.ink }}
             >
-              {P.education.logo && (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={P.education.logo}
-                  alt=""
-                  className="w-12 h-12 object-contain mb-4"
-                  style={{
-                    filter: theme === "dark" ? "invert(1) opacity(0.9)" : "",
-                  }}
-                />
-              )}
-              <div
-                className="font-serif font-normal text-[22px] md:text-[24px] lg:text-[26px] leading-[1.15]"
-                style={{ color: c.ink }}
-              >
-                {P.education.school}
-              </div>
-              <div
-                className="text-[14px] mt-1 font-serif italic"
-                style={{ color: c.sub }}
-              >
-                {P.education.degree}
-              </div>
-              <div
-                className="font-mono text-[11px] mt-2"
-                style={{ color: c.accent, letterSpacing: 0.5 }}
-              >
-                {P.education.period} · {P.education.location}
+              <div className="flex items-start gap-4">
+                <div
+                  className="w-14 h-14 overflow-hidden flex-shrink-0 flex items-center justify-center border"
+                  style={{ background: c.soft, borderColor: c.rule }}
+                >
+                  {P.education.logo && (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={P.education.logo}
+                      alt=""
+                      className="w-full h-full object-contain p-2"
+                    />
+                  )}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div
+                    className="font-serif font-normal text-[22px] md:text-[24px] lg:text-[26px] leading-[1.15]"
+                    style={{ color: c.ink }}
+                  >
+                    {P.education.school}
+                  </div>
+                  <div
+                    className="text-[14px] mt-1 font-serif italic"
+                    style={{ color: c.sub }}
+                  >
+                    {P.education.degree}
+                  </div>
+                  <div
+                    className="font-mono text-[11px] mt-2"
+                    style={{ color: c.accent, letterSpacing: 0.5 }}
+                  >
+                    {P.education.period} · {P.education.location}
+                  </div>
+                </div>
               </div>
               <div className="mt-6">
                 <div className="o3-kicker mb-3">Coursework</div>

@@ -56,6 +56,10 @@ export type OgTemplateOptions = {
   italicSecondLine?: boolean;
   /** Optional serif lede under the title. */
   description?: string;
+  /** Optional right-side image (data URL or absolute URL). Scales the title down. */
+  image?: string;
+  /** Optional overlay caption shown under the image, e.g. "TOKYO · 2023". */
+  imageCaption?: string;
   /** Bottom-left label, e.g. "graymarshall.dev/projects/lsr". */
   footerLeft: string;
   /** Bottom-right label, e.g. "2026 · AUSTIN". */
@@ -102,8 +106,10 @@ export async function renderOgImage(
 
   // Scale title with length so long project names stay on the card.
   const longestLine = Math.max(...opts.title.map((l) => l.length));
-  const titleSize =
-    longestLine > 24 ? 82 : longestLine > 16 ? 108 : 132;
+  const hasImage = Boolean(opts.image);
+  const titleSize = hasImage
+    ? longestLine > 18 ? 64 : longestLine > 12 ? 78 : 96
+    : longestLine > 24 ? 82 : longestLine > 16 ? 108 : 132;
 
   return new ImageResponse(
     (
@@ -160,75 +166,146 @@ export async function renderOgImage(
           </div>
         </div>
 
-        {/* kicker */}
+        {/* body row: text column + optional image column */}
         <div
           style={{
             display: "flex",
-            marginTop: 44,
-            fontSize: 14,
-            color: SUB,
-            letterSpacing: 3,
-            textTransform: "uppercase",
+            flex: 1,
+            flexDirection: "row",
+            marginTop: 40,
+            gap: 48,
           }}
         >
-          {opts.kicker}
-        </div>
-
-        {/* headline */}
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            marginTop: 18,
-            color: INK,
-            fontSize: titleSize,
-            lineHeight: 0.94,
-            letterSpacing: -4,
-          }}
-        >
-          {opts.title.map((line, i) => (
-            <div
-              key={i}
-              style={{
-                display: "flex",
-                fontStyle:
-                  opts.italicSecondLine && i === 1 ? "italic" : "normal",
-                fontWeight:
-                  opts.italicSecondLine && i === 1 ? 300 : 400,
-              }}
-            >
-              {i === opts.title.length - 1 ? (
-                <>
-                  {line}
-                  <span style={{ color: ACCENT }}>.</span>
-                </>
-              ) : (
-                line
-              )}
-            </div>
-          ))}
-        </div>
-
-        {/* description */}
-        {opts.description && (
           <div
             style={{
               display: "flex",
-              marginTop: 26,
-              maxWidth: 900,
-              fontSize: 22,
-              lineHeight: 1.4,
-              color: SUB,
-              fontStyle: "italic",
-              fontWeight: 300,
+              flexDirection: "column",
+              flex: 1,
+              minWidth: 0,
             }}
           >
-            {opts.description}
-          </div>
-        )}
+            {/* kicker */}
+            <div
+              style={{
+                display: "flex",
+                fontSize: 14,
+                color: SUB,
+                letterSpacing: 3,
+                textTransform: "uppercase",
+              }}
+            >
+              {opts.kicker}
+            </div>
 
-        {/* spacer */}
-        <div style={{ display: "flex", flex: 1 }} />
+            {/* headline */}
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                marginTop: 18,
+                color: INK,
+                fontSize: titleSize,
+                lineHeight: 0.94,
+                letterSpacing: -4,
+              }}
+            >
+              {opts.title.map((line, i) => (
+                <div
+                  key={i}
+                  style={{
+                    display: "flex",
+                    fontStyle:
+                      opts.italicSecondLine && i === 1 ? "italic" : "normal",
+                    fontWeight:
+                      opts.italicSecondLine && i === 1 ? 300 : 400,
+                  }}
+                >
+                  {i === opts.title.length - 1 ? (
+                    <>
+                      {line}
+                      <span style={{ color: ACCENT }}>.</span>
+                    </>
+                  ) : (
+                    line
+                  )}
+                </div>
+              ))}
+            </div>
+
+            {/* description */}
+            {opts.description && (
+              <div
+                style={{
+                  display: "flex",
+                  marginTop: 22,
+                  maxWidth: hasImage ? 640 : 900,
+                  fontSize: hasImage ? 19 : 22,
+                  lineHeight: 1.4,
+                  color: SUB,
+                  fontStyle: "italic",
+                  fontWeight: 300,
+                }}
+              >
+                {opts.description}
+              </div>
+            )}
+          </div>
+
+          {opts.image && (
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "flex-end",
+                flexShrink: 0,
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  position: "relative",
+                  width: 300,
+                  height: 360,
+                  border: `1px solid ${INK}`,
+                  overflow: "hidden",
+                }}
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={opts.image}
+                  alt=""
+                  width={300}
+                  height={360}
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "cover",
+                    filter: "grayscale(0.15) contrast(1.02)",
+                  }}
+                />
+                {opts.imageCaption && (
+                  <div
+                    style={{
+                      display: "flex",
+                      position: "absolute",
+                      left: 0,
+                      right: 0,
+                      bottom: 0,
+                      padding: "8px 12px",
+                      background: "rgba(11,10,7,0.78)",
+                      color: INK,
+                      fontSize: 11,
+                      letterSpacing: 3,
+                      textTransform: "uppercase",
+                    }}
+                  >
+                    {opts.imageCaption}
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
 
         {/* footer */}
         <div
