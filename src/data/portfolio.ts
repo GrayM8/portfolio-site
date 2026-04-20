@@ -350,8 +350,8 @@ export const PORTFOLIO: Portfolio = {
     {
       title: "Founder & CTO",
       org: "PitLane Systems",
-      period: "Jan 2026 — Present",
-      tenure: "4 mos",
+      period: "Apr 2026 — Present",
+      tenure: "1 mo",
       location: "Austin, TX",
       logo: "/assets/pitlane.svg",
       bullets: [
