@@ -24,10 +24,12 @@ export function EditorialFooter() {
       >
         <div>
           <div
-            className="font-serif text-[18px] md:text-[20px] tracking-[0.15em] mb-2"
+            className="font-serif font-medium text-[18px] md:text-[20px] tracking-tight mb-2"
             style={{ color: c.ink }}
           >
-            G.MARSHALL — FIELD NOTES
+            graymarshall<span style={{ color: c.accent }}>.dev</span>{" "}
+            <span style={{ color: c.sub, fontWeight: 400 }}>—</span>{" "}
+            <span className="italic font-normal">portfolio</span>
           </div>
           <div className="leading-[1.6]" style={{ color: c.sub }}>
             Set in Fraunces &amp; Inter. Built in React. Hosted on the open web.
