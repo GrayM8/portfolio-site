@@ -65,26 +65,28 @@ export function ProjectDetail({ project }: { project: AnyProject }) {
       className="min-h-screen bg-[color:var(--bg)] text-[color:var(--ink)] font-sans text-[14px] leading-[1.55]"
     >
       <style>{`
-        .pd-link { color: inherit; text-decoration: none; position: relative; padding-bottom: 3px; display: inline-block; }
-        .pd-link::after { content:''; position:absolute; left:0; right:0; bottom:0; height:1px; background:currentColor; transform: scaleX(0); transform-origin: right; transition: transform .25s ease; }
-        .pd-link:hover::after { transform: scaleX(1); transform-origin: left; }
-        .pd-link:hover { color: var(--accent); }
-        .pd-kicker { font-family: var(--font-mono); font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--sub); }
-        .pd-card { transition: border-color .2s ease, background-color .2s ease; }
-        .pd-card:hover { border-color: var(--accent); }
-        .pd-card:hover .pd-card-title { color: var(--accent); }
-        .pd-card:hover .pd-card-arrow { transform: translateX(4px); color: var(--accent); }
-        .pd-card-title { transition: color .2s ease; }
-        .pd-card-arrow { transition: transform .25s ease, color .2s ease; }
-        .pd-btn { transition: background-color .2s ease, border-color .2s ease, color .2s ease; }
-        .pd-btn-primary { background: var(--ink); color: var(--bg); border-color: var(--ink); }
-        .pd-btn-primary:hover { background: var(--accent); border-color: var(--accent); color: var(--bg); }
-        .pd-btn-secondary { background: transparent; color: var(--ink); border-color: var(--rule); }
-        .pd-btn-secondary:hover { border-color: var(--accent); color: var(--accent); background: color-mix(in srgb, var(--accent) 8%, transparent); }
-        .pd-crumb { transition: color .2s ease, gap .2s ease; }
-        .pd-crumb:hover { color: var(--accent); }
-        .pd-crumb:hover svg { transform: translateX(-2px); }
-        .pd-crumb svg { transition: transform .2s ease; }
+        @layer components {
+          .pd-link { color: inherit; text-decoration: none; position: relative; padding-bottom: 3px; display: inline-block; }
+          .pd-link::after { content:''; position:absolute; left:0; right:0; bottom:0; height:1px; background:currentColor; transform: scaleX(0); transform-origin: right; transition: transform .25s ease; }
+          .pd-link:hover::after { transform: scaleX(1); transform-origin: left; }
+          .pd-link:hover { color: var(--accent); }
+          .pd-kicker { font-family: var(--font-mono); font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--sub); }
+          .pd-card { transition: border-color .2s ease, background-color .2s ease; }
+          .pd-card:hover { border-color: var(--accent); }
+          .pd-card:hover .pd-card-title { color: var(--accent); }
+          .pd-card:hover .pd-card-arrow { transform: translateX(4px); color: var(--accent); }
+          .pd-card-title { transition: color .2s ease; }
+          .pd-card-arrow { transition: transform .25s ease, color .2s ease; }
+          .pd-btn { transition: background-color .2s ease, border-color .2s ease, color .2s ease; }
+          .pd-btn-primary { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+          .pd-btn-primary:hover { background: var(--accent); border-color: var(--accent); color: var(--bg); }
+          .pd-btn-secondary { background: transparent; color: var(--ink); border-color: var(--rule); }
+          .pd-btn-secondary:hover { border-color: var(--accent); color: var(--accent); background: color-mix(in srgb, var(--accent) 8%, transparent); }
+          .pd-crumb { transition: color .2s ease, gap .2s ease; }
+          .pd-crumb:hover { color: var(--accent); }
+          .pd-crumb:hover svg { transform: translateX(-2px); }
+          .pd-crumb svg { transition: transform .2s ease; }
+        }
         .pd-dropcap::first-letter {
           float: left;
           font-family: var(--font-serif);
