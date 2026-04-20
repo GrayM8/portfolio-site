@@ -13,6 +13,8 @@ export type FeaturedProject = {
   link?: string;
   repo?: string;
   metrics?: Metric[];
+  overview?: string;
+  detailBullets?: string[];
 };
 
 export type IndexProject = {
@@ -22,7 +24,32 @@ export type IndexProject = {
   status: "Live" | "In Development" | "Archived" | string;
   year: string;
   image?: string;
+  slug?: string;
+  link?: string;
+  repo?: string;
+  overview?: string;
+  detailBullets?: string[];
 };
+
+export type AnyProject = FeaturedProject | (IndexProject & { slug: string });
+
+export function getProjectBySlug(slug: string): AnyProject | undefined {
+  const featured = PORTFOLIO.featured.find((p) => p.slug === slug);
+  if (featured) return featured;
+  const indexed = PORTFOLIO.projects.find(
+    (p): p is IndexProject & { slug: string } => p.slug === slug,
+  );
+  return indexed;
+}
+
+export function getAllProjectSlugs(): string[] {
+  return [
+    ...PORTFOLIO.featured.map((p) => p.slug),
+    ...PORTFOLIO.projects
+      .filter((p): p is IndexProject & { slug: string } => Boolean(p.slug))
+      .map((p) => p.slug),
+  ];
+}
 
 export type Experience = {
   title: string;
@@ -159,8 +186,25 @@ export const PORTFOLIO: Portfolio = {
     },
   ],
   projects: [
-    { title: "Personal Website (v3)", tagline: "Technical portfolio & personal platform", tech: ["TypeScript", "Next.js"], status: "Live", year: "2026", image: "/assets/proj-portfolio.png" },
-    { title: "AgentWorkspaces", tagline: "Real-time AI collaboration platform", tech: ["TypeScript", "React", "Cloudflare Workers", "Durable Objects"], status: "Live", year: "2025", image: "/assets/proj-agents.png" },
+    {
+      title: "Personal Website (v3)",
+      slug: "personal-website-v3",
+      tagline: "Technical portfolio & personal platform",
+      tech: ["TypeScript", "Next.js", "Tailwind", "Recharts"],
+      status: "Live",
+      year: "2026",
+      image: "/assets/proj-portfolio.png",
+      repo: "github.com/GrayM8/portfolio-site",
+    },
+    {
+      title: "AgentWorkspaces",
+      slug: "agentworkspaces",
+      tagline: "Real-time AI collaboration platform",
+      tech: ["TypeScript", "React", "Cloudflare Workers", "Durable Objects"],
+      status: "Live",
+      year: "2025",
+      image: "/assets/proj-agents.png",
+    },
     { title: "Pintos OS Kernel", tagline: "Scheduling, virtual memory, file systems", tech: ["C", "Operating Systems"], status: "Archived", year: "2025" },
     { title: "chArm-v3 CPU Simulator", tagline: "Cycle-accurate pipelined CPU + cache", tech: ["C", "Computer Architecture"], status: "Archived", year: "2025" },
     { title: "Dynamic Memory Allocator", tagline: "Explicit free-list, coalescing, validation", tech: ["C", "Memory Mgmt"], status: "Archived", year: "2024" },

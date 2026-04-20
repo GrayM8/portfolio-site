@@ -1,6 +1,7 @@
 "use client";
 
-import { Fragment, useEffect, useState, type CSSProperties } from "react";
+import { Fragment, useEffect, useState, type ElementType } from "react";
+import Link from "next/link";
 import { Github } from "lucide-react";
 import {
   Area,
@@ -15,40 +16,7 @@ import { PORTFOLIO, type FeaturedProject, type Note } from "@/data/portfolio";
 import { useGithubActivity } from "@/lib/github";
 import { useAustinTemp } from "@/lib/weather";
 import { useModeTheme } from "../ModeThemeProvider";
-
-type Palette = {
-  bg: string;
-  cover: string;
-  ink: string;
-  sub: string;
-  rule: string;
-  accent: string;
-  soft: string;
-  card: string;
-};
-
-const o3Styles: { light: Palette; dark: Palette } = {
-  light: {
-    bg: "#f5ecd8",
-    cover: "#e8dcbe",
-    ink: "#18140a",
-    sub: "#6f6650",
-    rule: "#cfc09c",
-    accent: "#b94610",
-    soft: "#ddcea8",
-    card: "#fbf5e6",
-  },
-  dark: {
-    bg: "#0b0a07",
-    cover: "#18160f",
-    ink: "#f4ecd6",
-    sub: "#948b78",
-    rule: "#2b2820",
-    accent: "#ff7a1a",
-    soft: "#1f1c13",
-    card: "#16140d",
-  },
-};
+import { paletteFor, paletteToVars, type Palette } from "./palette";
 
 const WRAP = "mx-auto w-full max-w-[1440px]";
 const PAD = "px-5 sm:px-8 md:px-10 lg:px-12";
@@ -66,7 +34,7 @@ const NAV_ITEMS: ReadonlyArray<{ id: NavId; label: string }> = [
 
 export function EditorialSite() {
   const { theme } = useModeTheme();
-  const c = theme === "dark" ? o3Styles.dark : o3Styles.light;
+  const c = paletteFor(theme);
   const P = PORTFOLIO;
   const [active, setActive] = useState<NavId>(NAV_ITEMS[0].id);
   const [today, setToday] = useState<Date | null>(null);
@@ -112,16 +80,7 @@ export function EditorialSite() {
     };
   }, []);
 
-  const cssVars = {
-    "--bg": c.bg,
-    "--cover": c.cover,
-    "--ink": c.ink,
-    "--sub": c.sub,
-    "--rule": c.rule,
-    "--accent": c.accent,
-    "--soft": c.soft,
-    "--card": c.card,
-  } as CSSProperties;
+  const cssVars = paletteToVars(c);
 
   return (
     <div
@@ -948,8 +907,8 @@ function EditorialFeature({
 }) {
   const flip = idx % 2 === 1;
   return (
-    <a
-      href="#"
+    <Link
+      href={`/projects/${p.slug}`}
       className="o3-feat grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 lg:gap-16 no-underline items-center"
       style={{ color: "inherit" }}
     >
@@ -1080,7 +1039,7 @@ function EditorialFeature({
           </span>
         </div>
       </div>
-    </a>
+    </Link>
   );
 }
 
@@ -1091,6 +1050,7 @@ type TileItem = {
   status: string;
   year: string;
   image?: string;
+  slug?: string;
 };
 
 function ProjectTile({
@@ -1104,13 +1064,21 @@ function ProjectTile({
 }) {
   const hasImage = Boolean(p.image) && !compact;
   const statusColor = p.status === "Live" ? c.accent : c.sub;
+  const isLinked = Boolean(p.slug);
+
+  const Outer = (isLinked ? Link : "article") as ElementType;
+  const outerProps = isLinked
+    ? { href: `/projects/${p.slug}` }
+    : ({} as Record<string, never>);
 
   return (
-    <article
-      className="o3-tile relative overflow-hidden border font-mono"
+    <Outer
+      {...outerProps}
+      className="o3-tile relative overflow-hidden border font-mono block no-underline"
       style={{
         borderColor: c.rule,
         background: c.card,
+        color: "inherit",
         minHeight: compact ? 96 : 180,
       }}
     >
@@ -1199,7 +1167,7 @@ function ProjectTile({
           {p.tech.join(" · ")}
         </div>
       </div>
-    </article>
+    </Outer>
   );
 }
 
