@@ -88,8 +88,8 @@ export function EditorialSite() {
         .o3-tile { transition: border-color .2s ease, transform .2s ease; }
         .o3-tile:hover { border-color: var(--accent); }
         .o3-tile:hover .o3-tile-title { color: var(--accent); }
-        .o3-tile:hover .o3-tile-img { transform: translateY(-50%) rotateX(50deg) rotateZ(20deg) scale(2.35); }
-        .o3-tile-img { transition: transform .6s ease; transform: translateY(-50%) rotateX(50deg) rotateZ(20deg) scale(2.2); }
+        .o3-tile:hover .o3-tile-img { transform: translateY(-50%) rotateX(50deg) rotateZ(20deg) scale(1.95); }
+        .o3-tile-img { transition: transform .6s ease; transform: translateY(-50%) rotateX(50deg) rotateZ(20deg) scale(1.8); }
         .o3-tile-title { transition: color .2s ease; }
       `}</style>
 
