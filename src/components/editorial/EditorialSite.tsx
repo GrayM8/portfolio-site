@@ -904,11 +904,9 @@ export function EditorialSite() {
           <div>
             <div className="o3-kicker mb-2">Masthead</div>
             <div className="leading-[1.7]" style={{ color: c.ink }}>
-              Editor · Gray Marshall
+              Editor, engineer &amp; designer
               <br />
-              Engineering · Gray Marshall
-              <br />
-              Design · Gray Marshall
+              Gray Marshall
             </div>
           </div>
           <div>
