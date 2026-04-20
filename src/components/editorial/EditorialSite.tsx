@@ -11,7 +11,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { PORTFOLIO, type FeaturedProject, type Note } from "@/data/portfolio";
+import { PORTFOLIO, type FeaturedProject, type IndexProject, type Note } from "@/data/portfolio";
 import { useGithubActivity } from "@/lib/github";
 import { useAustinTemp } from "@/lib/weather";
 import { useModeTheme } from "../ModeThemeProvider";
@@ -147,6 +147,12 @@ export function EditorialSite() {
         @keyframes o3-pulse { 0%,100% { transform: scale(1); opacity: 0.65 } 50% { transform: scale(1.8); opacity: 0 } }
         .o3-pulse { transform-origin: center; transform-box: fill-box; animation: o3-pulse 1.8s ease-out infinite; }
         .o3-kicker { font-family: var(--font-mono); font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--sub); }
+        .o3-tile { transition: border-color .2s ease, transform .2s ease; }
+        .o3-tile:hover { border-color: var(--accent); }
+        .o3-tile:hover .o3-tile-title { color: var(--accent); }
+        .o3-tile:hover .o3-tile-img { transform: translateY(-50%) rotateX(50deg) rotateZ(20deg) scale(2.35); }
+        .o3-tile-img { transition: transform .6s ease; transform: translateY(-50%) rotateX(50deg) rotateZ(20deg) scale(2.2); }
+        .o3-tile-title { transition: color .2s ease; }
       `}</style>
 
       {/* MASTHEAD */}
@@ -470,97 +476,10 @@ export function EditorialSite() {
             title="Everything, listed"
             sub={`${P.projects.length + P.featured.length} projects, archived and active.`}
           />
-          <div className="mt-8">
-            {/* Mobile: card list */}
-            <div className="md:hidden">
-              {P.projects.map((p, i) => (
-                <div
-                  key={i}
-                  className="o3-row py-4 border-b"
-                  style={{ borderColor: c.rule }}
-                >
-                  <div className="flex items-baseline justify-between gap-3 mb-1">
-                    <div
-                      className="font-mono text-[10px] uppercase tracking-widest"
-                      style={{
-                        color: p.status === "Live" ? c.accent : c.sub,
-                      }}
-                    >
-                      {p.status} · {p.year}
-                    </div>
-                  </div>
-                  <div
-                    className="o3-t font-serif font-normal text-[22px] leading-[1.15]"
-                    style={{ color: c.ink }}
-                  >
-                    {p.title}
-                  </div>
-                  <div
-                    className="font-serif italic text-[14px] mt-1"
-                    style={{ color: c.sub }}
-                  >
-                    {p.tagline}
-                  </div>
-                  <div
-                    className="font-mono text-[10px] mt-2"
-                    style={{ color: c.sub, letterSpacing: 0.5 }}
-                  >
-                    {p.tech.join(" · ")}
-                  </div>
-                </div>
-              ))}
-            </div>
-            {/* Desktop: table */}
-            <div className="hidden md:block">
-              <div
-                className="grid grid-cols-[70px_1fr_2fr_1.4fr_80px] px-4 py-3 border-b font-mono text-[10px] uppercase tracking-widest"
-                style={{ borderColor: c.ink, color: c.sub }}
-              >
-                <div>Year</div>
-                <div>Title</div>
-                <div>Description</div>
-                <div>Stack</div>
-                <div>Status</div>
-              </div>
-              {P.projects.map((p, i) => (
-                <div
-                  key={i}
-                  className="o3-row grid grid-cols-[70px_1fr_2fr_1.4fr_80px] px-4 py-4 border-b items-baseline cursor-pointer"
-                  style={{ borderColor: c.rule }}
-                >
-                  <div
-                    className="font-mono text-[11px]"
-                    style={{ color: c.sub }}
-                  >
-                    {p.year}
-                  </div>
-                  <div
-                    className="o3-t font-serif text-[20px] leading-[1.15] font-normal"
-                    style={{ color: c.ink }}
-                  >
-                    {p.title}
-                  </div>
-                  <div
-                    className="font-serif italic text-[14px]"
-                    style={{ color: c.sub }}
-                  >
-                    {p.tagline}
-                  </div>
-                  <div
-                    className="font-mono text-[10px]"
-                    style={{ color: c.sub, letterSpacing: 0.5 }}
-                  >
-                    {p.tech.join(" · ")}
-                  </div>
-                  <div
-                    className="font-mono text-[10px] uppercase tracking-widest"
-                    style={{ color: p.status === "Live" ? c.accent : c.sub }}
-                  >
-                    {p.status}
-                  </div>
-                </div>
-              ))}
-            </div>
+          <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
+            {P.projects.map((p, i) => (
+              <ProjectTile key={i} p={p} c={c} />
+            ))}
           </div>
         </div>
       </section>
@@ -1125,6 +1044,93 @@ function EditorialFeature({
         </div>
       </div>
     </a>
+  );
+}
+
+function ProjectTile({ p, c }: { p: IndexProject; c: Palette }) {
+  const hasImage = Boolean(p.image);
+  const statusColor = p.status === "Live" ? c.accent : c.sub;
+
+  return (
+    <article
+      className="o3-tile relative overflow-hidden border font-mono"
+      style={{ borderColor: c.rule, background: c.card, minHeight: 180 }}
+    >
+      {hasImage && (
+        <div
+          aria-hidden
+          className="absolute inset-0 pointer-events-none overflow-hidden"
+        >
+          <div
+            className="absolute inset-0"
+            style={{ perspective: "600px", perspectiveOrigin: "85% 50%" }}
+          >
+            <div
+              className="o3-tile-img absolute"
+              style={{
+                width: 300,
+                aspectRatio: "16 / 10",
+                left: "56%",
+                top: "50%",
+                transformOrigin: "center center",
+              }}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={p.image}
+                alt=""
+                className="absolute inset-0 w-full h-full object-cover"
+              />
+            </div>
+          </div>
+          {/* vignette: fades image into the card background */}
+          <div
+            className="absolute inset-0"
+            style={{
+              background: `radial-gradient(ellipse 50% 170% at 72% 50%, transparent 22%, ${c.card}ee 52%, ${c.card} 70%)`,
+            }}
+          />
+        </div>
+      )}
+
+      {/* header row — mirrors telemetry widget chrome */}
+      <div
+        className="relative z-10 flex items-center justify-between px-4 py-2.5 border-b text-[9px] uppercase tracking-widest"
+        style={{ borderColor: c.rule, color: c.sub }}
+      >
+        <span>{p.year}</span>
+        <span style={{ color: statusColor }}>
+          {p.status === "Live" ? "● " : "○ "}
+          {p.status}
+        </span>
+      </div>
+
+      {/* body */}
+      <div className="relative z-10 px-4 py-4 md:px-5 md:py-5">
+        <h3
+          className="o3-tile-title font-serif font-normal leading-[1.1] m-0"
+          style={{
+            color: c.ink,
+            fontSize: "clamp(20px, 2.5vw, 26px)",
+            letterSpacing: -0.3,
+          }}
+        >
+          {p.title}
+        </h3>
+        <div
+          className="font-serif italic text-[14px] md:text-[15px] mt-2 max-w-[70%]"
+          style={{ color: c.sub }}
+        >
+          {p.tagline}
+        </div>
+        <div
+          className="font-mono text-[10px] mt-4 max-w-[70%]"
+          style={{ color: c.sub, letterSpacing: 0.5 }}
+        >
+          {p.tech.join(" · ")}
+        </div>
+      </div>
+    </article>
   );
 }
 
