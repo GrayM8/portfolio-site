@@ -34,9 +34,9 @@ export function ModeControls({ palette }: Props) {
         };
 
   return (
-    <div className="flex items-center gap-2 font-mono">
+    <div className="flex items-center gap-2">
       <div
-        className="flex items-center"
+        className="flex items-stretch"
         style={{
           border: `1px solid ${col.rule}`,
           background: col.track,
@@ -45,7 +45,7 @@ export function ModeControls({ palette }: Props) {
         <Link
           href="/"
           aria-current={!isTerminal ? "page" : undefined}
-          className="px-2.5 py-1 text-[10px] tracking-[0.12em] uppercase transition-colors no-underline"
+          className="px-2.5 py-1 italic font-[family-name:var(--font-serif-alt)] text-[15px] leading-[1] tracking-normal normal-case transition-colors no-underline flex items-center"
           style={{
             background: !isTerminal ? col.active : "transparent",
             color: !isTerminal ? col.activeText : col.inactive,
@@ -56,7 +56,7 @@ export function ModeControls({ palette }: Props) {
         <Link
           href="/tui"
           aria-current={isTerminal ? "page" : undefined}
-          className="px-2.5 py-1 text-[10px] tracking-[0.12em] uppercase transition-colors no-underline"
+          className="px-2.5 py-1 font-mono text-[10px] tracking-[0.12em] uppercase transition-colors no-underline flex items-center"
           style={{
             background: isTerminal ? col.active : "transparent",
             color: isTerminal ? col.activeText : col.inactive,

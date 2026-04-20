@@ -20,7 +20,7 @@ export async function generateMetadata({
   if (!project) return { title: "Project Not Found" };
   const description = project.overview ?? project.tagline;
   return {
-    title: `${project.title} — Gray Marshall`,
+    title: `${project.title} | Gray Marshall`,
     description,
     keywords: project.tech,
     alternates: { canonical: `/projects/${slug}` },

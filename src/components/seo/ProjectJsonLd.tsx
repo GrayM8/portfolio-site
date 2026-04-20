@@ -90,7 +90,7 @@ export function ProjectJsonLd({ project }: Props) {
     "@context": "https://schema.org",
     "@type": "ItemPage",
     url: pageUrl,
-    name: `${project.title} — Gray Marshall`,
+    name: `${project.title} | Gray Marshall`,
     description,
     author: {
       "@type": "Person",

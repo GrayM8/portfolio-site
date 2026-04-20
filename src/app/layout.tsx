@@ -38,7 +38,7 @@ const instrumentSerif = Instrument_Serif({
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: "Gray Marshall — Software Engineer",
+  title: "Gray Marshall | Software Engineer",
   description:
     "Real-time systems. Race-car telemetry. Production web platforms. Portfolio of Gray Marshall.",
 };

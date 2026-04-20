@@ -42,7 +42,9 @@
       "Bash(node *)",
       "Bash(git push *)",
       "Bash(npx next *)",
-      "Bash(npm install *)"
+      "Bash(npm install *)",
+      "Bash(cp .next/server/app/icon.body /tmp/icon-preview.png)",
+      "Bash(cp .next/server/app/apple-icon.body /tmp/apple-icon-preview.png)"
     ]
   }
 }

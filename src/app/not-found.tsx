@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "404 — Gray Marshall",
+  title: "404 | Gray Marshall",
   description: "The story you're looking for couldn't be filed.",
   robots: { index: false, follow: false },
 };

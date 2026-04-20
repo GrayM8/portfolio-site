@@ -74,7 +74,7 @@ export function ProfileJsonLd() {
     "@type": "ProfilePage",
     "@id": profilePageId,
     url: SITE_URL,
-    name: `${P.name} — ${P.role}`,
+    name: `${P.name} | ${P.role}`,
     description: P.tagline,
     inLanguage: "en-US",
     isPartOf: { "@id": websiteId },
