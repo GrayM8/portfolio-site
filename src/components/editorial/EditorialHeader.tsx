@@ -66,12 +66,13 @@ export function EditorialHeader({ active, homeRoute = false }: Props) {
           </div>
           <Link
             href="/"
-            className="font-serif text-[18px] sm:text-[20px] md:text-[22px] font-medium tracking-[0.12em] md:tracking-[0.18em] whitespace-nowrap text-left md:text-center no-underline"
+            className="font-serif text-[18px] sm:text-[20px] md:text-[22px] font-medium tracking-tight whitespace-nowrap text-left md:text-center no-underline"
             style={{ color: "inherit" }}
           >
-            <span style={{ color: c.accent }}>G.</span>MARSHALL{" "}
+            graymarshall
+            <span style={{ color: c.accent }}>.dev</span>{" "}
             <span className="text-[color:var(--sub)] font-normal">—</span>{" "}
-            <span className="italic font-normal">field notes</span>
+            <span className="italic font-normal">portfolio</span>
           </Link>
           <div className="flex items-center justify-end gap-3 font-mono text-[11px] text-[color:var(--sub)]">
             <span className="hidden sm:inline">

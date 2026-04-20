@@ -105,6 +105,7 @@ const COMMAND_NAMES = [
   "sl",
   "sudo",
   "rm",
+  "mkdir",
 ];
 
 const SLASH_NAV: Array<{ label: string; cmd: string }> = [
@@ -1166,6 +1167,29 @@ export function TerminalSite() {
             content: "rm: operation not permitted in this shell",
             color: "red",
           },
+        ];
+      },
+      mkdir: (arg) => {
+        const name = (arg ?? "").trim();
+        if (!name) {
+          return [
+            { t: "out", content: "mkdir: missing operand", color: "red" },
+          ];
+        }
+        const quips = [
+          `mkdir: ${name}: not today — you already have enough side projects.`,
+          `mkdir: ${name}: starting new projects is how you avoid finishing old ones.`,
+          `mkdir: ${name}: the filesystem is a carefully curated illusion.`,
+          `mkdir: ${name}: permission denied. too busy shipping.`,
+          `mkdir: ${name}: yes chef. … just kidding, no.`,
+        ];
+        return [
+          {
+            t: "out",
+            content: quips[Math.floor(Math.random() * quips.length)],
+            color: "red",
+          },
+          { t: "out", content: "(try `ls` to see what already exists.)", muted: true },
         ];
       },
       clear: () => "CLEAR",
