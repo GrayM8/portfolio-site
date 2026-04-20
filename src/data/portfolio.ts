@@ -84,6 +84,8 @@ export type Note = {
   date: string;
   tag: string;
   read: string;
+  url?: string;
+  description?: string;
 };
 
 export type Portfolio = {
@@ -445,9 +447,23 @@ export const PORTFOLIO: Portfolio = {
     Practices: ["TDD", "SEO", "Perf Analysis", "Reliability Eng"],
   },
   notes: [
-    { title: "Building a sub-20ms telemetry pipeline", date: "Apr 2026", tag: "systems", read: "8 min" },
-    { title: "What I learned co-founding an org at 19", date: "Mar 2026", tag: "notes", read: "5 min" },
-    { title: "Durable Objects vs. traditional WebSocket rooms", date: "Feb 2026", tag: "systems", read: "12 min" },
-    { title: "Writing the driver dash: clarity at 70 mph", date: "Jan 2026", tag: "design", read: "6 min" },
+    {
+      title: "PitLane Systems Selected as a 2026 McCombs Entrepreneur Summer Fellow",
+      date: "Apr 2026",
+      tag: "milestone",
+      read: "2 min",
+      url: "https://www.pitlanesystems.com/blog/mccombs-entrepreneur-summer-fellow-2026",
+      description:
+        "PitLane Systems is backed by the Harkey Institute at UT Austin's McCombs School of Business through the 2026 McCombs Entrepreneur Summer Fellowship.",
+    },
+    {
+      title: "Announcing PitLane Systems",
+      date: "Apr 2026",
+      tag: "founder",
+      read: "3 min",
+      url: "https://www.pitlanesystems.com/blog/announcing-pitlane-systems",
+      description:
+        "Over a year of producing sim racing broadcasts at UT Austin, and we kept hitting the same wall: the tool we needed didn't exist. So I built it.",
+    },
   ],
 };

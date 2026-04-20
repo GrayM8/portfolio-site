@@ -516,10 +516,35 @@ export function TerminalSite() {
       ],
       notes: () => [
         ...printRule("notes · writing"),
-        ...P.notes.map((n) => ({
-          t: "out" as const,
-          content: `  ${n.date.padEnd(10)} #${n.tag.padEnd(8)} ${n.title}  (${n.read})`,
-        })),
+        ...P.notes.flatMap((n) => {
+          const rows: Line[] = [
+            {
+              t: "out" as const,
+              content: `▸ ${n.date} · #${n.tag} · ${n.read}`,
+              color: "accent" as const,
+            },
+            {
+              t: "out" as const,
+              content: `  ${n.title}`,
+            },
+          ];
+          if (n.description) {
+            rows.push({
+              t: "out" as const,
+              content: `  ${n.description}`,
+              muted: true,
+            });
+          }
+          if (n.url) {
+            rows.push({
+              t: "out" as const,
+              content: `  ↗ ${n.url.replace(/^https?:\/\//, "")}`,
+              color: "blue" as const,
+            });
+          }
+          rows.push({ t: "out" as const, content: "" });
+          return rows;
+        }),
       ],
       cv: () => [
         ...printRule("cv · gray marshall"),

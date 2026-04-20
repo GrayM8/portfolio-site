@@ -631,18 +631,11 @@ export function EditorialSite() {
             roman="VII."
             kicker="Writing"
             title="Notes from the margin"
-            sub="Engineering, process, and occasional trackside observation."
+            sub="Essays and announcements, published on the PitLane Systems blog."
           />
-          <div className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-[1.5fr_1fr_1fr] gap-8 md:gap-10">
-            <FeatureNote n={P.notes[0]} c={c} lead />
-            <div className="grid gap-6 content-start">
-              {P.notes.slice(1, 3).map((n, i) => (
-                <FeatureNote key={i} n={n} c={c} />
-              ))}
-            </div>
-            <div className="grid gap-6 content-start md:col-span-2 lg:col-span-1">
-              <FeatureNote n={P.notes[3]} c={c} />
-            </div>
+          <div className="mt-8 grid grid-cols-1 lg:grid-cols-[1.5fr_1fr] gap-8 md:gap-10">
+            {P.notes[0] && <FeatureNote n={P.notes[0]} c={c} lead />}
+            {P.notes[1] && <FeatureNote n={P.notes[1]} c={c} />}
           </div>
         </div>
       </section>
@@ -1058,9 +1051,12 @@ function FeatureNote({
   c: Palette;
   lead?: boolean;
 }) {
+  const isExternal = Boolean(n.url);
   return (
     <a
-      href="#"
+      href={n.url ?? "#"}
+      target={isExternal ? "_blank" : undefined}
+      rel={isExternal ? "noreferrer" : undefined}
       className="o3-feat block no-underline"
       style={{ color: "inherit" }}
     >
@@ -1074,27 +1070,28 @@ function FeatureNote({
         className="o3-title font-serif font-normal mb-2.5 text-[color:var(--ink)]"
         style={{
           fontSize: lead ? "clamp(28px, 4.5vw, 40px)" : "clamp(18px, 2.5vw, 22px)",
-          lineHeight: lead ? 1 : 1.2,
+          lineHeight: lead ? 1.05 : 1.2,
           letterSpacing: lead ? -1 : 0,
         }}
       >
         {n.title}
       </div>
-      {lead && (
+      {n.description && (
         <div
-          className="font-serif italic text-[15px] md:text-[16px] leading-[1.5] mb-3"
-          style={{ color: c.sub }}
+          className="font-serif italic leading-[1.5] mb-3"
+          style={{
+            color: c.sub,
+            fontSize: lead ? 16 : 14,
+          }}
         >
-          A field report on building a distributed telemetry stack that delivers race-car
-          bytes to a driver dashboard in under 20 milliseconds — what worked, what didn&apos;t,
-          what I&apos;d do again.
+          {n.description}
         </div>
       )}
       <div
         className="font-mono text-[10px] uppercase tracking-widest"
         style={{ color: c.sub }}
       >
-        {n.read} · Read →
+        {n.read} · Read {isExternal ? "↗" : "→"}
       </div>
     </a>
   );
