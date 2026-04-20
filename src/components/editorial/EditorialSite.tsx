@@ -349,7 +349,7 @@ export function EditorialSite() {
                 {(
                   [
                     ["2nd", "year at UT Austin"],
-                    ["1 race car", "shipping telemetry for"],
+                    ["2 race cars", "shipping telemetry for"],
                     ["1 platform", "built as CTO · live"],
                     ["3+", "featured projects"],
                     ["127", "signals streaming"],
