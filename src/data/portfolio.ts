@@ -281,6 +281,7 @@ export const PORTFOLIO: Portfolio = {
       tech: ["ROS 2", "Python", "Gazebo", "RViz", "Pure Pursuit"],
       status: "In Development",
       year: "2026 — Present",
+      image: "/assets/proj-autonomy.png",
       overview:
         "A ROS 2 workspace implementing the full FSAE driverless pipeline — procedural cone track generation, FOV-limited sensor simulation, centerline extraction, pure-pursuit control, the competition state machine, and a metrics harness — running on a pluggable simulation backend (lightweight kinematic model or Gazebo physics). Built as the starting point for next season's autonomous program at Longhorn Racing.",
       detailBullets: [
