@@ -565,7 +565,11 @@ export function TerminalSite() {
         }
         const [srcRaw, ...pipeParts] = arg.split("|").map((s) => s.trim());
         const src = srcRaw.replace(/^~\//, "").replace(/^\.\//, "");
-        const lookup = VFS[src] ?? VFS[`~/${src}`] ?? VFS[srcRaw];
+        const needle = src.toLowerCase();
+        const key = Object.keys(VFS).find(
+          (k) => k.toLowerCase() === needle,
+        );
+        const lookup = key ? VFS[key] : undefined;
         if (!lookup) {
           return [
             {
@@ -579,7 +583,7 @@ export function TerminalSite() {
         for (const part of pipeParts) {
           const tokens = part.split(/\s+/);
           const op = tokens[0]?.toLowerCase();
-          const flag = tokens[1] ?? "";
+          const flag = (tokens[1] ?? "").toLowerCase();
           if (op === "head") {
             const n = Math.max(0, parseInt(flag.replace(/^-/, ""), 10) || 10);
             lines = lines.slice(0, n);
@@ -601,7 +605,8 @@ export function TerminalSite() {
         return lines.map((line) => ({ t: "out" as const, content: line }));
       },
       systemctl: (arg) => {
-        const subcmd = (arg ?? "").trim().split(/\s+/)[0] || "status";
+        const subcmd =
+          (arg ?? "").trim().split(/\s+/)[0]?.toLowerCase() || "status";
         if (subcmd === "status") {
           return [
             {
