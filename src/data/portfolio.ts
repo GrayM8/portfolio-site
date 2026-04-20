@@ -364,7 +364,7 @@ export const PORTFOLIO: Portfolio = {
       ],
       status: "In Development",
       year: "2026 — Present",
-      image: "/assets/proj-investcheck.svg",
+      image: "/assets/proj-investcheck.png",
       overview:
         "A verified-trading marketplace where individual traders upload brokerage statements, have their trade histories reconciled against source-of-truth records, and then sell access to followers. Unlock a trader's published history, see verified equity curves, and study their strategy with full provenance. Built ground-up as a freelance contractor for the client.",
       detailBullets: [

@@ -36,7 +36,8 @@
       "Bash(curl -s -w \"\\\\nHTTP %{http_code}\\\\nCache-Control: %{header_json}\\\\n\" -D- -o /tmp/body.json \"http://localhost:3000/api/activity?user=GrayM8\")",
       "Bash(cp \"C:/Users/Gray/WebstormProjects/distribution-site/public/pitlane-mark.svg\" \"C:/Users/Gray/WebstormProjects/portfolio-site/public/assets/pitlane.svg\")",
       "Bash(cp \"C:/Users/Gray/WebstormProjects/distribution-site/public/pitlane-director-ac-broadcast-dashboard.png\" \"C:/Users/Gray/WebstormProjects/portfolio-site/public/assets/proj-pitlane.png\")",
-      "Bash(cp \"C:/Users/Gray/WebstormProjects/distribution-site/public/og.png\" \"C:/Users/Gray/WebstormProjects/portfolio-site/public/assets/proj-pitlane-site.png\")"
+      "Bash(cp \"C:/Users/Gray/WebstormProjects/distribution-site/public/og.png\" \"C:/Users/Gray/WebstormProjects/portfolio-site/public/assets/proj-pitlane-site.png\")",
+      "Bash(curl *)"
     ]
   }
 }
