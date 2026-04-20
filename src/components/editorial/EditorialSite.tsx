@@ -416,7 +416,7 @@ export function EditorialSite() {
             roman="IV."
             kicker="Engagements"
             title="Where I spend my weeks"
-            sub="Two roles, both active."
+            sub="Four roles, all active."
           />
           <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10">
             {P.experience.map((e, i) => (
