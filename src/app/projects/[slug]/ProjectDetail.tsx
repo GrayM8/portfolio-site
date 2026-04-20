@@ -26,6 +26,11 @@ function normalizeUrl(url: string): string {
   return `https://${url}`;
 }
 
+const ROMAN = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"];
+function toRoman(n: number): string {
+  return ROMAN[n - 1] ?? String(n);
+}
+
 export function ProjectDetail({ project }: { project: AnyProject }) {
   const { theme } = useModeTheme();
   const c = paletteFor(theme);
@@ -60,6 +65,17 @@ export function ProjectDetail({ project }: { project: AnyProject }) {
         .pd-card:hover { border-color: var(--accent); }
         .pd-card:hover .pd-card-title { color: var(--accent); }
         .pd-card-title { transition: color .2s ease; }
+        .pd-dropcap::first-letter {
+          float: left;
+          font-family: var(--font-serif);
+          font-style: italic;
+          font-weight: 300;
+          font-size: 5em;
+          line-height: 0.82;
+          padding-right: 14px;
+          padding-top: 6px;
+          color: var(--accent);
+        }
       `}</style>
 
       {/* top bar */}
@@ -199,55 +215,123 @@ export function ProjectDetail({ project }: { project: AnyProject }) {
         </div>
       </section>
 
-      {/* body: content + sidebar */}
-      <section className="border-b" style={{ borderColor: c.rule }}>
+      {/* metadata strip — full-width band right under the hero */}
+      <div className="border-b" style={{ borderColor: c.rule, background: c.soft }}>
         <div
-          className={`${WRAP} ${PAD} py-12 md:py-16 grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-10 lg:gap-14`}
+          className={`${WRAP} ${PAD} py-4 md:py-5 flex flex-wrap items-center gap-x-8 gap-y-3 font-mono text-[10px] md:text-[11px] uppercase tracking-widest`}
         >
-          <div className="min-w-0 space-y-10 md:space-y-12">
+          <span>
+            <span style={{ color: c.sub }}>Year </span>
+            <span style={{ color: c.ink }}>{project.year}</span>
+          </span>
+          <span>
+            <span style={{ color: c.sub }}>Status </span>
+            <span style={{ color: statusColor }}>
+              {project.status === "Live" ? "●" : "○"} {project.status}
+            </span>
+          </span>
+          <span className="flex items-center gap-x-2 gap-y-1 flex-wrap">
+            <span style={{ color: c.sub }}>Stack</span>
+            {project.tech.map((t) => (
+              <span
+                key={t}
+                className="px-2 py-0.5 border normal-case tracking-normal text-[10px]"
+                style={{ borderColor: c.rule, color: c.ink }}
+              >
+                {t}
+              </span>
+            ))}
+          </span>
+          <span className="md:ml-auto flex items-center gap-4">
+            {project.link && (
+              <a
+                href={normalizeUrl(project.link)}
+                target="_blank"
+                rel="noreferrer"
+                className="pd-link inline-flex items-center gap-1.5"
+                style={{ color: c.accent }}
+              >
+                <ExternalLink size={12} strokeWidth={1.75} aria-hidden />
+                <span>Visit</span>
+              </a>
+            )}
+            {project.repo && (
+              <a
+                href={normalizeUrl(project.repo)}
+                target="_blank"
+                rel="noreferrer"
+                className="pd-link inline-flex items-center gap-1.5"
+                style={{ color: c.ink }}
+              >
+                <Github size={12} strokeWidth={1.75} aria-hidden />
+                <span>Source</span>
+              </a>
+            )}
+          </span>
+        </div>
+      </div>
+
+      {/* reading body — single centered column */}
+      <section>
+        <div className={`${WRAP} ${PAD} py-14 md:py-20`}>
+          <div className="mx-auto max-w-[720px] space-y-14 md:space-y-16">
             {project.overview && (
-              <article>
-                <div className="pd-kicker mb-4">Overview</div>
+              <SectionHead c={c} roman="I." kicker="Summary" title="Overview" />
+            )}
+            {project.overview && (
+              <div className="-mt-8 md:-mt-10">
                 <p
-                  className="font-serif text-[16px] md:text-[18px] leading-[1.55]"
+                  className="pd-dropcap font-serif text-[17px] md:text-[19px] leading-[1.65]"
                   style={{ color: c.ink }}
                 >
                   {project.overview}
                 </p>
-              </article>
+              </div>
             )}
 
             {bullets.length > 0 && (
-              <article>
-                <div className="pd-kicker mb-4">Highlights</div>
-                <ul className="list-none p-0 m-0 grid gap-3.5">
+              <>
+                <SectionHead c={c} roman="II." kicker="Breakdown" title="Highlights" />
+                <ol className="list-none p-0 m-0 grid gap-5 md:gap-6 -mt-8 md:-mt-10">
                   {bullets.map((b, i) => (
                     <li
                       key={i}
-                      className="grid grid-cols-[20px_1fr] text-[15px] md:text-[16px] leading-[1.55]"
-                      style={{ color: c.ink }}
+                      className="grid grid-cols-[44px_1fr] md:grid-cols-[60px_1fr] gap-4 md:gap-5 items-baseline"
                     >
                       <span
-                        className="font-serif italic"
-                        style={{ color: c.accent }}
+                        className="font-serif italic font-light leading-[0.9] tabular-nums"
+                        style={{
+                          color: c.accent,
+                          fontSize: "clamp(22px, 2.6vw, 30px)",
+                        }}
                       >
-                        ›
+                        {toRoman(i + 1)}.
                       </span>
-                      <span>{b}</span>
+                      <span
+                        className="font-serif text-[16px] md:text-[17px] leading-[1.55]"
+                        style={{ color: c.ink }}
+                      >
+                        {b}
+                      </span>
                     </li>
                   ))}
-                </ul>
-              </article>
+                </ol>
+              </>
             )}
 
             {(project.detailBullets ?? []).length > 0 && (
-              <article>
-                <div className="pd-kicker mb-4">Notes</div>
-                <ul className="list-none p-0 m-0 grid gap-3.5">
+              <>
+                <SectionHead
+                  c={c}
+                  roman={bullets.length > 0 ? "III." : "II."}
+                  kicker="Margin"
+                  title="Notes"
+                />
+                <ul className="list-none p-0 m-0 grid gap-4 -mt-8 md:-mt-10">
                   {(project.detailBullets ?? []).map((b, i) => (
                     <li
                       key={i}
-                      className="grid grid-cols-[20px_1fr] text-[15px] leading-[1.55]"
+                      className="grid grid-cols-[24px_1fr] gap-3 text-[15px] md:text-[16px] leading-[1.55]"
                       style={{ color: c.ink }}
                     >
                       <span
@@ -260,134 +344,67 @@ export function ProjectDetail({ project }: { project: AnyProject }) {
                     </li>
                   ))}
                 </ul>
-              </article>
+              </>
             )}
 
-            {metrics.length > 0 && (
-              <article>
-                <div className="pd-kicker mb-4">By the numbers</div>
-                <div
-                  className="grid grid-cols-3 border-t border-b"
-                  style={{ borderColor: c.ink }}
-                >
-                  {metrics.map((m, i) => (
-                    <div
-                      key={i}
-                      className="py-6 md:py-7 px-3 md:px-4"
-                      style={{
-                        borderRight:
-                          i < metrics.length - 1
-                            ? `1px solid ${c.rule}`
-                            : "none",
-                      }}
-                    >
-                      <div
-                        className="font-serif font-normal leading-none"
-                        style={{
-                          color: c.ink,
-                          fontSize: "clamp(26px, 3.5vw, 36px)",
-                          letterSpacing: -0.5,
-                        }}
-                      >
-                        {m.v}
-                      </div>
-                      <div
-                        className="font-mono text-[9px] uppercase tracking-widest mt-2"
-                        style={{ color: c.sub }}
-                      >
-                        {m.k}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </article>
+            {!project.overview && bullets.length === 0 && (project.detailBullets ?? []).length === 0 && (
+              <div
+                className="font-serif italic text-center text-[16px] py-8"
+                style={{ color: c.sub }}
+              >
+                Write-up forthcoming.
+              </div>
             )}
           </div>
-
-          {/* sidebar */}
-          <aside className="grid gap-5 content-start">
-            <div
-              className="border p-5 font-mono"
-              style={{ borderColor: c.rule, background: c.card }}
-            >
-              <div className="pd-kicker mb-3">Tech stack</div>
-              <div className="flex flex-wrap gap-1.5">
-                {project.tech.map((t) => (
-                  <span
-                    key={t}
-                    className="text-[11px] px-2.5 py-1 border"
-                    style={{ borderColor: c.rule, color: c.ink }}
-                  >
-                    {t}
-                  </span>
-                ))}
-              </div>
-            </div>
-
-            <div
-              className="border p-5 font-mono"
-              style={{ borderColor: c.rule, background: c.card }}
-            >
-              <div className="pd-kicker mb-3">Links</div>
-              <div className="grid gap-2.5">
-                {project.link && (
-                  <a
-                    href={normalizeUrl(project.link)}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="pd-link flex items-center gap-2 text-[12px]"
-                    style={{ color: c.ink }}
-                  >
-                    <ExternalLink size={12} strokeWidth={1.75} aria-hidden />
-                    <span>{project.link}</span>
-                  </a>
-                )}
-                {project.repo && (
-                  <a
-                    href={normalizeUrl(project.repo)}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="pd-link flex items-center gap-2 text-[12px]"
-                    style={{ color: c.ink }}
-                  >
-                    <Github size={12} strokeWidth={1.75} aria-hidden />
-                    <span>{project.repo}</span>
-                  </a>
-                )}
-                {!project.link && !project.repo && (
-                  <span
-                    className="text-[12px] italic"
-                    style={{ color: c.sub }}
-                  >
-                    No public links yet.
-                  </span>
-                )}
-              </div>
-            </div>
-
-            <div
-              className="border p-5 font-mono"
-              style={{ borderColor: c.rule, background: c.card }}
-            >
-              <div className="pd-kicker mb-3">Dates</div>
-              <div className="grid gap-1.5 text-[12px]">
-                <div>
-                  <span style={{ color: c.sub }}>Year</span>
-                  <div style={{ color: c.ink }}>{project.year}</div>
-                </div>
-                <div>
-                  <span style={{ color: c.sub }}>Status</span>
-                  <div style={{ color: statusColor }}>{project.status}</div>
-                </div>
-              </div>
-            </div>
-          </aside>
         </div>
       </section>
 
+      {/* metrics — full-width break-out */}
+      {metrics.length > 0 && (
+        <section
+          className="border-t border-b"
+          style={{ borderColor: c.ink, background: c.cover }}
+        >
+          <div className={`${WRAP} ${PAD} py-8 md:py-12`}>
+            <div className="pd-kicker mb-4 md:mb-6">By the numbers</div>
+            <div className="grid grid-cols-3">
+              {metrics.map((m, i) => (
+                <div
+                  key={i}
+                  className="py-4 md:py-6 px-3 md:px-6"
+                  style={{
+                    borderRight:
+                      i < metrics.length - 1
+                        ? `1px solid ${c.rule}`
+                        : "none",
+                  }}
+                >
+                  <div
+                    className="font-serif font-normal leading-none"
+                    style={{
+                      color: c.ink,
+                      fontSize: "clamp(32px, 5vw, 56px)",
+                      letterSpacing: -1,
+                    }}
+                  >
+                    {m.v}
+                  </div>
+                  <div
+                    className="font-mono text-[10px] md:text-[11px] uppercase tracking-widest mt-3"
+                    style={{ color: c.sub }}
+                  >
+                    {m.k}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* related */}
       {related.length > 0 && (
-        <section>
+        <section className="border-b" style={{ borderColor: c.rule }}>
           <div className={`${WRAP} ${PAD} py-12 md:py-16`}>
             <div className="pd-kicker mb-5 flex items-center gap-3">
               <span>Other work</span>
@@ -442,6 +459,112 @@ export function ProjectDetail({ project }: { project: AnyProject }) {
           </div>
         </section>
       )}
+
+      {/* colophon footer */}
+      <footer style={{ background: c.cover, borderTop: `2px solid ${c.ink}` }}>
+        <div
+          className={`${WRAP} ${PAD} py-8 md:py-10 grid grid-cols-1 md:grid-cols-[2fr_1fr_1fr] gap-8 font-mono text-[11px]`}
+        >
+          <div>
+            <div className="pd-kicker mb-2">Colophon</div>
+            <div
+              className="font-serif text-[18px] md:text-[20px] tracking-[0.1em]"
+              style={{ color: c.ink }}
+            >
+              {project.title}
+            </div>
+            <div
+              className="mt-1 font-serif italic text-[13px]"
+              style={{ color: c.sub }}
+            >
+              {project.tagline}
+            </div>
+          </div>
+          <div>
+            <div className="pd-kicker mb-2">Stack</div>
+            <div className="leading-[1.7]" style={{ color: c.ink }}>
+              {project.tech.join(" · ")}
+            </div>
+          </div>
+          <div>
+            <div className="pd-kicker mb-2">Links</div>
+            <div className="grid gap-1.5 leading-[1.6]" style={{ color: c.ink }}>
+              {project.link && (
+                <a
+                  href={normalizeUrl(project.link)}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="pd-link inline-flex items-center gap-2"
+                >
+                  <ExternalLink size={11} strokeWidth={1.75} aria-hidden />
+                  {project.link}
+                </a>
+              )}
+              {project.repo && (
+                <a
+                  href={normalizeUrl(project.repo)}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="pd-link inline-flex items-center gap-2"
+                >
+                  <Github size={11} strokeWidth={1.75} aria-hidden />
+                  {project.repo}
+                </a>
+              )}
+              <Link
+                href="/#index"
+                className="pd-link inline-flex items-center gap-2"
+              >
+                <ArrowLeft size={11} strokeWidth={1.75} aria-hidden />
+                Back to index
+              </Link>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
+}
+
+function SectionHead({
+  c,
+  roman,
+  kicker,
+  title,
+}: {
+  c: ReturnType<typeof paletteFor>;
+  roman: string;
+  kicker: string;
+  title: string;
+}) {
+  return (
+    <div
+      className="grid grid-cols-[60px_1fr] md:grid-cols-[80px_1fr] gap-5 md:gap-6 items-baseline border-b pb-4 md:pb-5"
+      style={{ borderColor: c.ink }}
+    >
+      <div
+        className="font-serif italic font-light leading-[0.9]"
+        style={{
+          color: c.accent,
+          fontSize: "clamp(32px, 5vw, 48px)",
+        }}
+      >
+        {roman}
+      </div>
+      <div>
+        <div className="pd-kicker">{kicker}</div>
+        <div
+          className="font-serif font-normal mt-1"
+          style={{
+            color: c.ink,
+            fontSize: "clamp(28px, 5vw, 44px)",
+            lineHeight: 1,
+            letterSpacing: -1,
+          }}
+        >
+          {title}
+        </div>
+      </div>
     </div>
   );
 }
