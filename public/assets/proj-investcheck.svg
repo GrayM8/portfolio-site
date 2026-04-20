@@ -1,0 +1,9 @@
+<svg width="220" height="48" viewBox="0 0 220 48" xmlns="http://www.w3.org/2000/svg">
+  <rect x="4" y="30" width="5" height="8" fill="#635BFF"/>
+  <rect x="12" y="24" width="5" height="14" fill="#635BFF"/>
+  <rect x="20" y="17" width="5" height="21" fill="#635BFF"/>
+  <rect x="28" y="9" width="5" height="29" fill="#635BFF"/>
+  <path d="M 6.5 25 L 14.5 19 L 22.5 12 L 30.5 4" fill="none" stroke="#0A2540" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="30.5" cy="4" r="2.5" fill="#0A2540"/>
+  <text x="44" y="31" font-family="Inter, -apple-system, 'Helvetica Neue', sans-serif" font-size="22" font-weight="500" fill="#0A2540" letter-spacing="-1.2">Invest<tspan font-weight="700" fill="#635BFF">Check</tspan></text>
+</svg>
