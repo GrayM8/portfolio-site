@@ -98,7 +98,7 @@ export const PORTFOLIO: Portfolio = {
       title: "Longhorn Sim Racing Platform",
       slug: "lsr",
       tagline: "Events, membership & competition management",
-      year: "2025—",
+      year: "2025 — Present",
       status: "Live",
       tech: ["TypeScript", "Next.js", "PostgreSQL", "React"],
       bullets: [
@@ -119,7 +119,7 @@ export const PORTFOLIO: Portfolio = {
       title: "Formula SAE EV Telemetry",
       slug: "fsae",
       tagline: "Distributed real-time vehicle telemetry",
-      year: "2024—",
+      year: "2024 — Present",
       status: "In Development",
       tech: ["Distributed Systems", "TypeScript", "Python", "Real-Time"],
       bullets: [
@@ -140,7 +140,7 @@ export const PORTFOLIO: Portfolio = {
       title: "In-Vehicle Driver Dash",
       slug: "dash",
       tagline: "Real-time driver display: timing, energy, vehicle state",
-      year: "2025—",
+      year: "2025 — Present",
       status: "In Development",
       tech: ["WebSockets", "TypeScript", "Real-Time", "HMI"],
       bullets: [
@@ -159,7 +159,7 @@ export const PORTFOLIO: Portfolio = {
     },
   ],
   projects: [
-    { title: "Personal Website (v2)", tagline: "Technical portfolio & personal platform", tech: ["TypeScript", "Next.js"], status: "Live", year: "2025", image: "/assets/proj-portfolio.png" },
+    { title: "Personal Website (v3)", tagline: "Technical portfolio & personal platform", tech: ["TypeScript", "Next.js"], status: "Live", year: "2026", image: "/assets/proj-portfolio.png" },
     { title: "AgentWorkspaces", tagline: "Real-time AI collaboration platform", tech: ["TypeScript", "React", "Cloudflare Workers", "Durable Objects"], status: "Live", year: "2025", image: "/assets/proj-agents.png" },
     { title: "Pintos OS Kernel", tagline: "Scheduling, virtual memory, file systems", tech: ["C", "Operating Systems"], status: "Archived", year: "2025" },
     { title: "chArm-v3 CPU Simulator", tagline: "Cycle-accurate pipelined CPU + cache", tech: ["C", "Computer Architecture"], status: "Archived", year: "2025" },
