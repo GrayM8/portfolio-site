@@ -160,7 +160,7 @@ export const PORTFOLIO: Portfolio = {
   ],
   projects: [
     { title: "Personal Website (v2)", tagline: "Technical portfolio & personal platform", tech: ["TypeScript", "Next.js"], status: "Live", year: "2025", image: "/assets/proj-portfolio.png" },
-    { title: "AgentWorkspaces", tagline: "Real-time AI collaboration platform", tech: ["TypeScript", "React", "Cloudflare Workers", "Durable Objects"], status: "Live", year: "2024", image: "/assets/proj-agents.png" },
+    { title: "AgentWorkspaces", tagline: "Real-time AI collaboration platform", tech: ["TypeScript", "React", "Cloudflare Workers", "Durable Objects"], status: "Live", year: "2025", image: "/assets/proj-agents.png" },
     { title: "Pintos OS Kernel", tagline: "Scheduling, virtual memory, file systems", tech: ["C", "Operating Systems"], status: "Archived", year: "2025" },
     { title: "chArm-v3 CPU Simulator", tagline: "Cycle-accurate pipelined CPU + cache", tech: ["C", "Computer Architecture"], status: "Archived", year: "2025" },
     { title: "Dynamic Memory Allocator", tagline: "Explicit free-list, coalescing, validation", tech: ["C", "Memory Mgmt"], status: "Archived", year: "2024" },
