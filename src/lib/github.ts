@@ -4,10 +4,11 @@ import { useEffect, useState } from "react";
 
 export type GithubActivity = {
   daily: number[];
+  dates: string[];
   eventsTotal: number;
-  prsOpened: number;
   reviewsGiven: number;
   reposTouched: number;
+  commitsMade: number;
   streak: number;
   lastSynced: number;
 };
@@ -22,7 +23,16 @@ function readCache(user: string): GithubActivity | null {
     const raw = window.localStorage.getItem(storageKey(user));
     if (!raw) return null;
     const parsed = JSON.parse(raw) as GithubActivity;
-    if (!parsed || !Array.isArray(parsed.daily) || !parsed.lastSynced) return null;
+    if (
+      !parsed ||
+      !Array.isArray(parsed.daily) ||
+      !Array.isArray(parsed.dates) ||
+      parsed.dates.length !== parsed.daily.length ||
+      typeof parsed.commitsMade !== "number" ||
+      !parsed.lastSynced
+    ) {
+      return null;
+    }
     return parsed;
   } catch {
     return null;

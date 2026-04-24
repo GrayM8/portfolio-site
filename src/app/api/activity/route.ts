@@ -1,29 +1,70 @@
 import { NextResponse, type NextRequest } from "next/server";
 
-type GHEvent = {
-  type: string;
-  created_at: string;
-  repo: { name: string };
-  payload: { action?: string };
+type ContributionDay = { date: string; contributionCount: number };
+type GraphQLResponse = {
+  data?: {
+    user: {
+      contributionsCollection: {
+        contributionCalendar: {
+          totalContributions: number;
+          weeks: { contributionDays: ContributionDay[] }[];
+        };
+        totalCommitContributions: number;
+        totalPullRequestReviewContributions: number;
+        totalRepositoriesWithContributedCommits: number;
+      };
+    } | null;
+  };
+  errors?: { message: string }[];
 };
 
 type GithubActivity = {
   daily: number[];
+  dates: string[];
   eventsTotal: number;
-  prsOpened: number;
   reviewsGiven: number;
   reposTouched: number;
+  commitsMade: number;
   streak: number;
   lastSynced: number;
 };
 
 const DAYS = 30;
-const TEN_MIN = 600;
+// GitHub's contribution calendar buckets days in the user's profile timezone.
+// Hardcoded to Gray's TZ so the last slot is always "today in Austin," not a
+// phantom tomorrow-in-UTC partial that GitHub pads in when the query window
+// crosses UTC midnight.
+const CALENDAR_TZ = "America/Chicago";
 
-function startOfDay(d: Date): number {
-  const copy = new Date(d);
-  copy.setHours(0, 0, 0, 0);
-  return copy.getTime();
+export const revalidate = 0;
+
+const QUERY = `
+  query($login: String!, $from: DateTime!, $to: DateTime!) {
+    user(login: $login) {
+      contributionsCollection(from: $from, to: $to) {
+        contributionCalendar {
+          totalContributions
+          weeks {
+            contributionDays { date contributionCount }
+          }
+        }
+        totalCommitContributions
+        totalPullRequestReviewContributions
+        totalRepositoriesWithContributedCommits
+      }
+    }
+  }
+`;
+
+function todayInTz(tz: string): string {
+  return new Date().toLocaleDateString("en-CA", { timeZone: tz });
+}
+
+function shiftDate(isoDate: string, days: number): string {
+  const [y, m, d] = isoDate.split("-").map(Number);
+  const dt = new Date(Date.UTC(y, m - 1, d));
+  dt.setUTCDate(dt.getUTCDate() + days);
+  return dt.toISOString().slice(0, 10);
 }
 
 export async function GET(req: NextRequest) {
@@ -32,13 +73,32 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "invalid_user" }, { status: 400 });
   }
 
-  const url = `https://api.github.com/users/${encodeURIComponent(user)}/events/public?per_page=100`;
-  const upstream = await fetch(url, {
+  const token = process.env.GITHUB_TOKEN;
+  if (!token) {
+    return NextResponse.json(
+      { error: "missing_token" },
+      { status: 500, headers: { "Cache-Control": "no-store" } },
+    );
+  }
+
+  const to = new Date();
+  const from = new Date(to.getTime() - (DAYS + 1) * 24 * 60 * 60 * 1000);
+
+  const debug = req.nextUrl.searchParams.get("debug") === "1";
+
+  const upstream = await fetch("https://api.github.com/graphql", {
+    method: "POST",
     headers: {
+      Authorization: `Bearer ${token}`,
       Accept: "application/vnd.github+json",
+      "Content-Type": "application/json",
       "User-Agent": "portfolio-site",
     },
-    next: { revalidate: TEN_MIN },
+    body: JSON.stringify({
+      query: QUERY,
+      variables: { login: user, from: from.toISOString(), to: to.toISOString() },
+    }),
+    cache: "no-store",
   });
 
   if (!upstream.ok) {
@@ -48,31 +108,40 @@ export async function GET(req: NextRequest) {
     );
   }
 
-  const events = (await upstream.json()) as GHEvent[];
-  const daily = new Array<number>(DAYS).fill(0);
-  const repos = new Set<string>();
-  const todayStart = startOfDay(new Date());
-  const dayMs = 24 * 60 * 60 * 1000;
-  let prsOpened = 0;
-  let reviewsGiven = 0;
-  let eventsInWindow = 0;
-
-  for (const e of events) {
-    const diffDays = Math.floor(
-      (todayStart - startOfDay(new Date(e.created_at))) / dayMs,
+  const payload = (await upstream.json()) as GraphQLResponse;
+  if (payload.errors?.length || !payload.data?.user) {
+    return NextResponse.json(
+      { error: "graphql", messages: payload.errors?.map((e) => e.message) ?? [] },
+      { status: 502, headers: { "Cache-Control": "no-store" } },
     );
-    if (diffDays < 0 || diffDays >= DAYS) continue;
-    daily[DAYS - 1 - diffDays] += 1;
-    repos.add(e.repo.name);
-    eventsInWindow += 1;
-    if (e.type === "PullRequestEvent" && e.payload.action === "opened") {
-      prsOpened += 1;
-    } else if (
-      e.type === "PullRequestReviewEvent" ||
-      e.type === "PullRequestReviewCommentEvent"
-    ) {
-      reviewsGiven += 1;
-    }
+  }
+
+  const cc = payload.data.user.contributionsCollection;
+  const flat: ContributionDay[] = cc.contributionCalendar.weeks
+    .flatMap((w) => w.contributionDays)
+    .sort((a, b) => a.date.localeCompare(b.date));
+
+  const todayStr = todayInTz(CALENDAR_TZ);
+  const earliest = shiftDate(todayStr, -(DAYS - 1));
+  const byDate = new Map(flat.map((d) => [d.date, d.contributionCount]));
+
+  const dates: string[] = [];
+  const daily: number[] = [];
+  for (let i = 0; i < DAYS; i++) {
+    const date = shiftDate(earliest, i);
+    dates.push(date);
+    daily.push(byDate.get(date) ?? 0);
+  }
+
+  if (debug) {
+    return NextResponse.json(
+      {
+        window: { from: from.toISOString(), to: to.toISOString(), todayStr, earliest },
+        raw: payload.data.user.contributionsCollection,
+        aligned: { dates, daily },
+      },
+      { headers: { "Cache-Control": "no-store" } },
+    );
   }
 
   let streak = 0;
@@ -83,10 +152,11 @@ export async function GET(req: NextRequest) {
 
   const activity: GithubActivity = {
     daily,
-    eventsTotal: eventsInWindow,
-    prsOpened,
-    reviewsGiven,
-    reposTouched: repos.size,
+    dates,
+    eventsTotal: daily.reduce((a, b) => a + b, 0),
+    reviewsGiven: cc.totalPullRequestReviewContributions,
+    reposTouched: cc.totalRepositoriesWithContributedCommits,
+    commitsMade: cc.totalCommitContributions,
     streak,
     lastSynced: Date.now(),
   };

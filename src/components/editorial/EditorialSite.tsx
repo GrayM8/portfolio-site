@@ -1142,8 +1142,19 @@ function LiveTelemetry({ c, username }: { c: Palette; username: string }) {
   const activity = useGithubActivity(username);
 
   const daily = activity?.daily ?? new Array<number>(30).fill(0);
+  const dates = activity?.dates;
 
   const chartData: ChartPoint[] = daily.map((count, i) => {
+    const iso = dates?.[i];
+    if (iso) {
+      const [y, m, day] = iso.split("-").map(Number);
+      const d = new Date(y, m - 1, day);
+      return {
+        date: iso,
+        label: d.toLocaleDateString("en-US", { month: "short", day: "numeric" }),
+        count,
+      };
+    }
     const d = new Date();
     d.setDate(d.getDate() - (daily.length - 1 - i));
     return {
@@ -1155,14 +1166,14 @@ function LiveTelemetry({ c, username }: { c: Palette; username: string }) {
 
   const metrics: Array<[string, string, string]> = activity
     ? [
-        ["prs", `${activity.prsOpened}`, "opened"],
         ["reviews", `${activity.reviewsGiven}`, "given"],
         ["repos", `${activity.reposTouched}`, "touched"],
+        ["commits", `${activity.commitsMade}`, "made"],
       ]
     : [
-        ["prs", "—", "opened"],
         ["reviews", "—", "given"],
         ["repos", "—", "touched"],
+        ["commits", "—", "made"],
       ];
 
   const gradientId = `o3-area-${username}`;
@@ -1177,7 +1188,7 @@ function LiveTelemetry({ c, username }: { c: Palette; username: string }) {
         className="flex items-center justify-between px-4 py-2.5 border-b text-[9px] uppercase tracking-widest"
         style={{ borderColor: c.rule, color: c.sub }}
       >
-        <span>Activity (excluding private repos)</span>
+        <span>Activity · last 30 days</span>
         <a
           href={`https://github.com/${username}`}
           target="_blank"
@@ -1195,7 +1206,7 @@ function LiveTelemetry({ c, username }: { c: Palette; username: string }) {
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart
             data={chartData}
-            margin={{ top: 4, right: 6, bottom: 0, left: 6 }}
+            margin={{ top: 4, right: 6, bottom: 0, left: 0 }}
           >
             <defs>
               <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
@@ -1210,7 +1221,20 @@ function LiveTelemetry({ c, username }: { c: Palette; username: string }) {
               opacity={0.7}
             />
             <XAxis dataKey="label" hide />
-            <YAxis hide domain={[0, (max: number) => Math.max(1, max)]} />
+            <YAxis
+              domain={[0, (max: number) => Math.max(1, max)]}
+              width={34}
+              tickCount={3}
+              axisLine={false}
+              tickLine={false}
+              tickMargin={4}
+              tick={{
+                fill: c.sub,
+                fontSize: 9,
+                fontFamily: "var(--font-mono)",
+              }}
+              tickFormatter={(v: number) => (Number.isInteger(v) ? `${v}` : "")}
+            />
             <Tooltip
               cursor={{ stroke: c.accent, strokeWidth: 0.6, strokeDasharray: "2 3" }}
               contentStyle={{
