@@ -400,7 +400,7 @@ export const PORTFOLIO: Portfolio = {
         "Tailwind v4",
       ],
       status: "Live",
-      year: "2026 — Present",
+      year: "2026",
       image: "/assets/proj-investcheck.png",
       link: "https://www.investcheck.com/",
       overview:
