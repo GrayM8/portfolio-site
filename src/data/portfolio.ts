@@ -296,6 +296,35 @@ export const PORTFOLIO: Portfolio = {
       ],
     },
     {
+      title: "Longhorn Racing Recruiting Platform",
+      slug: "lhr-recruiting",
+      tagline:
+        "Applications, scorecards, and admin review for Longhorn Racing's recruiting cycle.",
+      tech: [
+        "Next.js 16",
+        "TypeScript",
+        "Tailwind v4",
+        "Firebase",
+        "AWS SES",
+        "Google APIs",
+        "SWR",
+      ],
+      status: "Live",
+      year: "2025 — Present",
+      image: "/assets/proj-lhr-recruiting.png",
+      repo: "https://github.com/LonghornRacingElectric/recruiting-site-2026",
+      overview:
+        "The official recruiting platform for Longhorn Racing at UT Austin — prospects browse teams, submit per-team applications, and track decisions through their dashboard, while team captains and admin staff review applications, score candidates, and gate trial workday decisions from a unified admin console. Co-built with Dhairya Gupta on Next.js 16, Firebase, and AWS SES.",
+      detailBullets: [
+        "Per-team application pipeline: prospects pick a team at `/apply/[team]` and submit a configurable question set defined in Firestore, with applicant-side `/dashboard` tracking status across the cycle.",
+        "Role-gated admin console (`/admin`) for applications, teams, users, scorecards, configuration, and settings — server-side role checks across `ADMIN` and `TEAM_CAPTAIN_OB` on every action and `/api/admin/*` route.",
+        "Scorecard system with per-section ratings that aggregate to a candidate-level score, used to drive committing / rejecting / waitlist decisions and a `day decision gating` workflow on trial workdays.",
+        "Waitlist logic with day-level decision gating and email-sent tracking, so reviewers can move candidates between cohorts without double-sending or losing audit trail.",
+        "AWS SES transactional email pipeline with templated sends (`lib/email/`) and Google Calendar integration (`lib/google/calendar.ts`) for scheduling interviews against reviewer availability.",
+        "Unified public + admin navigation with light/dark mode propagated through both surfaces, mobile drawer UX on admin lists, and a fixed-header dashboard with profile/menu mutex tuned for phone-first triage.",
+      ],
+    },
+    {
       title: "PitLane Director AC",
       slug: "pitlane",
       tagline: "Broadcast director for Assetto Corsa sim racing leagues",
