@@ -267,23 +267,21 @@ export function ProjectDetail({ project }: { project: AnyProject }) {
         <div className={`${WRAP} ${PAD} py-14 md:py-20`}>
           <div className="mx-auto max-w-[960px] space-y-20 md:space-y-24">
             {project.overview && (
-              <SectionHead c={c} roman="I." kicker="Summary" title="Overview" />
-            )}
-            {project.overview && (
-              <div className="-mt-14 md:-mt-16">
+              <section>
+                <SectionHead c={c} roman="I." kicker="Summary" title="Overview" />
                 <p
-                  className="pd-dropcap font-serif text-[17px] md:text-[19px] leading-[1.65]"
+                  className="pd-dropcap font-serif text-[17px] md:text-[19px] leading-[1.65] mt-6 md:mt-8 mb-0"
                   style={{ color: c.ink }}
                 >
                   {project.overview}
                 </p>
-              </div>
+              </section>
             )}
 
             {bullets.length > 0 && (
-              <>
+              <section>
                 <SectionHead c={c} roman="II." kicker="Breakdown" title="Highlights" />
-                <ol className="list-none p-0 m-0 grid gap-5 md:gap-6 -mt-14 md:-mt-16">
+                <ol className="list-none p-0 m-0 grid gap-5 md:gap-6 mt-6 md:mt-8">
                   {bullets.map((b, i) => (
                     <li
                       key={i}
@@ -307,18 +305,18 @@ export function ProjectDetail({ project }: { project: AnyProject }) {
                     </li>
                   ))}
                 </ol>
-              </>
+              </section>
             )}
 
             {(project.detailBullets ?? []).length > 0 && (
-              <>
+              <section>
                 <SectionHead
                   c={c}
                   roman={bullets.length > 0 ? "III." : "II."}
                   kicker="Margin"
                   title="Notes"
                 />
-                <ul className="list-none p-0 m-0 grid gap-4 -mt-14 md:-mt-16">
+                <ul className="list-none p-0 m-0 grid gap-4 mt-6 md:mt-8">
                   {(project.detailBullets ?? []).map((b, i) => (
                     <li
                       key={i}
@@ -335,7 +333,7 @@ export function ProjectDetail({ project }: { project: AnyProject }) {
                     </li>
                   ))}
                 </ul>
-              </>
+              </section>
             )}
 
             {!project.overview && bullets.length === 0 && (project.detailBullets ?? []).length === 0 && (
