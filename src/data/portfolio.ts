@@ -402,6 +402,7 @@ export const PORTFOLIO: Portfolio = {
       status: "Live",
       year: "2026 — Present",
       image: "/assets/proj-investcheck.png",
+      link: "https://www.investcheck.com/",
       overview:
         "A verified-trading marketplace where individual traders publish reconciled brokerage and prop-firm histories, and followers buy access. Two purchase paths per trader: a permanent point-in-time snapshot or a recurring monthly subscription that grants live trade access plus a daily digest after market close. Bundle subscriptions cover multiple traders at a discount. Built ground-up under PitLane Systems for Adam Edwards.",
       detailBullets: [
