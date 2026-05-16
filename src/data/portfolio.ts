@@ -312,6 +312,7 @@ export const PORTFOLIO: Portfolio = {
       status: "Live",
       year: "2025 — Present",
       image: "/assets/proj-lhr-recruiting.png",
+      link: "https://recruiting.lhre.org/",
       repo: "https://github.com/LonghornRacingElectric/recruiting-site-2026",
       overview:
         "The official recruiting platform for Longhorn Racing at UT Austin — prospects browse teams, submit per-team applications, and track decisions through their dashboard, while team captains and admin staff review applications, score candidates, and gate trial workday decisions from a unified admin console. Co-built with Dhairya Gupta on Next.js 16, Firebase, and AWS SES.",
