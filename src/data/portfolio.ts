@@ -240,14 +240,14 @@ export const PORTFOLIO: Portfolio = {
       status: "In Development",
       tech: ["React", "TypeScript", "Rust", "WebSockets", "MQTT", "CAN Bus", "Protobuf", "Real-Time"],
       bullets: [
-        "Four-screen in-vehicle UI (Driving / Pit Diagnostic / Shutdown / Settings) cycled with a single Enter press from the wheel — 800×480 target.",
+        "Four-screen in-vehicle UI (Driving / Pit Diagnostic / Shutdown / Settings) cycled with an on-wheel button input — 800×480 target.",
         "Two data planes wired in lockstep — Rust `dashd` on-car forwards CAN signals over WebSocket, off-car compute publishes lap/energy values to typed MQTT topics.",
-        "Built-in demo mode (single-key toggle) renders a synthesized data stream so the dash presents at full fidelity off-car for development and showcase.",
+        "Fail to `--`, not last-known — `dashd` resets the CAN frame after 3 seconds of silence, the WebSocket renderer auto-reconnects with infinite retries, and the MQTT layer enforces per-topic 5-second staleness.",
       ],
       overview:
         "A real-time in-vehicle driver display for Longhorn Racing Electric's FSAE car. Speed, SOC, pack temperature, lap delta + per-second delta rate, energy delta, brake bias, and driver-armable flags (traction control, regen) on a multi-screen UI that cycles Driving → Pit Diagnostic → Shutdown → Settings. Two data planes feed it: a Rust on-car backend (`dashd`) forwarding CAN over WebSocket, and a typed MQTT contract for off-car-computed lap and energy values. A built-in demo mode synthesizes the full data stream so the same dash runs off-car for development, presentation, and judging.",
       detailBullets: [
-        "Multi-screen architecture (Driving / Pit Diagnostic / Shutdown / Settings) cycled with a single Enter press from the steering wheel — same `DashContext` + data hooks back every screen, so screens compose cleanly without per-screen wiring.",
+        "Multi-screen architecture (Driving / Pit Diagnostic / Shutdown / Settings) cycled with an on-wheel button input — same `DashContext` + data hooks back every screen, so screens compose cleanly without per-screen wiring.",
         "Driving screen tuned for one-glance reads: oversized speed digit, ±0.5 s/s lap-delta-rate bar pinned at the top, energy delta with decimal-point dead-center anchoring to stop digit jitter, bidirectional power bar split 20% regen / 80% drive, dual sidebar gauges for SOC and pack temperature with thermal color-shift at 50 °C.",
         "Dual data planes — Rust `dashd` on-car forwards CAN signals (speed, power, SOC, cell-top temp, shutdown circuit) over WebSocket; off-car compute publishes lap delta, energy delta, and laps-remaining to `lhre/dash/*` MQTT topics per a typed contract, with QoS 0 and a 5-second staleness fallback to `--` so the driver never sees frozen values.",
         "Wire format is one schema with two implementations — Rust serde structs in `dashd` (`CanData`, `MqttData`, `DashMessage`) carry explicit `#[serde(rename)]` annotations so JSON keys line up byte-for-byte with the TypeScript interfaces in `DashData.ts` on the renderer. The schema is the contract; no ad-hoc parsing on either side, and adding a field is one coordinated change across both files.",
