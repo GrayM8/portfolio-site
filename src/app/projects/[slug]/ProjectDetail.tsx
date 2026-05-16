@@ -265,12 +265,12 @@ export function ProjectDetail({ project }: { project: AnyProject }) {
       {/* reading body — single centered column */}
       <section>
         <div className={`${WRAP} ${PAD} py-14 md:py-20`}>
-          <div className="mx-auto max-w-[960px] space-y-14 md:space-y-16">
+          <div className="mx-auto max-w-[960px] space-y-20 md:space-y-24">
             {project.overview && (
               <SectionHead c={c} roman="I." kicker="Summary" title="Overview" />
             )}
             {project.overview && (
-              <div className="-mt-8 md:-mt-10">
+              <div className="-mt-14 md:-mt-16">
                 <p
                   className="pd-dropcap font-serif text-[17px] md:text-[19px] leading-[1.65]"
                   style={{ color: c.ink }}
@@ -283,7 +283,7 @@ export function ProjectDetail({ project }: { project: AnyProject }) {
             {bullets.length > 0 && (
               <>
                 <SectionHead c={c} roman="II." kicker="Breakdown" title="Highlights" />
-                <ol className="list-none p-0 m-0 grid gap-5 md:gap-6 -mt-8 md:-mt-10">
+                <ol className="list-none p-0 m-0 grid gap-5 md:gap-6 -mt-14 md:-mt-16">
                   {bullets.map((b, i) => (
                     <li
                       key={i}
@@ -318,7 +318,7 @@ export function ProjectDetail({ project }: { project: AnyProject }) {
                   kicker="Margin"
                   title="Notes"
                 />
-                <ul className="list-none p-0 m-0 grid gap-4 -mt-8 md:-mt-10">
+                <ul className="list-none p-0 m-0 grid gap-4 -mt-14 md:-mt-16">
                   {(project.detailBullets ?? []).map((b, i) => (
                     <li
                       key={i}
