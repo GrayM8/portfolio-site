@@ -242,7 +242,7 @@ export const PORTFOLIO: Portfolio = {
       bullets: [
         "Four-screen in-vehicle UI (Driving / Pit Diagnostic / Shutdown / Settings) cycled with an on-wheel button input — 800×480 target.",
         "Two data planes wired in lockstep — Rust `dashd` on-car forwards CAN signals over WebSocket, off-car compute publishes lap/energy values to typed MQTT topics.",
-        "Fail to `--`, not last-known — `dashd` resets the CAN frame after 3 seconds of silence, the WebSocket renderer auto-reconnects with infinite retries, and the MQTT layer enforces per-topic 5-second staleness.",
+        "On-car renderer stays simple by design — anything that needs history (lap reconstruction, energy prediction, lap-delta-rate) is computed off-car and arrives over MQTT, leaving the dash as a stateless 30 Hz painter of last-known values.",
       ],
       overview:
         "A real-time in-vehicle driver display for Longhorn Racing Electric's FSAE car. Speed, SOC, pack temperature, lap delta + per-second delta rate, energy delta, brake bias, and driver-armable flags (traction control, regen) on a multi-screen UI that cycles Driving → Pit Diagnostic → Shutdown → Settings. Two data planes feed it: a Rust on-car backend (`dashd`) forwarding CAN over WebSocket, and a typed MQTT contract for off-car-computed lap and energy values. A built-in demo mode synthesizes the full data stream so the same dash runs off-car for development, presentation, and judging.",
@@ -273,7 +273,7 @@ export const PORTFOLIO: Portfolio = {
       metrics: [
         { k: "screens", v: "4" },
         { k: "res", v: "800×480" },
-        { k: "stale", v: "5s →" },
+        { k: "render", v: "30 Hz" },
       ],
     },
   ],
