@@ -640,6 +640,7 @@ export const PORTFOLIO: Portfolio = {
     ],
     Practices: [
       "TDD",
+      "CI/CD",
       "SEO",
       "Perf Analysis",
       "Reliability Eng",
