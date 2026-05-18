@@ -10,9 +10,9 @@ export const contentType = OG_CONTENT_TYPE;
 async function loadHeadshotDataUrl(): Promise<string | undefined> {
   try {
     const buf = await readFile(
-      path.join(process.cwd(), "public", "assets", "headshot.jpg"),
+      path.join(process.cwd(), "public", "assets", "headshot.png"),
     );
-    return `data:image/jpeg;base64,${buf.toString("base64")}`;
+    return `data:image/png;base64,${buf.toString("base64")}`;
   } catch {
     return undefined;
   }
@@ -33,7 +33,7 @@ export default async function Image() {
     description:
       "Second-year CS at UT Austin. Founder of PitLane Systems, co-founder and CTO at Longhorn Sim Racing and Trophy Sim Solutions, telemetry + autonomy engineer on Longhorn Racing.",
     image: headshot,
-    imageCaption: "Tokyo · 2023",
+    imageCaption: "Austin · 2026",
     footerLeft: "graymarshall.dev",
     footerRight: formatToday(),
   });

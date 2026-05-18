@@ -193,10 +193,9 @@ export function EditorialSite() {
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src="/assets/headshot.jpg"
+                  src="/assets/headshot.png"
                   alt="Gray Marshall"
                   className="w-full h-full object-cover"
-                  style={{ filter: "grayscale(0.35) contrast(1.05) sepia(0.12)" }}
                 />
                 <div
                   className="absolute inset-x-0 bottom-0 px-5 pb-4 pt-8 font-mono text-[10px] uppercase tracking-widest"
@@ -206,7 +205,7 @@ export function EditorialSite() {
                   }}
                 >
                   <div style={{ color: c.accent }}>Gray Marshall</div>
-                  <div style={{ color: c.sub }}>Tokyo · 2023</div>
+                  <div style={{ color: c.sub }}>Austin · 2026</div>
                 </div>
               </div>
               <LiveTelemetry c={c} username={P.github.replace(/^github\.com\//, "")} />

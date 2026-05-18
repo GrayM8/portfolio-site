@@ -30,7 +30,7 @@ export function ProfileJsonLd() {
     alternateName: "Matthew Gray Marshall",
     url: SITE_URL,
     mainEntityOfPage: { "@id": profilePageId },
-    image: `${SITE_URL}/assets/headshot.jpg`,
+    image: `${SITE_URL}/assets/headshot.png`,
     jobTitle: P.role,
     description: P.tagline,
     email: `mailto:${P.email}`,
