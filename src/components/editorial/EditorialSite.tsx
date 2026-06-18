@@ -673,7 +673,13 @@ export function EditorialSite() {
           />
           <div className="mt-8 grid grid-cols-1 lg:grid-cols-[1.5fr_1fr] gap-8 md:gap-10">
             {P.notes[0] && <FeatureNote n={P.notes[0]} c={c} lead />}
-            {P.notes[1] && <FeatureNote n={P.notes[1]} c={c} />}
+            {P.notes.length > 1 && (
+              <div className="grid gap-8 md:gap-10 content-start">
+                {P.notes.slice(1, 3).map((n, i) => (
+                  <FeatureNote key={n.url ?? n.title ?? i} n={n} c={c} />
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </section>
