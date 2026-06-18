@@ -652,6 +652,15 @@ export const PORTFOLIO: Portfolio = {
   },
   notes: [
     {
+      title: "Longhorn Sim Racing names PitLane Systems its Official Broadcasting Partner",
+      date: "May 2026",
+      tag: "partnership",
+      read: "3 min",
+      url: "https://www.pitlanesystems.com/blog/longhorn-sim-racing-official-broadcasting-partner",
+      description:
+        "Longhorn Sim Racing names PitLane its Official Broadcasting Partner and Gold Tier Sponsor for the Fall 2026 Lonestar Cup — the tool built inside an LSR broadcast booth comes back as the league's full broadcast stack.",
+    },
+    {
       title: "PitLane Systems Selected as a 2026 McCombs Entrepreneur Summer Fellow",
       date: "Apr 2026",
       tag: "milestone",
