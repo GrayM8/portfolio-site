@@ -117,7 +117,7 @@ export const PORTFOLIO: Portfolio = {
   github: "github.com/GrayM8",
   linkedin: "linkedin.com/in/graymarshall",
   about: [
-    "I'm a second-year CS major translating raw race-car bytes into winning insights for UT Austin's Formula SAE EV Team — and building the real-time systems that keep competition software reliable under pressure.",
+    "I'm a third-year CS major translating raw race-car bytes into winning insights for UT Austin's Formula SAE EV Team — and building the real-time systems that keep competition software reliable under pressure.",
     "At Longhorn Racing, I work on a distributed telemetry stack spanning on-car data ingest, real-time streaming, persistent storage, and live visualization.",
     "I co-founded and lead the technical direction of Longhorn Sim Racing, where I've designed and shipped a production-grade web platform built with Next.js, React, and TypeScript.",
     "Across both domains, I optimize for tight feedback loops, clear abstractions, and durable software that ships fast and performs under pressure.",

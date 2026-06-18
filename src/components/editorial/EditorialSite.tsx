@@ -134,7 +134,7 @@ export function EditorialSite() {
                 style={{ color: c.ink }}
               >
                 <span className="o3-kicker mr-2">Summary</span>
-                Gray Marshall is a second-year CS student at UT Austin — founder of{" "}
+                Gray Marshall is a third-year CS student at UT Austin — founder of{" "}
                 <a
                   href="https://www.pitlanesystems.com"
                   target="_blank"
@@ -545,7 +545,7 @@ export function EditorialSite() {
               roman="V."
               kicker="Schooling"
               title="Education"
-              sub="Second year at UT Austin."
+              sub="Third year at UT Austin."
               compact
             />
             <div

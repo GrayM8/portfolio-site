@@ -31,7 +31,7 @@ export default async function Image() {
     title: ["Building", "things that", "don't break"],
     italicSecondLine: true,
     description:
-      "Second-year CS at UT Austin. Founder of PitLane Systems, co-founder and CTO at Longhorn Sim Racing and Trophy Sim Solutions, telemetry + autonomy engineer on Longhorn Racing.",
+      "Third-year CS at UT Austin. Founder of PitLane Systems, co-founder and CTO at Longhorn Sim Racing and Trophy Sim Solutions, telemetry + autonomy engineer on Longhorn Racing.",
     image: headshot,
     imageCaption: "Austin · 2026",
     footerLeft: "graymarshall.dev",
